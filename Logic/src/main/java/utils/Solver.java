@@ -1,6 +1,7 @@
 package utils;
 
 import domain.Field;
+import domain.Grid;
 import domain.Point;
 import domain.Row;
 
@@ -96,8 +97,79 @@ public class Solver {
     }
 
     public List<Field> solve() {
-        List<Field> changes = new ArrayList<>();
+        Field[][] solution = new Field[9][9];
+        for(int x = 0; x < 9; x++) {
+            for(int y = 0; y < 9; y++) {
+                solution[x][y] = new Field(x, y, grid[x][y].value());
+            }
+        }
+        if(calculateSolution(solution, solution.length)) {
+            return Grid.compareTo(solution, grid);
+        }
+        return null;
+    }
 
-        return changes;
+    private boolean isUnique(Field insert) {
+        for (int i = 0; i < grid.length; i++) {
+            if(grid[insert.point().x()][i].value() == insert.value()) return false;
+        }
+        for (int i = 0; i < grid.length; i++) {
+            if(grid[i][insert.point().y()].value() == insert.value()) return false;
+        }
+        int sqrt = (int)Math.sqrt(grid.length);
+        int squareXStart = insert.point().x() - insert.point().x() % sqrt;
+        int squareYStart = insert.point().y() - insert.point().y() % sqrt;
+
+        for (int x = squareXStart; x < squareXStart + sqrt; x++) {
+            for (int y = squareYStart; y < squareYStart + sqrt; y++){
+                if (grid[x][y].value() == insert.value()) return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean calculateSolution(Field[][] grid, int n) { //n = grid.length
+        int xPos = -1;
+        int yPos = -1;
+        boolean completed = true;
+        int x = 0;
+        while (x < n && completed) {
+            int y = 0;
+            while (y < n && completed) {
+                if (grid[x][y].value() == 0) {
+                    completed = false;
+                    xPos = x;
+                    yPos = y;
+                }
+                y++;
+            }
+            x++;
+        }
+        if(completed) return true;
+        // else backtrack
+        for (int value = 1; value <= n; value++) {
+            if (isUnique(new Field(xPos, yPos, value))) {
+                grid[xPos][yPos] = new Field(xPos, yPos, value);
+                if (calculateSolution(grid, n)) return true;
+                else grid[xPos][yPos] = new Field(xPos, yPos, 0); // replace
+            }
+        }
+        return false;
+    }
+
+    private boolean isCompleted(Field[][] grid, int n) {
+        boolean completed = true;
+        int x = 0;
+        while (x < n && completed) {
+            int y = 0;
+            while (y < n && completed) {
+                if (grid[x][y].value() == 0) {
+                    completed = false;
+                }
+                y++;
+            }
+            x++;
+        }
+        return completed;
     }
 }

@@ -26,6 +26,16 @@ public class Grid {
         return differences;
     }
 
+    public static List<Field> compareTo(Field[][] key, Field[][] value) { //return the values from key
+        List<Field> differences = new ArrayList<>();
+        for(int x = 0; x < 9; x++) {
+            for(int y  =0; y < 9; y++) {
+                if(!key[x][y].equals(value[x][y])) differences.add(key[x][y]);
+            }
+        }
+        return differences;
+    }
+
     public String toString() {
         return Arrays.stream(grid).toList().toString();
     }
