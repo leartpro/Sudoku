@@ -3,7 +3,6 @@ package domain;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class Grid {
     private Field[][] grid;
@@ -26,8 +25,8 @@ public class Grid {
             Point[] vertical = new Row(0, 8, y, y).asPoints();
             if (!isRowSolved(vertical)) return false;
         }
-        for(Field[][] square : getSquares()) {
-            if(!isSquareSolved(square)) return false;
+        for (Field[][] square : getSquares()) {
+            if (!isSquareSolved(square)) return false;
         }
         return true;
     }
@@ -35,8 +34,8 @@ public class Grid {
     private boolean isSquareSolved(Field[][] square) {
         //map to 1d array
         Field[] flat = new Field[square.length * square[0].length];
-        for(int i = 0; i < square.length; i++) {
-            for(int j = 0; j < square[i].length; j++) {
+        for (int i = 0; i < square.length; i++) {
+            for (int j = 0; j < square[i].length; j++) {
                 flat[i + (j * square.length)] = square[i][j];
             }
         }
@@ -44,12 +43,27 @@ public class Grid {
     }
 
 
-
     private List<Field[][]> getSquares() {
         List<Field[][]> squares = new ArrayList<>();
-        for(int x = 1; x < 9; x+=3) {
-            for(int y = 1; y < 9; y+=3) {
-                //TODO: get surroundings of this point and map it to a two dimensional field array
+        for (int x = 1; x < 9; x += 3) {
+            for (int y = 1; y < 9; y += 3) {
+                squares.add(new Field[][]{
+                        new Field[]{
+                                new Field(x - 1, y + 1, grid[x-1][y+1].value()),
+                                new Field(x, y + 1, grid[x][y+1].value()),
+                                new Field(x + 1, y + 1, grid[x+1][y+1].value())
+                        },
+                        new Field[]{
+                                new Field(x - 1, y, grid[x-1][y].value()),
+                                new Field(x, y, grid[x][y].value()),
+                                new Field(x + 1, y, grid[x+1][y].value())
+                        },
+                        new Field[]{
+                                new Field(x - 1, y - 1, grid[x-1][y-1].value()),
+                                new Field(x, y - 1, grid[x][y-1].value()),
+                                new Field(x + 1, y - 1, grid[x+1][y-1].value())
+                        },
+                });
             }
         }
         return squares;
@@ -74,14 +88,14 @@ public class Grid {
 
     private List<Field> getDuplications(Field[] row) {
         List<Field> duplications = new ArrayList<>();
-        for(int i = 0; i < row.length; i++) {
-            for(int j = i +1; j < row.length; j++) {
-                if(row[i].equals(row[j])) {
+        for (int i = 0; i < row.length; i++) {
+            for (int j = i + 1; j < row.length; j++) {
+                if (row[i].equals(row[j])) {
                     duplications.add(row[i]);
                 }
             }
         }
-        if(duplications.size() == 0) return null;
+        if (duplications.size() == 0) return null;
         return duplications;
     }
 
@@ -91,9 +105,13 @@ public class Grid {
         return changes;
     }
 
-    public List<Field> compareTo(Grid grid) {
+    public List<Field> compareTo(Field[][] grid) {
         List<Field> differences = new ArrayList<>();
-
+        for(int x = 0; x < 9; x++) {
+            for(int y  =0; y < 9; y++) {
+                if(!grid[x][y].equals(this.grid[x][y])) differences.add(grid[x][y]);
+            }
+        }
         return differences;
     }
 

@@ -1,4 +1,4 @@
-package generator;
+package utils;
 
 public class Generator {
 }
