@@ -28,7 +28,7 @@ class SolverTest {
      */
 
     @Test
-    void isSolvedTrue() { //TODO: complete grid
+    void isSolvedTrue() {
         solver = new Solver(
                 toComparableGrid(
                         new int[][]{ //solved grid
@@ -67,7 +67,7 @@ class SolverTest {
     }
 
     @Test
-    void solve() {
+    void solve() { //TODO: create multiple test methods for different difficulties of grids
         assertEquals(new ArrayList<>(
                         List.of( //TODO: complete expected output
                                 new Field(0, 0, 0),
