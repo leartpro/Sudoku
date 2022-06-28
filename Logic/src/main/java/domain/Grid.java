@@ -36,7 +36,30 @@ public class Grid {
         return differences;
     }
 
+    @Override
     public String toString() {
         return Arrays.stream(grid).toList().toString();
+    }
+
+    public static void display(Field[][] grid) {
+        StringBuilder output = new StringBuilder();
+        for(int x = 0; x < 9; x++) {
+            for(int y = 0; y < 9; y++) {
+                output.append(grid[x][y]).append(" ");
+            }
+            output.append("\r\n");
+        }
+        System.out.println(output);
+    }
+
+    public static void displaySmall(Field[][] grid) {
+        StringBuilder output = new StringBuilder();
+        for(int x = 0; x < 9; x++) {
+            for(int y = 0; y < 9; y++) {
+                output.append(grid[x][y].value()).append(" ");
+            }
+            output.append("\r\n");
+        }
+        System.out.println(output);
     }
 }

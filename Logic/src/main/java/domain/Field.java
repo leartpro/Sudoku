@@ -8,4 +8,9 @@ public record Field(Point point, int value) {
     public Field(int x, int y, int value) {
         this(new Point(x,y), value);
     }
+
+    @Override
+    public String toString() {
+        return "Field[point="+point+",value="+value+"]";
+    }
 }

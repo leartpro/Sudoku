@@ -50,7 +50,7 @@ class SolverTest {
     }
 
     @Test
-    void isSolvedFalse() { //TODO: complete grid
+    void isSolvedFalse() {
         solver = new Solver(
                 toComparableGrid(
                         new int[][]{ //unsolved grid
@@ -94,8 +94,10 @@ class SolverTest {
         };
         solver = new Solver(toComparableGrid(input));
         int[][] actual = addAll(input, solver.solve());
+
         if(solver.isSolved()) System.out.println("correctly solved");
         else System.out.println("unsolved or incorrect");
+
         boolean success = true;
         for(int x = 0; x < 9; x++) {
             for(int y = 0; y < 9; y++) {
@@ -107,8 +109,9 @@ class SolverTest {
                 }
             }
         }
-        System.err.flush();
+        if(!success) System.err.flush();
         System.out.println();
+
         if(!success) {
             StringBuilder output = new StringBuilder();
             output.append("Expected:              Actual:"+"\r\n");

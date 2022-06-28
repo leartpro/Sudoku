@@ -104,12 +104,14 @@ public class Solver {
             }
         }
         if(calculateSolution(solution, solution.length)) {
+            System.out.println("solution:");
+            Grid.displaySmall(solution);
             return Grid.compareTo(solution, grid);
         }
         return null;
     }
 
-    private boolean isUnique(Field insert) {
+    private boolean isUnique(Field insert) { //TODO: create tests for this method probably not working
         for (int i = 0; i < grid.length; i++) {
             if(grid[insert.point().x()][i].value() == insert.value()) return false;
         }
@@ -146,7 +148,7 @@ public class Solver {
             x++;
         }
         if(completed) return true;
-        // else backtrack
+        //backtrack
         for (int value = 1; value <= n; value++) {
             if (isUnique(new Field(xPos, yPos, value))) {
                 grid[xPos][yPos] = new Field(xPos, yPos, value);
