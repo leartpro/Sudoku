@@ -30,7 +30,70 @@ class SolverTest {
      */
 
     @Test
-    void isSolvedTrue() {
+    void isUniqueTrueTest() {
+        solver = new Solver(
+                toComparableGrid(
+                        new int[][]{ //solved grid
+                                {8, 2, 7, 1, 5, 4, 3, 9, 6},
+                                {9, 0/*place in*/, 5, 3, 2, 7, 1, 4, 8},
+                                {3, 4, 1, 6, 8, 9, 7, 5, 2},
+                                {5, 9, 3, 4, 6, 8, 2, 7, 1},
+                                {4, 7, 2, 5, 1, 3, 6, 8, 9},
+                                {6, 1, 8, 9, 7, 2, 4, 3, 5},
+                                {7, 8, 6, 2, 3, 5, 9, 1, 4},
+                                {1, 5, 4, 7, 9, 6, 8, 2, 3},
+                                {2, 3, 9, 8, 4, 1, 5, 6, 7}
+                        }
+                )
+        );
+        Field insert = new Field(1, 1, 6);
+        assertTrue(solver.isUnique(insert));
+    }
+
+    @Test
+    void isUniqueFalseTest() {
+        solver = new Solver(
+                toComparableGrid(
+                        new int[][]{ //solved grid
+                                {8, 2, 7, 1, 5, 4, 3, 9, 6},
+                                {9, 0/*place in*/, 5, 3, 2, 7, 1, 4, 8},
+                                {3, 4, 1, 6, 8, 9, 7, 5, 2},
+                                {5, 9, 3, 4, 6, 8, 2, 7, 1},
+                                {4, 7, 2, 5, 1, 3, 6, 8, 9},
+                                {6, 1, 8, 9, 7, 2, 4, 3, 5},
+                                {7, 8, 6, 2, 3, 5, 9, 1, 4},
+                                {1, 5, 4, 7, 9, 6, 8, 2, 3},
+                                {2, 3, 9, 8, 4, 1, 5, 6, 7}
+                        }
+                )
+        );
+        Field insert = new Field(1, 1, 5);
+        assertFalse(solver.isUnique(insert));
+    }
+
+    @Test
+    void isUniqueInSquareTest() {
+        solver = new Solver(
+                toComparableGrid(
+                        new int[][]{ //solved grid
+                                {8, 2, 7, 1, 5, 4, 3, 9, 6},
+                                {9, 0/*place in*/, 5, 3, 2, 7, 1, 4, 8},
+                                {3, 4, 6/*1*/, 6, 8, 9, 7, 5, 2},
+                                {5, 9, 3, 4, 6, 8, 2, 7, 1},
+                                {4, 7, 2, 5, 1, 3, 6, 8, 9},
+                                {6, 1, 8, 9, 7, 2, 4, 3, 5},
+                                {7, 8, 6, 2, 3, 5, 9, 1, 4},
+                                {1, 5, 4, 7, 9, 6, 8, 2, 3},
+                                {2, 3, 9, 8, 4, 1, 5, 6, 7}
+                        }
+                )
+        );
+        Field insert = new Field(1, 1, 6);
+        assertFalse(solver.isUnique(insert));
+    }
+
+    @Test
+    void isSolvedTrueTest() {
         solver = new Solver(
                 toComparableGrid(
                         new int[][]{ //solved grid
@@ -50,7 +113,7 @@ class SolverTest {
     }
 
     @Test
-    void isSolvedFalse() {
+    void isSolvedFalseTest() {
         solver = new Solver(
                 toComparableGrid(
                         new int[][]{ //unsolved grid
@@ -69,7 +132,7 @@ class SolverTest {
     }
 
     @Test
-    void solveEasy() { //TODO: create multiple test methods for different difficulties of grids
+    void solveEasyTest() { //TODO: create multiple test methods for different difficulties of grids
         int[][] input = new int[][]{ //unsolved
                 {4, 0, 0, 0, 9, 1, 0, 0, 0},
                 {0, 0, 9, 0, 0, 7, 4, 2, 5},

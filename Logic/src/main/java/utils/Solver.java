@@ -103,7 +103,7 @@ public class Solver {
                 solution[x][y] = new Field(x, y, grid[x][y].value());
             }
         }
-        if(calculateSolution(solution, solution.length)) {
+        if(calculateSolution(solution)) {
             System.out.println("solution:");
             Grid.displaySmall(solution);
             return Grid.compareTo(solution, grid);
@@ -111,33 +111,34 @@ public class Solver {
         return null;
     }
 
-    private boolean isUnique(Field insert) { //TODO: create tests for this method probably not working
-        for (int i = 0; i < grid.length; i++) {
-            if(grid[insert.point().x()][i].value() == insert.value()) return false;
+    public boolean isUnique(Field insert) { //TODO: create tests for this method probably not working
+        assert (grid[insert.point().x()][insert.point().y()].value() == 0);
+        for (int y = 0; y < 9; y++) {
+            if(grid[insert.point().x()][y].value() == insert.value()) return false;
         }
-        for (int i = 0; i < grid.length; i++) {
-            if(grid[i][insert.point().y()].value() == insert.value()) return false;
+        for (int x = 0; x < 9; x++) {
+            if(grid[x][insert.point().y()].value() == insert.value()) return false;
         }
-        int sqrt = (int)Math.sqrt(grid.length);
-        int squareXStart = insert.point().x() - insert.point().x() % sqrt;
-        int squareYStart = insert.point().y() - insert.point().y() % sqrt;
 
-        for (int x = squareXStart; x < squareXStart + sqrt; x++) {
-            for (int y = squareYStart; y < squareYStart + sqrt; y++){
+        int squareXStart = insert.point().x() - insert.point().x() % 3;
+        int squareYStart = insert.point().y() - insert.point().y() % 3;
+
+        for (int x = squareXStart; x < squareXStart + 3; x++) {
+            for (int y = squareYStart; y < squareYStart + 3; y++){
                 if (grid[x][y].value() == insert.value()) return false;
             }
         }
         return true;
     }
 
-    private boolean calculateSolution(Field[][] grid, int n) { //n = grid.length
+    private boolean calculateSolution(Field[][] grid) { //n = grid.length
         int xPos = -1;
         int yPos = -1;
         boolean completed = true;
         int x = 0;
-        while (x < n && completed) {
+        while (x < 9 && completed) {
             int y = 0;
-            while (y < n && completed) {
+            while (y < 9 && completed) {
                 if (grid[x][y].value() == 0) {
                     completed = false;
                     xPos = x;
@@ -149,22 +150,22 @@ public class Solver {
         }
         if(completed) return true;
         //backtrack
-        for (int value = 1; value <= n; value++) {
+        for (int value = 1; value <= 9; value++) {
             if (isUnique(new Field(xPos, yPos, value))) {
                 grid[xPos][yPos] = new Field(xPos, yPos, value);
-                if (calculateSolution(grid, n)) return true;
+                if (calculateSolution(grid)) return true;
                 else grid[xPos][yPos] = new Field(xPos, yPos, 0); // replace
             }
         }
         return false;
     }
 
-    private boolean isCompleted(Field[][] grid, int n) {
+    private boolean isCompleted(Field[][] grid) {
         boolean completed = true;
         int x = 0;
-        while (x < n && completed) {
+        while (x < 9 && completed) {
             int y = 0;
-            while (y < n && completed) {
+            while (y < 9 && completed) {
                 if (grid[x][y].value() == 0) {
                     completed = false;
                 }
