@@ -49,9 +49,20 @@ public abstract class GridUtils {
     }
 
     public int[][] addAll(int[][] grid, List<Field> inserts) {
+        if(inserts == null) return grid;
         inserts.forEach(i -> {
             if(grid[i.x()][i.y()] == 0) grid[i.x()][i.y()] = i.value();
         });
         return grid;
+    }
+
+    public int[][] mapComperableGrid(Field[][] grid) {
+        int[][] result = new int[9][9];
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                result[x][y] = grid[x][y].value();
+            }
+        }
+        return result;
     }
 }

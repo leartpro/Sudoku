@@ -5,27 +5,37 @@ import utils.Generator;
 import utils.GridUtils;
 import utils.Solver;
 
+import java.util.List;
+
 public class Controller extends GridUtils {
     private int[][] grid;
     private Generator generator;
     private Solver solver;
-    public Controller(int difficulty) {
-        this.grid = generatePuzzle(difficulty);
+
+    public Controller() {
+        this.grid = generatePuzzle(0);
+        solver = new Solver(toComparableGrid(grid));
     }
 
-    private int[][] generatePuzzle(int difficulty) {
-        return null;
+    public Controller(int difficulty) {
+        this.grid = generatePuzzle(difficulty);
+        solver = new Solver(toComparableGrid(grid));
+    }
+
+    public int[][] generatePuzzle(int difficulty) {
+        generator = new Generator(difficulty);
+        return mapComperableGrid(generator.generate());
     }
 
     public boolean isSolved() {
-        return new Solver(toComparableGrid(grid)).isSolved();
+        return solver.isSolved();
     }
 
     public int[][] getGrid() {
-        return null;
+        return grid;
     }
 
     public int[][] solveGrid() {
-        return null;
+        return addAll(grid, solver.solve());
     }
 }
