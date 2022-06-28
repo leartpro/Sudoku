@@ -4,14 +4,9 @@ import domain.Field;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class SolverTest {
-    private Field[][] grid;
+class SolverTest extends GridUtils {
     private Solver solver;
 
     /*
@@ -31,65 +26,82 @@ class SolverTest {
 
     @Test
     void isUniqueTrueTest() {
-        solver = new Solver(
-                toComparableGrid(
-                        new int[][]{ //solved grid
-                                {8, 2, 7, 1, 5, 4, 3, 9, 6},
-                                {9, 0/*place in*/, 5, 3, 2, 7, 1, 4, 8},
-                                {3, 4, 1, 6, 8, 9, 7, 5, 2},
-                                {5, 9, 3, 4, 6, 8, 2, 7, 1},
-                                {4, 7, 2, 5, 1, 3, 6, 8, 9},
-                                {6, 1, 8, 9, 7, 2, 4, 3, 5},
-                                {7, 8, 6, 2, 3, 5, 9, 1, 4},
-                                {1, 5, 4, 7, 9, 6, 8, 2, 3},
-                                {2, 3, 9, 8, 4, 1, 5, 6, 7}
-                        }
-                )
+        Field[][] grid = toComparableGrid(
+                new int[][]{ //solved grid
+                        {8, 2, 7, 1, 5, 4, 3, 9, 6},
+                        {9, 0/*place in*/, 5, 3, 2, 7, 1, 4, 8},
+                        {3, 4, 1, 6, 8, 9, 7, 5, 2},
+                        {5, 9, 3, 4, 6, 8, 2, 7, 1},
+                        {4, 7, 2, 5, 1, 3, 6, 8, 9},
+                        {6, 1, 8, 9, 7, 2, 4, 3, 5},
+                        {7, 8, 6, 2, 3, 5, 9, 1, 4},
+                        {1, 5, 4, 7, 9, 6, 8, 2, 3},
+                        {2, 3, 9, 8, 4, 1, 5, 6, 7}
+                }
         );
+        solver = new Solver(grid);
         Field insert = new Field(1, 1, 6);
-        assertTrue(solver.isUnique(insert));
+        assertTrue(solver.isUnique(grid, insert));
     }
 
     @Test
     void isUniqueFalseTest() {
-        solver = new Solver(
-                toComparableGrid(
-                        new int[][]{ //solved grid
-                                {8, 2, 7, 1, 5, 4, 3, 9, 6},
-                                {9, 0/*place in*/, 5, 3, 2, 7, 1, 4, 8},
-                                {3, 4, 1, 6, 8, 9, 7, 5, 2},
-                                {5, 9, 3, 4, 6, 8, 2, 7, 1},
-                                {4, 7, 2, 5, 1, 3, 6, 8, 9},
-                                {6, 1, 8, 9, 7, 2, 4, 3, 5},
-                                {7, 8, 6, 2, 3, 5, 9, 1, 4},
-                                {1, 5, 4, 7, 9, 6, 8, 2, 3},
-                                {2, 3, 9, 8, 4, 1, 5, 6, 7}
-                        }
-                )
+        Field[][] grid = toComparableGrid(
+                new int[][]{ //solved grid
+                        {8, 2, 7, 1, 5, 4, 3, 9, 6},
+                        {9, 0/*place in*/, 5, 3, 2, 7, 1, 4, 8},
+                        {3, 4, 1, 6, 8, 9, 7, 5, 2},
+                        {5, 9, 3, 4, 6, 8, 2, 7, 1},
+                        {4, 7, 2, 5, 1, 3, 6, 8, 9},
+                        {6, 1, 8, 9, 7, 2, 4, 3, 5},
+                        {7, 8, 6, 2, 3, 5, 9, 1, 4},
+                        {1, 5, 4, 7, 9, 6, 8, 2, 3},
+                        {2, 3, 9, 8, 4, 1, 5, 6, 7}
+                }
         );
+        solver = new Solver(grid);
         Field insert = new Field(1, 1, 5);
-        assertFalse(solver.isUnique(insert));
+        assertFalse(solver.isUnique(grid, insert));
     }
 
     @Test
-    void isUniqueInSquareTest() {
-        solver = new Solver(
-                toComparableGrid(
-                        new int[][]{ //solved grid
-                                {8, 2, 7, 1, 5, 4, 3, 9, 6},
-                                {9, 0/*place in*/, 5, 3, 2, 7, 1, 4, 8},
-                                {3, 4, 6/*1*/, 6, 8, 9, 7, 5, 2},
-                                {5, 9, 3, 4, 6, 8, 2, 7, 1},
-                                {4, 7, 2, 5, 1, 3, 6, 8, 9},
-                                {6, 1, 8, 9, 7, 2, 4, 3, 5},
-                                {7, 8, 6, 2, 3, 5, 9, 1, 4},
-                                {1, 5, 4, 7, 9, 6, 8, 2, 3},
-                                {2, 3, 9, 8, 4, 1, 5, 6, 7}
-                        }
-                )
+    void isUniqueInSquareFalseTest() {
+        Field[][] grid = toComparableGrid(
+                new int[][]{ //solved grid
+                        {8, 2, 7, 1, 5, 4, 3, 9, 6},
+                        {9, 0/*place in*/, 5, 3, 2, 7, 1, 4, 8},
+                        {3, 4, 6/*1*/, 6, 8, 9, 7, 5, 2},
+                        {5, 9, 3, 4, 6, 8, 2, 7, 1},
+                        {4, 7, 2, 5, 1, 3, 6, 8, 9},
+                        {6, 1, 8, 9, 7, 2, 4, 3, 5},
+                        {7, 8, 6, 2, 3, 5, 9, 1, 4},
+                        {1, 5, 4, 7, 9, 6, 8, 2, 3},
+                        {2, 3, 9, 8, 4, 1, 5, 6, 7}
+                }
         );
+        solver = new Solver(grid);
         Field insert = new Field(1, 1, 6);
-        assertFalse(solver.isUnique(insert));
+        assertFalse(solver.isUnique(grid, insert));
+    }
+
+    @Test
+    void isUniqueInSquareTrueTest() {
+        Field[][] grid = toComparableGrid(
+                new int[][]{ //unsolved
+                        {4, 0, 0, 0, 9, 1, 0, 0, 0},
+                        {0, 0, 9, 0, 0, 7, 4, 2, 5},
+                        {0, 5, 8, 3, 4, 0, 1, 9, 0},
+                        {6, 9, 1, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 3, 9, 6, 4, 7, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 9, 6, 3},
+                        {0, 8, 7, 0, 2, 6, 5, 3, 0},
+                        {3, 1, 5, 8, 0, 0, 6, 0, 0},
+                        {0, 0, 0, 1, 5, 0, 0, 0, 9}
+                }
+        );
+        solver = new Solver(grid);
+        Field insert = new Field(0, 1, 1);
+        assertFalse(solver.isUnique(grid, insert));
     }
 
     @Test
@@ -114,20 +126,20 @@ class SolverTest {
 
     @Test
     void isSolvedFalseTest() {
-        solver = new Solver(
-                toComparableGrid(
-                        new int[][]{ //unsolved grid
-                                {8, 2, 7, 1, 5, 0, 3, 9, 6},
-                                {9, 0, 5, 3, 2, 7, 1, 4, 8},
-                                {3, 4, 1, 6, 8, 9, 7, 5, 2},
-                                {5, 9, 3, 4, 6, 8, 2, 0, 1},
-                                {4, 7, 2, 5, 1, 3, 6, 8, 9},
-                                {6, 1, 8, 9, 0, 2, 4, 3, 5},
-                                {7, 8, 6, 2, 3, 5, 9, 1, 4},
-                                {1, 0, 4, 7, 9, 6, 8, 2, 3},
-                                {2, 3, 9, 8, 4, 1, 5, 6, 7}
-                        }
-                ));
+        Field[][] grid = toComparableGrid(
+                new int[][]{ //unsolved grid
+                        {8, 2, 7, 1, 5, 0, 3, 9, 6},
+                        {9, 0, 5, 3, 2, 7, 1, 4, 8},
+                        {3, 4, 1, 6, 8, 9, 7, 5, 2},
+                        {5, 9, 3, 4, 6, 8, 2, 0, 1},
+                        {4, 7, 2, 5, 1, 3, 6, 8, 9},
+                        {6, 1, 8, 9, 0, 2, 4, 3, 5},
+                        {7, 8, 6, 2, 3, 5, 9, 1, 4},
+                        {1, 0, 4, 7, 9, 6, 8, 2, 3},
+                        {2, 3, 9, 8, 4, 1, 5, 6, 7}
+                }
+        );
+        solver = new Solver(grid);
         assertFalse(solver.isSolved());
     }
 
@@ -157,55 +169,41 @@ class SolverTest {
         };
         solver = new Solver(toComparableGrid(input));
         int[][] actual = addAll(input, solver.solve());
-
-        if(solver.isSolved()) System.out.println("correctly solved");
+        if (new Solver(toComparableGrid(actual)).isSolved()) System.out.println("correctly solved");
         else System.out.println("unsolved or incorrect");
 
         boolean success = true;
-        for(int x = 0; x < 9; x++) {
-            for(int y = 0; y < 9; y++) {
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
                 try {
                     assertEquals(expected[x][y], actual[x][y]);
                 } catch (AssertionFailedError e) {
-                    System.err.println("Unexpected value="+actual[x][y]+" on x="+x+", y="+y+". Should be value="+expected[x][y]);
+                    System.err.println("Unexpected value=" + actual[x][y] + " on x=" + x + ", y=" + y + ". Should be value=" + expected[x][y]);
                     success = false;
                 }
             }
         }
-        if(!success) System.err.flush();
+        if (!success) System.err.flush();
         System.out.println();
 
-        if(!success) {
+        if (!success) {
             StringBuilder output = new StringBuilder();
-            output.append("Expected:              Actual:"+"\r\n");
-            for(int x = 0; x < 9; x++) {
-                for(int y = 0; y < 9; y++) {
+            output.append("Expected:              Actual:" + "\r\n");
+            for (int x = 0; x < 9; x++) {
+                for (int y = 0; y < 9; y++) {
                     output.append(expected[x][y]).append(" ");
                 }
                 output.append("     ");
-                for(int y = 0; y < 9; y++) {
+                for (int y = 0; y < 9; y++) {
                     output.append(actual[x][y]).append(" ");
                 }
                 output.append("\r\n");
             }
             System.out.println(output);
+        } else {
+            displaySmall(toComparableGrid(actual));
+            display(toComparableGrid(actual));
         }
     }
 
-    private Field[][] toComparableGrid(int[][] grid) {
-        Field[][] result = new Field[9][9];
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
-                result[x][y] = new Field(x, y, grid[x][y]);
-            }
-        }
-        return result;
-    }
-
-    private int[][] addAll(int[][] grid, List<Field> inserts) {
-        inserts.forEach(i -> {
-            if(grid[i.point().x()][i.point().y()] == 0) grid[i.point().x()][i.point().y()] = i.value();
-        });
-        return grid;
-    }
 }

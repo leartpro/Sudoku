@@ -1,130 +1,78 @@
 package utils;
 
 import domain.Field;
-import domain.Grid;
-import domain.Point;
-import domain.Row;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Solver {
-    private Field[][] grid;
+public class Solver extends GridUtils{
+    private final Field[][] grid;
+
     public Solver(Field[][] grid) {
-        this.grid=grid;
+        this.grid = grid;
     }
+
     public boolean isSolved() {
         for (int x = 0; x < 9; x++) {
-            Point[] horizontal = new Row(x, x, 0, 8).asPoints();
-            if (!isRowSolved(horizontal)) return false;
-        }
-        for (int y = 0; y < 9; y++) {
-            Point[] vertical = new Row(0, 8, y, y).asPoints();
-            if (!isRowSolved(vertical)) return false;
-        }
-        for (Field[][] square : getSquares()) {
-            if (!isSquareSolved(square)) return false;
+            for (int y = 0; y < 9; y++) {
+                Field current = grid[x][y];
+
+                //check row for current
+                for (int i = 0; i < 9; i++) {
+                    if(i == current.y()) {
+                        continue;
+                    }
+                    if (grid[x][i].value() == current.value()) return false;
+                }
+
+                //check column for current
+                for (int i = 0; i < 9; i++) {
+                    if(i == current.x()) {
+                        continue;
+                    }
+                    if (grid[i][y].value() == current.value()) return false;
+                }
+
+                //check square for current
+                int squareXStart = x - x % 3;
+                int squareYStart = y - y % 3;
+                for (int i = squareXStart; i < squareXStart + 3; i++) {
+                    for (int j = squareYStart; j < squareYStart + 3; j++) {
+                        if (i == current.x() && y == current.y()) continue;
+                        if (grid[i][j].value() == current.value()) return false;
+                    }
+                }
+
+            }
         }
         return true;
     }
 
-    private boolean isSquareSolved(Field[][] square) {
-        //map to 1d array
-        Field[] flat = new Field[square.length * square[0].length];
-        for (int i = 0; i < square.length; i++) {
-            for (int j = 0; j < square[i].length; j++) {
-                flat[i + (j * square.length)] = square[i][j];
-            }
-        }
-        return isRowCompleted(flat);
-    }
-
-
-    private List<Field[][]> getSquares() {
-        List<Field[][]> squares = new ArrayList<>();
-        for (int x = 1; x < 9; x += 3) {
-            for (int y = 1; y < 9; y += 3) {
-                squares.add(new Field[][]{
-                        new Field[]{
-                                new Field(x - 1, y + 1, grid[x-1][y+1].value()),
-                                new Field(x, y + 1, grid[x][y+1].value()),
-                                new Field(x + 1, y + 1, grid[x+1][y+1].value())
-                        },
-                        new Field[]{
-                                new Field(x - 1, y, grid[x-1][y].value()),
-                                new Field(x, y, grid[x][y].value()),
-                                new Field(x + 1, y, grid[x+1][y].value())
-                        },
-                        new Field[]{
-                                new Field(x - 1, y - 1, grid[x-1][y-1].value()),
-                                new Field(x, y - 1, grid[x][y-1].value()),
-                                new Field(x + 1, y - 1, grid[x+1][y-1].value())
-                        },
-                });
-            }
-        }
-        return squares;
-    }
-
-    private boolean isRowSolved(Point[] vertical) {
-        Field[] VRow = new Field[9];
-        int i = 0;
-        for (Point p : vertical) {
-            VRow[i] = grid[p.x()][p.y()];
-            i++;
-        }
-        return isRowCompleted(VRow);
-    }
-
-    private boolean isRowCompleted(Field[] row) {
-        for (Field f : row) {
-            if (f.value() <= 0 || f.value() > 9) return false;
-        }
-        return getDuplications(row) == null;
-    }
-
-    private List<Field> getDuplications(Field[] row) {
-        List<Field> duplications = new ArrayList<>();
-        for (int i = 0; i < row.length; i++) {
-            for (int j = i + 1; j < row.length; j++) {
-                if (row[i].equals(row[j])) {
-                    duplications.add(row[i]);
-                }
-            }
-        }
-        if (duplications.size() == 0) return null;
-        return duplications;
-    }
-
     public List<Field> solve() {
         Field[][] solution = new Field[9][9];
-        for(int x = 0; x < 9; x++) {
-            for(int y = 0; y < 9; y++) {
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
                 solution[x][y] = new Field(x, y, grid[x][y].value());
             }
         }
-        if(calculateSolution(solution)) {
-            System.out.println("solution:");
-            Grid.displaySmall(solution);
-            return Grid.compareTo(solution, grid);
+        if (calculateSolution(solution)) {
+            return compareTo(solution, this.grid);
         }
         return null;
     }
 
-    public boolean isUnique(Field insert) { //TODO: create tests for this method probably not working
-        assert (grid[insert.point().x()][insert.point().y()].value() == 0);
+    public boolean isUnique(Field[][] grid, Field insert) {
         for (int y = 0; y < 9; y++) {
-            if(grid[insert.point().x()][y].value() == insert.value()) return false;
+            if (grid[insert.x()][y].value() == insert.value()) return false;
         }
         for (int x = 0; x < 9; x++) {
-            if(grid[x][insert.point().y()].value() == insert.value()) return false;
+            if (grid[x][insert.y()].value() == insert.value()) return false;
         }
 
-        int squareXStart = insert.point().x() - insert.point().x() % 3;
-        int squareYStart = insert.point().y() - insert.point().y() % 3;
+        int squareXStart = insert.x() - insert.x() % 3;
+        int squareYStart = insert.y() - insert.y() % 3;
 
         for (int x = squareXStart; x < squareXStart + 3; x++) {
-            for (int y = squareYStart; y < squareYStart + 3; y++){
+            for (int y = squareYStart; y < squareYStart + 3; y++) {
                 if (grid[x][y].value() == insert.value()) return false;
             }
         }
@@ -148,31 +96,16 @@ public class Solver {
             }
             x++;
         }
-        if(completed) return true;
+        if (completed) return true;
         //backtrack
         for (int value = 1; value <= 9; value++) {
-            if (isUnique(new Field(xPos, yPos, value))) {
+            assert (grid[xPos][yPos].value() == 0); //may cause error
+            if (isUnique(grid, new Field(xPos, yPos, value))) {
                 grid[xPos][yPos] = new Field(xPos, yPos, value);
                 if (calculateSolution(grid)) return true;
                 else grid[xPos][yPos] = new Field(xPos, yPos, 0); // replace
             }
         }
         return false;
-    }
-
-    private boolean isCompleted(Field[][] grid) {
-        boolean completed = true;
-        int x = 0;
-        while (x < 9 && completed) {
-            int y = 0;
-            while (y < 9 && completed) {
-                if (grid[x][y].value() == 0) {
-                    completed = false;
-                }
-                y++;
-            }
-            x++;
-        }
-        return completed;
     }
 }

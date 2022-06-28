@@ -1,16 +1,14 @@
 package domain;
 
-public record Field(Point point, int value) {
+public record Field(int x, int y, int value) {
     public Field {
         assert (value >= 0 && value < 10);
-    }
-
-    public Field(int x, int y, int value) {
-        this(new Point(x,y), value);
+        assert (x >= 0 && x < 9);
+        assert (y >= 0 && y < 9);
     }
 
     @Override
     public String toString() {
-        return "Field[point="+point+",value="+value+"]";
+        return "Field[x="+x+",y="+y+",value="+value+"]";
     }
 }
