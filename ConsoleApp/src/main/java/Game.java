@@ -14,7 +14,7 @@ public class Game implements InputHandler{
 
     @Override
     public void handel(String input) {
-        
+        //todo: game input type iin grid with rollback (grid)
     }
 
     public void start() {

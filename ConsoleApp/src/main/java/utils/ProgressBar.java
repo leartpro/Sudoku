@@ -1,11 +1,12 @@
 package utils;
 
 public class ProgressBar {
-    private Bar bar;
-    private boolean hasSteps = false;
+    private final Bar bar;
+    private final boolean hasSteps;
 
     public ProgressBar(String name) {
         this.bar = new Bar(name);
+        hasSteps = false;
     }
 
     public ProgressBar(String name, Integer totalSteps) {
@@ -14,33 +15,29 @@ public class ProgressBar {
     }
 
     public void addProgress() {
-        if(hasSteps) bar.addStep();
+        if (hasSteps) bar.addStep();
         else bar.addProgress();
         System.out.print(bar);
-
     }
 
     public void addProgress(int steps) {
-        if(hasSteps) bar.addSteps(steps);
+        if (hasSteps) bar.addSteps(steps);
         else bar.addProgress(steps);
         System.out.print(bar);
     }
 
-    public void clearProgress() {
-        bar.clear();
-        System.out.print(bar);
-    }
-
-    private class Bar {
+    private static class Bar {
 
         private final String name;
         private final Integer totalSteps;
         private int progress;
-        private Integer progressSteps;
+        private int progressSteps = 0;
+        private boolean isCompleted = false;
 
         public Bar(String name) {
             this.name = name;
             this.totalSteps = null;
+
         }
 
         public Bar(String name, Integer totalSteps) {
@@ -48,17 +45,15 @@ public class ProgressBar {
             this.totalSteps = totalSteps;
         }
 
-        public void clear() {
-            progress = 0;
-        }
-
         @Override
         public String toString() {
-            return
-                    (name != null ? (name + " ") : "") +
-                            getPercentage() + " [" +
-                            getProgress() + " ] " +
-                            (totalSteps != null ? (getUnits() + " ") : "") + "\r";
+            if(isCompleted) return "\r";
+            if(progress == 100) isCompleted = true;
+            return (name != null ? (name + " ") : "") +
+                    getPercentage() + " [" +
+                    getProgress() + " ] " +
+                    (totalSteps != null ? (getUnits() + " ") : "") + "\r" +
+                    (progress == 100 ? "\n" : "");
         }
 
         private String getUnits() {
@@ -75,24 +70,24 @@ public class ProgressBar {
 
         public void addSteps(int value) {
             assert totalSteps != null;
-            if(progressSteps + value >= totalSteps.hashCode()) progressSteps = totalSteps;
-            else progressSteps+=value;
-            progress = progressSteps / totalSteps * 100;
+            if (progressSteps + value >= totalSteps.hashCode()) progressSteps = totalSteps;
+            else progressSteps += value;
+            progress = (int) (float) (progressSteps * 100 / totalSteps);
         }
 
         public void addStep() {
             assert totalSteps != null;
-            if(progressSteps + 1 >= totalSteps.hashCode()) progressSteps = totalSteps;
-            else progressSteps+=1;
-            progress = progressSteps / totalSteps * 100;
+            if (progressSteps + 1 >= totalSteps.hashCode()) progressSteps = totalSteps;
+            else progressSteps += 1;
+            progress = (int) (float) (progressSteps * 100 / totalSteps);
         }
 
         public void addProgress() {
-            if(progress+1 <= 100) progress+=1;
+            if (progress + 1 <= 100) progress += 1;
         }
 
         public void addProgress(int value) {
-            if(progress+value <= 100) progress+=value;
+            if (progress + value <= 100) progress += value;
         }
     }
 }
