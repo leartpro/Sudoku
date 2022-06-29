@@ -99,7 +99,7 @@ public class Solver extends GridUtils{
         if (completed) return true;
         //backtrack
         for (int value = 1; value <= 9; value++) {
-            assert (grid[xPos][yPos].value() == 0); //may cause error
+            assert (grid[xPos][yPos].value() == 0);
             if (isUnique(grid, new Field(xPos, yPos, value))) {
                 grid[xPos][yPos] = new Field(xPos, yPos, value);
                 if (calculateSolution(grid)) return true;
