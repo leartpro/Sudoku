@@ -3,7 +3,7 @@ package utils;
 import java.security.Timestamp;
 
 public abstract class TerminalUtils {
-    private static String toColorString(String s, String color) {
+    public static String toColorString(String s, String color) {
         return color + s + TerminalColors.reset;
     }
 

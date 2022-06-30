@@ -1,22 +1,20 @@
 package controller;
 
-import domain.Field;
 import utils.Generator;
 import utils.GridUtils;
 import utils.Solver;
 
-import java.util.List;
-
 public final class Controller extends GridUtils {
-    private int[][] grid;
+    private final int[][] grid;
     private final Generator generator;
     private final Solver solver;
-    private int difficulty = 0;
+    private int difficulty;
 
     public Controller() {
-        generator = new Generator(0);
+        generator = new Generator();
         this.grid = generatePuzzle(0);
         solver = new Solver(toComparableGrid(grid));
+        difficulty = 0;
     }
 
     public int[][] generatePuzzle(int difficulty) {
@@ -32,7 +30,7 @@ public final class Controller extends GridUtils {
         return grid;
     }
 
-    public int[][] solveGrid() {
+    public int[][] solvedGrid() {
         return addAll(grid, solver.solve());
     }
 
@@ -40,12 +38,7 @@ public final class Controller extends GridUtils {
         this.difficulty = difficulty;
     }
 
-    public void pause() {
-    }
-
-    public void start() {
-    }
-
-    public void resume() {
+    public int getDifficulty() {
+        return difficulty;
     }
 }

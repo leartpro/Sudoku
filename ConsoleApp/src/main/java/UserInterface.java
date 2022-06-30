@@ -11,19 +11,31 @@ public class UserInterface {
         this.reader = new BufferedReader(new InputStreamReader(input));
         this.handler = handler;
         this.status = true;
-        displayIntro();
     }
 
-    private void displayIntro() {
+    public void displayIntro() {
         TerminalUtils.printStatus("Welcome to Sudoku!" + "\n");
-    }
-
-    public int getDifficulty() { //todo: ask user for difficulty
-        return 0;
     }
 
     public void displayUsages() { //todo: print all program usages/commands
 
+    }
+
+    public void displayGame(int[][] grid) {
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                System.out.print(grid[x][y] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public void displayMenu() {
+        System.out.println("You are in the menu");
+    }
+
+    public int getDifficulty(int current) { //todo: ask user for difficulty an show current
+        return 0;
     }
 
     public boolean getStatus() {
@@ -33,7 +45,6 @@ public class UserInterface {
     public void setStatus(boolean status) {
         this.status = status;
     }
-
 
     public void listen() {
         Thread listen = new Thread(() -> {
@@ -58,17 +69,5 @@ public class UserInterface {
             }
         });
         listen.start();
-    }
-
-    public void displayGame(int[][] grid) {
-    }
-
-    public void displayMenu() {
-    }
-
-    public void pause() {
-    }
-
-    public void resume() {
     }
 }

@@ -1,4 +1,5 @@
 public class App{
+
     public static void main(String[] args) { //todo: args
         /*ProgressBar progressBar = new ProgressBar("ExampleProgress");
         for(int i = 0; i < 100; i++) {
@@ -21,7 +22,6 @@ public class App{
             }
             i++;
         }*/
-        Game game = new Game(System.in);
-        game.init();
+        new Game(System.in).init();
     }
 }

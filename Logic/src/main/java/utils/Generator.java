@@ -3,10 +3,13 @@ package utils;
 import domain.Field;
 
 public class Generator extends GridUtils{
-    public Generator(int difficulty) {
+    private int difficulty;
+    public Generator() {
+        this.difficulty = 0;
     }
 
     public Field[][] generate() {
+        assert difficulty > 0;
         int[][] input = new int[][]{ //unsolved
                 {4, 0, 0, 0, 9, 1, 0, 0, 0},
                 {0, 0, 9, 0, 0, 7, 4, 2, 5},
@@ -22,5 +25,6 @@ public class Generator extends GridUtils{
     }
 
     public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
     }
 }
