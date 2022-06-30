@@ -26,6 +26,10 @@ public class ProgressBar {
         System.out.print(bar);
     }
 
+    public boolean isCompleted() {
+        return bar.isCompleted;
+    }
+
     private static class Bar {
 
         private final String name;

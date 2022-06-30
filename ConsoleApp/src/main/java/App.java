@@ -1,8 +1,6 @@
-import utils.ProgressBar;
-
 public class App{
     public static void main(String[] args) { //todo: args
-        ProgressBar progressBar = new ProgressBar("ExampleProgress");
+        /*ProgressBar progressBar = new ProgressBar("ExampleProgress");
         for(int i = 0; i < 100; i++) {
             progressBar.addProgress();
             try {
@@ -12,7 +10,8 @@ public class App{
             }
         }
         ProgressBar progressBar2 = new ProgressBar("ExampleProgress", 5000);
-        for(int i = 0; i < 5000; i++) {
+        int i = 0;
+        while(!progressBar2.isCompleted()) {
             progressBar2.addProgress();
             if(i > 30) progressBar2.addProgress(12);
             try {
@@ -20,8 +19,9 @@ public class App{
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        }
+            i++;
+        }*/
         Game game = new Game(System.in);
-        game.start();
+        game.init();
     }
 }

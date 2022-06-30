@@ -20,4 +20,7 @@ public class Generator extends GridUtils{
         };
         return toComparableGrid(input);
     }
+
+    public void setDifficulty(int difficulty) {
+    }
 }
