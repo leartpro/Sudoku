@@ -60,25 +60,6 @@ public class Solver extends GridUtils{
         return null;
     }
 
-    public boolean isUnique(Field[][] grid, Field insert) {
-        for (int y = 0; y < 9; y++) {
-            if (grid[insert.x()][y].value() == insert.value()) return false;
-        }
-        for (int x = 0; x < 9; x++) {
-            if (grid[x][insert.y()].value() == insert.value()) return false;
-        }
-
-        int squareXStart = insert.x() - insert.x() % 3;
-        int squareYStart = insert.y() - insert.y() % 3;
-
-        for (int x = squareXStart; x < squareXStart + 3; x++) {
-            for (int y = squareYStart; y < squareYStart + 3; y++) {
-                if (grid[x][y].value() == insert.value()) return false;
-            }
-        }
-        return true;
-    }
-
     private boolean calculateSolution(Field[][] grid) { //n = grid.length
         int xPos = -1;
         int yPos = -1;

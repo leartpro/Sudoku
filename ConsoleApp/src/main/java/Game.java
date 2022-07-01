@@ -105,7 +105,6 @@ public class Game implements InputHandler {
                 TerminalUtils.printWarning("the command '" + input + "' was not found");
             }
         }
-
     }
 
     public void init() {

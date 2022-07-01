@@ -65,4 +65,33 @@ public abstract class GridUtils {
         }
         return result;
     }
+
+    public boolean isUnique(Field[][] grid, Field insert) {
+        for (int y = 0; y < 9; y++) {
+            if (grid[insert.x()][y].value() == insert.value()) return false;
+        }
+        for (int x = 0; x < 9; x++) {
+            if (grid[x][insert.y()].value() == insert.value()) return false;
+        }
+
+        int squareXStart = insert.x() - insert.x() % 3;
+        int squareYStart = insert.y() - insert.y() % 3;
+
+        for (int x = squareXStart; x < squareXStart + 3; x++) {
+            for (int y = squareYStart; y < squareYStart + 3; y++) {
+                if (grid[x][y].value() == insert.value()) return false;
+            }
+        }
+        return true;
+    }
+
+    public List<Field> flatGrid(Field[][] grid) {
+        List<Field> result = new ArrayList<>();
+        for(int x = 0; x < 9; x++) {
+            for(int y = 0; y < 9; y++) {
+                result.add(grid[x][y]);
+            }
+        }
+        return result;
+    }
 }
