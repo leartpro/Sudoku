@@ -98,4 +98,8 @@ public final class Solver extends GridUtils{
         }
         return solution;
     }
+
+    public int countOfAllSolutions() {
+        return 1;
+    }
 }
