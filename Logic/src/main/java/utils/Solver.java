@@ -4,7 +4,7 @@ import domain.Field;
 
 import java.util.List;
 
-public class Solver extends GridUtils{
+public final class Solver extends GridUtils{
     private final Field[][] grid;
 
     public Solver(Field[][] grid) {
@@ -48,12 +48,7 @@ public class Solver extends GridUtils{
     }
 
     public List<Field> solve() {
-        Field[][] solution = new Field[9][9];
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
-                solution[x][y] = new Field(x, y, grid[x][y].value());
-            }
-        }
+        Field[][] solution = newInstanceOf(grid);
         if (calculateSolution(solution)) {
             return compareTo(solution, this.grid);
         }
@@ -88,5 +83,19 @@ public class Solver extends GridUtils{
             }
         }
         return false;
+    }
+
+    public boolean isSolvable() {
+        return calculateSolution(newInstanceOf(grid));
+    }
+
+    private static Field[][] newInstanceOf(Field[][] grid) {
+        Field[][] solution = new Field[9][9];
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                solution[x][y] = new Field(x, y, grid[x][y].value());
+            }
+        }
+        return solution;
     }
 }
