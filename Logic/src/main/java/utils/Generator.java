@@ -22,14 +22,19 @@ public class Generator extends GridUtils {
             }
         }
         System.out.println("Generating...");
+        System.out.println("Filled Grid:");
         if (completeRandom(grid)) {
-            display(grid);
-            System.out.println();
-            createPuzzle(grid);
-            display(grid);
-            System.out.println();
+            displaySmall(grid);
+            System.out.println("\n");
+            System.out.println("Generated Puzzle:");
+            if(createPuzzle(grid, flatGrid(newInstanceOf(grid)))) { //todo: infinity loop!
+                System.out.println("success!!!!!!!");
+            } else {
+                System.err.println("unable to create a valid puzzle");
+            }
+            displaySmall(grid);
         } else {
-            System.err.println("unable to create a valid puzzle");
+            System.err.println("unable to create a valid pattern");
         }
         return grid;
     }
@@ -42,38 +47,22 @@ public class Generator extends GridUtils {
     -first try with easy techniques than improve step by step
         to validate the difficulty of the given grid
     */
-    //displaySmall(grid);
-
-    /*
-    notes:
-    1. get random field in grid
-    2. try to set the value on this point to 0
-    3. if the grid has exactly one solution
-        call recursion (means repeat from step 1)
-        return result
-       else undo step 2 and
-       return false
-     */
-    private boolean createPuzzle(Field[][] grid) { //todo: reverse 'completeRandom'-algorithm
-        List<Field> removable = flatGrid(grid);
-        Field current = removable.get(new Random().nextInt(removable.size()));
-        int xPos = current.x(), yPos = current.y();
-        grid[xPos][yPos] = new Field(xPos, yPos, 0);
-        if(new Solver(grid).countOfAllSolutions() == 1) { //todo: if solver does not find more than one solution
-            //repeat
-            //call recursion
-            return createPuzzle(grid); //todo: this line is wrong!!!!!!!!!!!!!!!!!!!!!
-            //return is always false, have to handle result... or similar...
-            /*
-            if result of recursion-call si false means:
-            that this is the latest validate candidate to remove
-             */
-            //todo: should have list of removals as param?
-        } else {
-            //return to pre method-call
-            grid[xPos][yPos] = current;
-            return false;
+    private boolean createPuzzle(Field[][] grid, List<Field> removable) {
+        Collections.shuffle(removable);
+        for (Field current : removable) {
+            removable.remove(current);
+            grid[current.x()][current.y()] = new Field(current.x(), current.y(), 0);
+            if (new Solver(grid).allSolutions().size() == 1) {
+                if (createPuzzle(grid, removable)) {
+                    return true;
+                }
+            } else {
+                grid[current.x()][current.y()] = current;
+                removable.add(current);
+                return false;
+            }
         }
+        return true;
     }
 
     private boolean completeRandom(Field[][] grid) {

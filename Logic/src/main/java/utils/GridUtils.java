@@ -94,4 +94,14 @@ public abstract class GridUtils {
         }
         return result;
     }
+
+    public Field[][] newInstanceOf(Field[][] grid) {
+        Field[][] solution = new Field[9][9];
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                solution[x][y] = new Field(x, y, grid[x][y].value());
+            }
+        }
+        return solution;
+    }
 }

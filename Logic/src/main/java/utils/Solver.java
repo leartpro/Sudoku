@@ -2,6 +2,8 @@ package utils;
 
 import domain.Field;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class Solver extends GridUtils{
@@ -89,17 +91,53 @@ public final class Solver extends GridUtils{
         return calculateSolution(newInstanceOf(grid));
     }
 
-    private static Field[][] newInstanceOf(Field[][] grid) {
-        Field[][] solution = new Field[9][9];
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
-                solution[x][y] = new Field(x, y, grid[x][y].value());
+    public List<Field[][]> allSolutions() {
+        List<Field[][]> solutions = new ArrayList<>();
+        int[][][] values = new int[9][9][9];
+        for(int x = 0; x < 9; x++) {
+            for(int y = 0; y < 9; y++) {
+                values[x][y] = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
             }
         }
-        return solution;
+        boolean stillSolvable = true;
+        while (stillSolvable) {
+            Field[][] solution = newInstanceOf(grid);
+            if(calculateOneSolution(values, solution)) {
+                solutions.add(solution);
+            } else {
+                stillSolvable = false;
+            }
+        }
+        return solutions;
     }
 
-    public int countOfAllSolutions() {
-        return 1;
+    private boolean calculateOneSolution(int[][][] availableValues, Field[][] grid) { //todo duplicated code
+        int xPos = -1;
+        int yPos = -1;
+        boolean completed = true;
+        int x = 0;
+        while (x < 9 && completed) {
+            int y = 0;
+            while (y < 9 && completed) {
+                if (grid[x][y].value() == 0) {
+                    completed = false;
+                    xPos = x;
+                    yPos = y;
+                }
+                y++;
+            }
+            x++;
+        }
+        if (completed) return true;
+        //backtrack
+        for (int value : availableValues[xPos][yPos]) {
+            assert (grid[xPos][yPos].value() == 0);
+            if (isUnique(grid, new Field(xPos, yPos, value))) {
+                grid[xPos][yPos] = new Field(xPos, yPos, value);
+                if (calculateSolution(grid)) return true;
+                else grid[xPos][yPos] = new Field(xPos, yPos, 0); // replace
+            }
+        }
+        return false;
     }
 }
