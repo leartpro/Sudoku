@@ -87,16 +87,20 @@ public final class Solver extends GridUtils{
         return false;
     }
 
+    /*todo
+    -first try with easy techniques than improve step by step
+        to validate the difficulty of the given grid
+     */
     public boolean isSolvable() {
         return calculateSolution(newInstanceOf(grid));
     }
 
     public List<Field[][]> allSolutions() {
         List<Field[][]> solutions = new ArrayList<>();
-        int[][][] values = new int[9][9][9];
+        List[][] values = new ArrayList[9][9];
         for(int x = 0; x < 9; x++) {
             for(int y = 0; y < 9; y++) {
-                values[x][y] = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
+                values[x][y] = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
             }
         }
         boolean stillSolvable = true;
@@ -111,7 +115,7 @@ public final class Solver extends GridUtils{
         return solutions;
     }
 
-    private boolean calculateOneSolution(int[][][] availableValues, Field[][] grid) { //todo duplicated code
+    private boolean calculateOneSolution(List<Integer>[][] availableValues, Field[][] grid) { //todo duplicated code
         int xPos = -1;
         int yPos = -1;
         boolean completed = true;
@@ -129,13 +133,17 @@ public final class Solver extends GridUtils{
             x++;
         }
         if (completed) return true;
-        //backtrack
-        for (int value : availableValues[xPos][yPos]) {
+        for (Integer value : new ArrayList<>(availableValues[xPos][yPos])) {
             assert (grid[xPos][yPos].value() == 0);
             if (isUnique(grid, new Field(xPos, yPos, value))) {
                 grid[xPos][yPos] = new Field(xPos, yPos, value);
-                if (calculateSolution(grid)) return true;
-                else grid[xPos][yPos] = new Field(xPos, yPos, 0); // replace
+                availableValues[xPos][yPos].remove(value);
+                if (calculateOneSolution(availableValues, grid)) {
+                    return true;
+                } else {
+                    grid[xPos][yPos] = new Field(xPos, yPos, 0);
+                    availableValues[xPos][yPos].add(value);
+                }
             }
         }
         return false;

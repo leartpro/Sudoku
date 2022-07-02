@@ -9,6 +9,7 @@ import java.util.Random;
 
 public class Generator extends GridUtils {
     private int difficulty;
+
     public Generator() {
         this.difficulty = 0;
     }
@@ -16,8 +17,8 @@ public class Generator extends GridUtils {
     public Field[][] generate() {
         assert difficulty > 0;
         Field[][] grid = new Field[9][9];
-        for(int x = 0; x < 9; x++) {
-            for(int y = 0; y < 9; y++) {
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
                 grid[x][y] = new Field(x, y, 0);
             }
         }
@@ -27,7 +28,10 @@ public class Generator extends GridUtils {
             displaySmall(grid);
             System.out.println("\n");
             System.out.println("Generated Puzzle:");
-            if(createPuzzle(grid, flatGrid(newInstanceOf(grid)))) { //todo: infinity loop!
+            List<Field> removable = flatGrid(newInstanceOf(grid));
+            Collections.shuffle(removable);
+            //if (createPuzzle(grid, removable)) { //todo: infinity loop!
+            if(createPuzzle2(grid)) {
                 System.out.println("success!!!!!!!");
             } else {
                 System.err.println("unable to create a valid puzzle");
@@ -39,23 +43,13 @@ public class Generator extends GridUtils {
         return grid;
     }
 
-    /*
-    todo:
-    return boolean is grid has at least one solution
-    for the second part of the algorithm...
-    isSolvable():
-    -first try with easy techniques than improve step by step
-        to validate the difficulty of the given grid
-    */
-    private boolean createPuzzle(Field[][] grid, List<Field> removable) {
-        Collections.shuffle(removable);
-        for (Field current : removable) {
+    private boolean createPuzzle(Field[][] grid, List<Field> removable) { //todo: infinity-loop
+        for (Field current : new ArrayList<>(removable)) {
             removable.remove(current);
+            //System.out.println(current);
             grid[current.x()][current.y()] = new Field(current.x(), current.y(), 0);
-            if (new Solver(grid).allSolutions().size() == 1) {
-                if (createPuzzle(grid, removable)) {
-                    return true;
-                }
+            if (new Solver(grid).allSolutions().size() == 1) { //todo: this method call throws the infinity-loop
+                if (createPuzzle(grid, removable)) return true;
             } else {
                 grid[current.x()][current.y()] = current;
                 removable.add(current);
@@ -65,11 +59,32 @@ public class Generator extends GridUtils {
         return true;
     }
 
+    public boolean createPuzzle2(Field[][] grid) {
+        List<Field> removable = new ArrayList<>();
+        for (Field field : flatGrid(grid)) {
+            if (field.value() != 0) {
+                removable.add(field);
+            }
+        }
+        Field current = removable.get(new Random().nextInt(removable.size()));
+        int xPos = current.x(), yPos = current.y();
+        assert (grid[xPos][yPos].value() != 0);
+        grid[xPos][yPos] = new Field(xPos, yPos, 0);
+        if (new Solver(grid).allSolutions().size() == 1) {
+            if (createPuzzle2(grid)) return true;
+            else grid[xPos][yPos] = new Field(xPos, yPos, 0);
+        } else {
+            grid[xPos][yPos] = new Field(xPos, yPos, 0);
+            return false;
+        }
+        return false;
+    }
+
     private boolean completeRandom(Field[][] grid) {
         List<Field> available = new ArrayList<>();
         boolean completed = true;
-        for(Field field : flatGrid(grid)) {
-            if(field.value() == 0) {
+        for (Field field : flatGrid(grid)) {
+            if (field.value() == 0) {
                 available.add(field);
                 completed = false;
             }
@@ -83,7 +98,7 @@ public class Generator extends GridUtils {
             assert (grid[xPos][yPos].value() == 0);
             if (isUnique(grid, new Field(xPos, yPos, value))) {
                 grid[xPos][yPos] = new Field(xPos, yPos, value);
-                if (new Solver(grid).isSolvable()) {
+                if (new Solver(grid).isSolvable()) { //todo: is necessary?
                     if (completeRandom(grid)) return true;
                     else grid[xPos][yPos] = new Field(xPos, yPos, 0);
                 } else grid[xPos][yPos] = new Field(xPos, yPos, 0);
