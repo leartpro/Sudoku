@@ -1,21 +1,20 @@
 package utils;
 
 import domain.Field;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GeneratorTest extends GridUtils {
 
-    private Generator generator = new Generator();
+    private final Generator generator = new Generator();
 
     @Test
-    void generate() { //todo: removes to much
+    void generate2() { //todo: removes to much
         int[][] input = new int[][]{ //todo solver.calculateOneSolution() is very inefficient, lists and arrays copy also very inefficient
                 {4, 6, 2, 5, 9, 1, 3, 8, 7},
                 {1, 3, 9, 6, 8, 7, 4, 2, 5},
@@ -38,7 +37,6 @@ class GeneratorTest extends GridUtils {
                 {3, 1, 5, 8, 0, 0, 6, 0, 0},
                 {0, 0, 0, 1, 5, 0, 0, 0, 9}
         };
-
         Field[][] result = toComparableGrid(input);
         generator.createPuzzle2(result);
         Solver solver = new Solver(result);
@@ -57,11 +55,14 @@ class GeneratorTest extends GridUtils {
         }
         //print grids
         System.out.println("is solvable: " + solver.isSolvable());
-        List<Field[][]> solutions = new ArrayList<>(solver.allSolutions());
+        List<Field[][]> solutions = new ArrayList<>(solver.allSolutions2());
         if (solutions.size() != 1 || !success) {
             System.out.println("invalid result: ");
             StringBuilder output = new StringBuilder();
-            output.append("\r\n" + "Puzzle:                Solution:" + "\r\n");
+            output.append("""
+                    \r
+                    Puzzle:                Solution:\r
+                    """);
             int count = 0;
             for (Field[][] solution : solutions) {
                 for (int x = 0; x < 9; x++) {
@@ -88,7 +89,7 @@ class GeneratorTest extends GridUtils {
     }
 
     @Test
-    void generate2() { //todo: removes to much
+    void generate3() { //todo: removes to much
         int[][] input = new int[][]{ //todo solver.calculateOneSolution() is very inefficient, lists and arrays copy also very inefficient
                 {4, 6, 2, 5, 9, 1, 3, 8, 7},
                 {1, 3, 9, 6, 8, 7, 4, 2, 5},
@@ -117,7 +118,10 @@ class GeneratorTest extends GridUtils {
         int[][] puzzle = mapComperableGrid(result);
 
         StringBuilder output = new StringBuilder();
-        output.append("\r\n" + "Actual:                Expected:" + "\r\n");
+        output.append("""
+                \r
+                Actual:                Expected:\r
+                """);
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
                 output.append(puzzle[x][y]).append(" ");
@@ -144,11 +148,16 @@ class GeneratorTest extends GridUtils {
         }
         //print grids
         System.out.println("is solvable: " + solver.isSolvable());
-        List<Field[][]> solutions = new ArrayList<>(solver.allSolutions());
+        List<Field[][]> solutions = new ArrayList<>(solver.allSolutions2());
         if (solutions.size() != 1 || !success) {
             System.out.println("invalid result: ");
+            System.out.print("Solutions-List: ");
+            solutions.forEach(System.out::print);
             output = new StringBuilder();
-            output.append("\r\n" + "Puzzle:                Solution:" + "\r\n");
+            output.append("""
+                    \r
+                    Puzzle:                Solution:\r
+                    """);
             int count = 0;
             for (Field[][] solution : solutions) {
                 for (int x = 0; x < 9; x++) {

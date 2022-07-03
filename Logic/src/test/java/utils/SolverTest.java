@@ -210,98 +210,6 @@ class SolverTest extends GridUtils {
     }
 
     @Test
-    void allSolutionsEasy() {
-        Field[][] grid = toComparableGrid(
-                new int[][]{ //unsolved grid
-                        {2, 9, 5, 7, 4, 3, 8, 6, 1},
-                        {4, 3, 1, 8, 6, 5, 9, 0, 0},
-                        {8, 7, 6, 1, 9, 2, 5, 4, 3},
-                        {3, 8, 7, 4, 5, 9, 2, 1, 6},
-                        {6, 1, 2, 3, 8, 7, 4, 9, 5},
-                        {5, 4, 9, 2, 1, 6, 7, 3, 8},
-                        {7, 6, 3, 5, 3, 4, 1, 8, 9},
-                        {9, 2, 8, 6, 7, 1, 3, 5, 4},
-                        {1, 5, 4, 9, 3, 8, 6, 0, 0}
-                }
-        );
-        solver = new Solver(grid);
-        List<Field[][]> solutions = new ArrayList<>(solver.allSolutions());
-        assertEquals(2, solutions.size());
-
-        StringBuilder output = new StringBuilder();
-        output.append("\r\n" + "Input:                 Solution/s:" + "\r\n");
-        int count = 0;
-        for (Field[][] solution : solutions) {
-            for (int x = 0; x < 9; x++) {
-                if (count == 0) {
-                    for (int y = 0; y < 9; y++) {
-                        output.append(grid[x][y].value()).append(" ");
-                    }
-                } else {
-                    output.append("  ".repeat(9));
-                }
-                output.append("     ");
-                for (int y = 0; y < 9; y++) {
-                    output.append(solution[x][y].value()).append(" ");
-                }
-                output.append("\r\n");
-            }
-            output.append("\r\n");
-            count++;
-        }
-        System.out.println(output);
-    }
-
-    @Test
-    void allSolutionsMedium() { //todo: grid with less values
-        Field[][] grid = toComparableGrid(
-                new int[][]{ //unsolved grid
-                        {0, 6, 0, 0, 0, 0, 0, 0, 0 },
-                        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                        {0, 5, 0, 0, 0, 0, 0, 9, 0},
-                        {0, 0, 0, 0, 3, 0, 0, 0, 0},
-                        {5, 0, 3, 0, 0, 0, 0, 0, 8},
-                        {0, 7, 4, 0, 0, 0, 0, 0, 0},
-                        {0, 0, 0, 0, 2, 6, 0, 0, 0},
-                        {3, 0, 0, 0, 0, 0, 0, 0, 2},
-                        {0, 0, 0, 0, 5, 0, 0, 0, 9}
-                }
-        );
-        /*
-        todo all-solutions:
-        for each point try with a value that is different from the previous one
-        then try to solve the sudoku
-
-         */
-        solver = new Solver(grid);
-        List<Field[][]> solutions = new ArrayList<>(solver.allSolutions());
-        assertEquals(2, solutions.size());
-
-        StringBuilder output = new StringBuilder();
-        output.append("\r\n" + "Input:                 Solution/s:" + "\r\n");
-        int count = 0;
-        for (Field[][] solution : solutions) {
-            for (int x = 0; x < 9; x++) {
-                if (count == 0) {
-                    for (int y = 0; y < 9; y++) {
-                        output.append(grid[x][y].value()).append(" ");
-                    }
-                } else {
-                    output.append("  ".repeat(9));
-                }
-                output.append("     ");
-                for (int y = 0; y < 9; y++) {
-                    output.append(solution[x][y].value()).append(" ");
-                }
-                output.append("\r\n");
-            }
-            output.append("\r\n");
-            count++;
-        }
-        System.out.println(output);
-    }
-
-    @Test
     void allSolutions2Easy() {
         Field[][] grid = toComparableGrid(
                 new int[][]{ //unsolved grid
@@ -318,10 +226,12 @@ class SolverTest extends GridUtils {
         );
         solver = new Solver(grid);
         List<Field[][]> solutions = new ArrayList<>(solver.allSolutions2());
-        //assertEquals(2, solutions.size());
+        assertEquals(2, solutions.size());
 
         StringBuilder output = new StringBuilder();
-        output.append("\r\n" + "Input:                 Solution/s:" + "\r\n");
+        output.append("""
+                Input:                 Solution/s:
+                """);
         int count = 0;
         for (Field[][] solution : solutions) {
             for (int x = 0; x < 9; x++) {
@@ -359,18 +269,14 @@ class SolverTest extends GridUtils {
                         {0, 0, 0, 0, 5, 0, 0, 0, 9}
                 }
         );
-        /*
-        todo all-solutions:
-        for each point try with a value that is different from the previous one
-        then try to solve the sudoku
 
-         */
         solver = new Solver(grid);
         List<Field[][]> solutions = new ArrayList<>(solver.allSolutions2());
-        //assertEquals(2, solutions.size());
-
+        assertEquals(44, solutions.size());
         StringBuilder output = new StringBuilder();
-        output.append("\r\n" + "Input:                 Solution/s:" + "\r\n");
+        output.append("""
+                Input:                 Solution/s:
+                """);
         int count = 0;
         for (Field[][] solution : solutions) {
             for (int x = 0; x < 9; x++) {

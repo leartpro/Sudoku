@@ -3,7 +3,6 @@ package utils;
 import domain.Field;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public final class Solver extends GridUtils {
@@ -87,38 +86,10 @@ public final class Solver extends GridUtils {
         return false;
     }
 
-    /*todo
-    -first try with easy techniques than improve step by step
-        to validate the difficulty of the given grid
-     */
     public boolean isSolvable() {
         return calculateSolution(newInstanceOf(grid));
     }
 
-    public List<Field[][]> allSolutions() {
-        List<Field[][]> solutions = new ArrayList<>();
-        List<Integer>[][] values = new ArrayList[9][9];
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
-                values[x][y] = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
-            }
-        }
-        boolean stillSolvable = true;
-        while (stillSolvable) {
-            Field[][] solution = newInstanceOf(grid);
-            if (calculateOneSolution2(values, solution)) {
-                solutions.add(solution);
-            } else {
-                stillSolvable = false;
-            }
-        }
-        return solutions;
-    }
-
-    /*
-    for each point try with a value that is different from the previous one
-        then try to solve the sudoku
-     */
     public List<Field[][]> allSolutions2() { //todo: find each solution twice
         List<Field[][]> solutions = new ArrayList<>();
         List<Integer>[][] values = new ArrayList[9][9];
@@ -139,87 +110,18 @@ public final class Solver extends GridUtils {
         for (Field current : flatGrid(newInstanceOf(grid))) {
             if (current.value() == 0) available.add(current);
         }
-        //available.forEach(System.out::print);
-        //System.out.println();
         for (Field current : available) {
-            //System.out.println(current);
+            if(values[current.x()][current.y()].size() == 0) continue;
             Field[][] solution = newInstanceOf(grid);
             Integer value = values[current.x()][current.y()].get(0);
             solution[current.x()][current.y()] = new Field(current.x(), current.y(), value);
             values[current.x()][current.y()].remove(value);
             if (calculateSolution(solution)) {
-                if (!inList(solutions, solution)) solutions.add(solution); //todo: inList does not work
-                //else System.out.println("This solution already exists!");
+                if (!inList(solutions, solution)) solutions.add(solution);
+                //todo: optimize the values[][][] handle
+                // so the same solution is never calculated more than once
             }
         }
         return solutions;
-    }
-
-    private boolean calculateOneSolution2(List<Integer>[][] availableValues, Field[][] grid) {
-        int xPos = -1;
-        int yPos = -1;
-        boolean completed = true;
-        int x = 0;
-        while (x < 9 && completed) {
-            int y = 0;
-            while (y < 9 && completed) {
-                if (grid[x][y].value() == 0) {
-                    completed = false;
-                    xPos = x;
-                    yPos = y;
-                }
-                y++;
-            }
-            x++;
-        }
-        if (completed) return true;
-        for (Integer value : new ArrayList<>(availableValues[xPos][yPos])) {
-            assert (grid[xPos][yPos].value() == 0);
-            if (isUnique(grid, new Field(xPos, yPos, value))) {
-                grid[xPos][yPos] = new Field(xPos, yPos, value);
-                availableValues[xPos][yPos].remove(value);
-                if (calculateOneSolution(availableValues, grid)) {
-                    return true;
-                } else {
-                    grid[xPos][yPos] = new Field(xPos, yPos, 0);
-                    availableValues[xPos][yPos].add(value);
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean calculateOneSolution(List<Integer>[][] availableValues, Field[][] grid) { //todo duplicated code
-        int xPos = -1;
-        int yPos = -1;
-        boolean completed = true;
-        int x = 0;
-        while (x < 9 && completed) {
-            int y = 0;
-            while (y < 9 && completed) {
-                if (grid[x][y].value() == 0) {
-                    completed = false;
-                    xPos = x;
-                    yPos = y;
-                }
-                y++;
-            }
-            x++;
-        }
-        if (completed) return true;
-        for (Integer value : new ArrayList<>(availableValues[xPos][yPos])) {
-            assert (grid[xPos][yPos].value() == 0);
-            if (isUnique(grid, new Field(xPos, yPos, value))) {
-                grid[xPos][yPos] = new Field(xPos, yPos, value);
-                availableValues[xPos][yPos].remove(value);
-                if (calculateOneSolution(availableValues, grid)) {
-                    return true;
-                } else {
-                    grid[xPos][yPos] = new Field(xPos, yPos, 0);
-                    availableValues[xPos][yPos].add(value);
-                }
-            }
-        }
-        return false;
     }
 }
