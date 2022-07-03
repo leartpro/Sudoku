@@ -16,6 +16,22 @@ public abstract class GridUtils {
         return differences;
     }
 
+    public boolean inList(List<Field[][]> list, Field[][] value) { //todo: work probably wrong
+        for(Field[][] current : list) {
+            boolean equals = true;
+            for(int x = 0; x < 9; x++) {
+                for(int y = 0; y < 9; y++) {
+                    if (current[x][y].value() != value[x][y].value()) {
+                        equals = false;
+                        break;
+                    }
+                }
+            }
+            if(equals) return true;
+        }
+        return false;
+    }
+
     public void display(Field[][] grid) {
         StringBuilder output = new StringBuilder();
         for(int x = 0; x < 9; x++) {
