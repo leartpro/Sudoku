@@ -1,9 +1,11 @@
-import utils.GridUtils;
 import utils.ProgressBar;
 import utils.TerminalColors;
 import utils.TerminalUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class UserInterface {
     private final InputHandler handler;
@@ -20,16 +22,25 @@ public class UserInterface {
         TerminalUtils.printStatus("Welcome to Sudoku!" + "\n");
     }
 
-    public void displayUsages() { //todo: print all program usages/commands (currently copy/paste from tic-tac-toe)
+    public void displayUsages() {
         System.out.println("These are the available commands...");
-        System.out.println(TerminalUtils.toColorString("  :q(uit)", TerminalColors.blue) + ",        quit the program");
-        System.out.println(TerminalUtils.toColorString("  :m(enu)", TerminalColors.blue) + ",        go back to the menu            (only in a game)");
-        System.out.println(TerminalUtils.toColorString("  :r(estart)", TerminalColors.blue) + ",     restart the game               (only in a game)");
-        System.out.println(TerminalUtils.toColorString("  :s(urrender)", TerminalColors.blue) + ",   restart but keep the opponent  (only in a game)");
-        System.out.println(TerminalUtils.toColorString("  :c(commands)", TerminalColors.blue) + ",   list all commands              (only in the main menu)");
-        System.out.println(TerminalUtils.toColorString("  :g(game)", TerminalColors.blue) + ",       start a new game               (only in the main menu)");
-        System.out.println(TerminalUtils.toColorString("  :o(pponent)", TerminalColors.blue) + ",    play again with same opponent  (only in the main menu, after a game)");
-        System.out.println(TerminalUtils.toColorString("  :h(history)", TerminalColors.blue) + ",    show history of last game      (only in the main menu, after a game)");
+        System.out.println(
+                        TerminalUtils.toColorString(".start", TerminalColors.blue) + " ".repeat(11) +
+                        "start a game" + " ".repeat(18) +
+                        "(only in the main menu)" + "\n" +
+                        TerminalUtils.toColorString(".menu", TerminalColors.blue) + " ".repeat(12) +
+                        "go back to the menu" + " ".repeat(11) +
+                        "(only in a game)" + "\n" +
+                        TerminalUtils.toColorString(".commands", TerminalColors.blue) + " ".repeat(8) +
+                        "list all commands" + " ".repeat(13) +
+                        "(everywhere)" + "\n" +
+                        TerminalUtils.toColorString(".exit", TerminalColors.blue) + " ".repeat(12) +
+                        "exit the program" + " ".repeat(14) +
+                        "(everywhere)" + "\n" +
+                        TerminalUtils.toColorString(".solve", TerminalColors.blue) + " ".repeat(11) +
+                        "validate your solution" + " ".repeat(8) +
+                        "(only in a game)" + "\n"
+        );
     }
 
     public void displayGame(int[][] grid) {
@@ -39,6 +50,7 @@ public class UserInterface {
             }
             System.out.println();
         }
+        System.out.println();
     }
 
     public void displayMenu() {
@@ -47,7 +59,7 @@ public class UserInterface {
 
     public void displayLoading(String name) {
         ProgressBar progressBar = new ProgressBar(name);
-        for(int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100; i++) {
             progressBar.addProgress();
             try {
                 Thread.sleep(30);
@@ -60,9 +72,9 @@ public class UserInterface {
     public void displayLoading(String name, int totalSteps) {
         ProgressBar progressBar2 = new ProgressBar(name, totalSteps);
         int i = 0;
-        while(!progressBar2.isCompleted()) {
+        while (!progressBar2.isCompleted()) {
             progressBar2.addProgress();
-            if(i > 30) progressBar2.addProgress(12);
+            if (i > 30) progressBar2.addProgress(12);
             try {
                 Thread.sleep(15);
             } catch (InterruptedException e) {
@@ -106,6 +118,8 @@ public class UserInterface {
     }
 
     public void close() {
+        TerminalUtils.printWarning("Do not receive any input from the user anymore");
+        status = false;
         try {
             reader.close();
         } catch (IOException e) {
@@ -114,13 +128,23 @@ public class UserInterface {
     }
 
     public void displayGameUsages() {
-        System.out.println("type at first your row, then your column and finally " +
+        System.out.println("Game Usages\n" +
+                "type at first your row, then your column and finally " +
                 "the value you want to insert");
     }
 
     public void displayGameInput() {
-        System.out.print("column " + TerminalUtils.toColorString("X", TerminalColors.cyan) +
-                            " row " + TerminalUtils.toColorString("X", TerminalColors.black) +
-                            " value " + TerminalUtils.toColorString("X", TerminalColors.black) + "\r");
+        System.out.println("column " + TerminalUtils.toColorString("X", TerminalColors.cyan) +
+                " row " + TerminalUtils.toColorString("X", TerminalColors.black) +
+                " value " + TerminalUtils.toColorString("X", TerminalColors.black));
+    }
+
+    public void displayGameIntro() {
+        System.out.println("Your are now in a game");
+    }
+
+    public void clear() {
+        System.out.println("\033[H\033[2J");
+        System.out.flush();
     }
 }

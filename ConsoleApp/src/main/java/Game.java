@@ -2,6 +2,7 @@ import controller.Controller;
 import utils.GridUtils;
 import utils.TerminalUtils;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 public class Game implements InputHandler {
@@ -28,9 +29,14 @@ public class Game implements InputHandler {
     }
 
     private void handleGameInput(String input) {
-        //todo: if not a number (and of course not a command) then print in-game commands/usages
-        int selected = Integer.parseInt(input);
+        try {
+            int selected = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            TerminalUtils.printWarning("input have to be a command or a number");
+            userInterface.displayGameUsages();
+        }
         //todo: valid inputs are row, column and value all other inputs are commands
+        userInterface.displayGame(controller.getGrid()); //todo: insert value by controller
         userInterface.displayGameInput();
     }
 
@@ -39,8 +45,11 @@ public class Game implements InputHandler {
             case "start" -> { //in menu -> to game
                 if (!inGame) {
                     controller.generateNewPuzzle();
+                    userInterface.clear();
+                    userInterface.displayGameIntro();
                     userInterface.displayGameUsages();
                     userInterface.displayGame(controller.getGrid());
+                    userInterface.displayGameInput();
                     this.inGame = true;
                 } else {
                     TerminalUtils.printWarning("can not use that command here");
@@ -50,6 +59,8 @@ public class Game implements InputHandler {
                 if (inGame) {
                     //todo warn that all progress will be lost
                     this.inGame = false;
+                    userInterface.clear();
+                    userInterface.displayUsages();
                     userInterface.displayMenu();
                 } else {
                     TerminalUtils.printWarning("can not use that command here");
