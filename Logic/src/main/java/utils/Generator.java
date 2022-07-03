@@ -46,7 +46,6 @@ public class Generator extends GridUtils {
     private boolean createPuzzle(Field[][] grid, List<Field> removable) { //todo: infinity-loop
         for (Field current : new ArrayList<>(removable)) {
             removable.remove(current);
-            //System.out.println(current);
             grid[current.x()][current.y()] = new Field(current.x(), current.y(), 0);
             if (new Solver(grid).allSolutions().size() == 1) { //todo: this method call throws the infinity-loop
                 if (createPuzzle(grid, removable)) return true;
@@ -57,6 +56,39 @@ public class Generator extends GridUtils {
             }
         }
         return true;
+    }
+
+    public Field[][] createPuzzle3(Field[][] grid) { //todo: countofallsolutions is not working
+        List<Field> removable = new ArrayList<>();
+        for (Field field : flatGrid(grid)) {
+            if (field.value() != 0) {
+                removable.add(field);
+            }
+        }
+        Collections.shuffle(removable);
+        System.out.println(removable.size());
+        for (Field current : removable) {
+            grid[current.x()][current.y()] = new Field(current.x(), current.y(), 0);
+            int countOfSolutions = new Solver(grid).allSolutions().size();
+            System.out.println("count of solutions: " + countOfSolutions);
+            displaySmall(grid);
+            System.out.println();
+            int countOfValues = 0;
+            for(int x = 0; x < 9; x++) {
+                for(int y = 0; y < 9; y++) {
+                    if(grid[x][y].value() != 0) countOfValues++;
+                }
+            }
+            System.out.println("count of values: " + countOfValues);
+            if (countOfSolutions == 0) {
+                return null;
+            } else if (countOfSolutions == 2) {
+                grid[current.x()][current.y()] = current;
+                assert (new Solver(grid).allSolutions().size() == 1);
+                return grid;
+            }
+        }
+        return grid;
     }
 
     public boolean createPuzzle2(Field[][] grid) {

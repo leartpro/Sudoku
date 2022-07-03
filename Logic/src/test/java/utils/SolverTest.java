@@ -4,6 +4,9 @@ import domain.Field;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SolverTest extends GridUtils {
@@ -207,7 +210,7 @@ class SolverTest extends GridUtils {
     }
 
     @Test
-    void allSolutions() {
+    void allSolutionsEasy() {
         Field[][] grid = toComparableGrid(
                 new int[][]{ //unsolved grid
                         {2, 9, 5, 7, 4, 3, 8, 6, 1},
@@ -222,6 +225,79 @@ class SolverTest extends GridUtils {
                 }
         );
         solver = new Solver(grid);
-        assertEquals(2, solver.allSolutions().size());
+        List<Field[][]> solutions = new ArrayList<>(solver.allSolutions());
+        assertEquals(2, solutions.size());
+
+        StringBuilder output = new StringBuilder();
+        output.append("\r\n" + "Input:                 Solution/s:" + "\r\n");
+        int count = 0;
+        for (Field[][] solution : solutions) {
+            for (int x = 0; x < 9; x++) {
+                if (count == 0) {
+                    for (int y = 0; y < 9; y++) {
+                        output.append(grid[x][y].value()).append(" ");
+                    }
+                } else {
+                    output.append("  ".repeat(9));
+                }
+                output.append("     ");
+                for (int y = 0; y < 9; y++) {
+                    output.append(solution[x][y].value()).append(" ");
+                }
+                output.append("\r\n");
+            }
+            output.append("\r\n");
+            count++;
+        }
+        System.out.println(output);
+    }
+
+    @Test
+    void allSolutionsMedium() { //todo: grid with less values
+        Field[][] grid = toComparableGrid(
+                new int[][]{ //unsolved grid
+                        {0, 6, 0, 0, 0, 0, 0, 0, 0 },
+                        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 5, 0, 0, 0, 0, 0, 9, 0},
+                        {0, 0, 0, 0, 3, 0, 0, 0, 0},
+                        {5, 0, 3, 0, 0, 0, 0, 0, 8},
+                        {0, 7, 4, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 2, 6, 0, 0, 0},
+                        {3, 0, 0, 0, 0, 0, 0, 0, 2},
+                        {0, 0, 0, 0, 5, 0, 0, 0, 9}
+                }
+        );
+        /*
+        all solutions:
+        for each point try with a value that is different from the previous one
+        then try to solve the sudoku
+
+         */
+        solver = new Solver(grid);
+        List<Field[][]> solutions = new ArrayList<>(solver.allSolutions());
+        assertEquals(2, solutions.size());
+
+        StringBuilder output = new StringBuilder();
+        output.append("\r\n" + "Input:                 Solution/s:" + "\r\n");
+        int count = 0;
+        for (Field[][] solution : solutions) {
+            for (int x = 0; x < 9; x++) {
+                if (count == 0) {
+                    for (int y = 0; y < 9; y++) {
+                        output.append(grid[x][y].value()).append(" ");
+                    }
+                } else {
+                    output.append("  ".repeat(9));
+                }
+                output.append("     ");
+                for (int y = 0; y < 9; y++) {
+                    output.append(solution[x][y].value()).append(" ");
+                }
+                output.append("\r\n");
+            }
+            output.append("\r\n");
+            count++;
+        }
+        System.out.println(output);
     }
 }
