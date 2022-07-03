@@ -8,14 +8,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Generator extends GridUtils {
-    private int difficulty;
-
-    public Generator() {
-        this.difficulty = 0;
-    }
 
     public Field[][] generate() {
-        assert difficulty > 0;
         Field[][] grid = new Field[9][9];
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
@@ -29,7 +23,7 @@ public class Generator extends GridUtils {
         return grid;
     }
 
-    public Field[][] createPuzzle3(Field[][] grid) { //todo: countofallsolutions is not working
+    public Field[][] createPuzzle3(Field[][] grid) {
         List<Field> removable = new ArrayList<>();
         for (Field field : flatGrid(grid)) {
             if (field.value() != 0) {
@@ -97,10 +91,5 @@ public class Generator extends GridUtils {
             }
         }
         return false;
-    }
-
-
-    public void setDifficulty(int difficulty) {
-        this.difficulty = difficulty;
     }
 }

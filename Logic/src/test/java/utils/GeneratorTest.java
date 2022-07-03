@@ -40,7 +40,7 @@ class GeneratorTest extends GridUtils {
         Field[][] result = toComparableGrid(input);
         generator.createPuzzle2(result);
         Solver solver = new Solver(result);
-        int[][] puzzle = mapComperableGrid(result);
+        int[][] puzzle = mapComparableGrid(result);
 
         boolean success = true;
         for (int x = 0; x < 9; x++) {
@@ -115,7 +115,7 @@ class GeneratorTest extends GridUtils {
 
         Field[][] result = generator.createPuzzle3(toComparableGrid(input));
         Solver solver = new Solver(result);
-        int[][] puzzle = mapComperableGrid(result);
+        int[][] puzzle = mapComparableGrid(result);
 
         StringBuilder output = new StringBuilder();
         output.append("""

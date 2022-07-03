@@ -92,7 +92,7 @@ public final class Solver extends GridUtils {
 
     public List<Field[][]> allSolutions2() { //todo: find each solution twice
         List<Field[][]> solutions = new ArrayList<>();
-        List<Integer>[][] values = new ArrayList[9][9];
+        @SuppressWarnings("unchecked") List<Integer>[][] values = new ArrayList[9][9];
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
                 if (grid[x][y].value() == 0) {

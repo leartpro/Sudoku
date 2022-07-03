@@ -1,3 +1,6 @@
+import utils.GridUtils;
+import utils.ProgressBar;
+import utils.TerminalColors;
 import utils.TerminalUtils;
 
 import java.io.*;
@@ -17,8 +20,15 @@ public class UserInterface {
         TerminalUtils.printStatus("Welcome to Sudoku!" + "\n");
     }
 
-    public void displayUsages() { //todo: print all program usages/commands
-
+    public void displayUsages() { //todo: print all program usages/commands (currently copy/paste from tic-tac-toe)
+        System.out.println(TerminalUtils.toColorString("  :q(uit)", TerminalColors.blue) + ",        quit the program");
+        System.out.println(TerminalUtils.toColorString("  :m(enu)", TerminalColors.blue) + ",        go back to the menu            (only in a game)");
+        System.out.println(TerminalUtils.toColorString("  :r(estart)", TerminalColors.blue) + ",     restart the game               (only in a game)");
+        System.out.println(TerminalUtils.toColorString("  :s(urrender)", TerminalColors.blue) + ",   restart but keep the opponent  (only in a game)");
+        System.out.println(TerminalUtils.toColorString("  :c(commands)", TerminalColors.blue) + ",   list all commands              (only in the main menu)");
+        System.out.println(TerminalUtils.toColorString("  :g(game)", TerminalColors.blue) + ",       start a new game               (only in the main menu)");
+        System.out.println(TerminalUtils.toColorString("  :o(pponent)", TerminalColors.blue) + ",    play again with same opponent  (only in the main menu, after a game)");
+        System.out.println(TerminalUtils.toColorString("  :h(history)", TerminalColors.blue) + ",    show history of last game      (only in the main menu, after a game)");
     }
 
     public void displayGame(int[][] grid) {
@@ -34,8 +44,31 @@ public class UserInterface {
         System.out.println("You are in the menu");
     }
 
-    public int getDifficulty(int current) { //todo: ask user for difficulty an show current
-        return 0;
+    public void displayLoading(String name) {
+        ProgressBar progressBar = new ProgressBar(name);
+        for(int i = 0; i < 100; i++) {
+            progressBar.addProgress();
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void displayLoading(String name, int totalSteps) {
+        ProgressBar progressBar2 = new ProgressBar(name, totalSteps);
+        int i = 0;
+        while(!progressBar2.isCompleted()) {
+            progressBar2.addProgress();
+            if(i > 30) progressBar2.addProgress(12);
+            try {
+                Thread.sleep(15);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            i++;
+        }
     }
 
     public boolean getStatus() {
@@ -69,5 +102,24 @@ public class UserInterface {
             }
         });
         listen.start();
+    }
+
+    public void close() {
+        try {
+            reader.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void displayGameUsages() {
+        System.out.println("type at first your row, then your column and finally " +
+                "the value you want to insert");
+    }
+
+    public void displayGameInput() {
+        System.out.print("column " + TerminalUtils.toColorString("X", TerminalColors.cyan) +
+                            " row " + TerminalUtils.toColorString("X", TerminalColors.black) +
+                            " value " + TerminalUtils.toColorString("X", TerminalColors.black) + "\r");
     }
 }

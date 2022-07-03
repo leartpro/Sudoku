@@ -1,5 +1,6 @@
 package domain;
 
+@SuppressWarnings("ALL")
 public record Field(int x, int y, int value) {
     public Field {
         assert (value >= 0 && value < 10);

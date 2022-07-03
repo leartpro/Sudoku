@@ -3,6 +3,7 @@ package utils;
 import domain.Field;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class GridUtils {
@@ -72,7 +73,7 @@ public abstract class GridUtils {
         return grid;
     }
 
-    public int[][] mapComperableGrid(Field[][] grid) {
+    public int[][] mapComparableGrid(Field[][] grid) {
         int[][] result = new int[9][9];
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
@@ -104,9 +105,7 @@ public abstract class GridUtils {
     public List<Field> flatGrid(Field[][] grid) {
         List<Field> result = new ArrayList<>();
         for(int x = 0; x < 9; x++) {
-            for(int y = 0; y < 9; y++) {
-                result.add(grid[x][y]);
-            }
+            result.addAll(Arrays.asList(grid[x]).subList(0, 9)); //higher performance than manual copy
         }
         return result;
     }

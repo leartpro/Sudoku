@@ -1,7 +1,5 @@
 package utils;
 
-import java.security.Timestamp;
-
 public abstract class TerminalUtils {
     public static String toColorString(String s, String color) {
         return color + s + TerminalColors.reset;
