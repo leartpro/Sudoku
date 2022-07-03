@@ -28,6 +28,7 @@ public class Game implements InputHandler {
     }
 
     private void handleGameInput(String input) {
+        //todo: if not a number (and of course not a command) then print in-game commands/usages
         int selected = Integer.parseInt(input);
         //todo: valid inputs are row, column and value all other inputs are commands
         userInterface.displayGameInput();

@@ -21,6 +21,7 @@ public class UserInterface {
     }
 
     public void displayUsages() { //todo: print all program usages/commands (currently copy/paste from tic-tac-toe)
+        System.out.println("These are the available commands...");
         System.out.println(TerminalUtils.toColorString("  :q(uit)", TerminalColors.blue) + ",        quit the program");
         System.out.println(TerminalUtils.toColorString("  :m(enu)", TerminalColors.blue) + ",        go back to the menu            (only in a game)");
         System.out.println(TerminalUtils.toColorString("  :r(estart)", TerminalColors.blue) + ",     restart the game               (only in a game)");
@@ -86,7 +87,7 @@ public class UserInterface {
                 System.out.println("Type your input:");
                 try {
                     message = reader.readLine();
-                    if (message != null) {
+                    if (message != null && !message.isBlank()) {
                         handler.handel(message);
                     }
                 } catch (IOException e) {
