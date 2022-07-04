@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Generator extends GridUtils {
+    //TODO: give progress staus information of grid completion and puzzle completion
 
     public Field[][] generate() {
         Field[][] grid = new Field[9][9];
@@ -17,53 +18,23 @@ public class Generator extends GridUtils {
             }
         }
             completeRandom(grid);
-            List<Field> removable = flatGrid(newInstanceOf(grid));
-            Collections.shuffle(removable);
-            createPuzzle2(grid); //up to date puzzle2 ?
+            createPuzzle(grid);
         return grid;
     }
 
-    public Field[][] createPuzzle3(Field[][] grid) {
-        List<Field> removable = new ArrayList<>();
-        for (Field field : flatGrid(grid)) {
-            if (field.value() != 0) {
-                removable.add(field);
-            }
-        }
-        Collections.shuffle(removable);
+
+    //TODO: to generate for different difficulties:
+    // use different strong solvers for different difficulty values
+    public void createPuzzle(Field[][] grid) {
+        List<Field> removable = new ArrayList<>(flatGrid(grid));
         for (Field current : removable) {
             grid[current.x()][current.y()] = new Field(current.x(), current.y(), 0);
-            int countOfSolutions = new Solver(grid).allSolutions2().size();
-            if (countOfSolutions == 0) {
-                return null;
-            } else if (countOfSolutions == 2) {
+            int countOfSolutions = new Solver(grid).allSolutions().size();
+            if (countOfSolutions != 1) {
                 grid[current.x()][current.y()] = current;
-                assert (new Solver(grid).allSolutions2().size() == 1);
-                return grid;
+                assert (new Solver(grid).allSolutions().size() <= 1);
             }
         }
-        return grid;
-    }
-
-    public boolean createPuzzle2(Field[][] grid) {
-        List<Field> removable = new ArrayList<>();
-        for (Field field : flatGrid(grid)) {
-            if (field.value() != 0) {
-                removable.add(field);
-            }
-        }
-        Field current = removable.get(new Random().nextInt(removable.size()));
-        int xPos = current.x(), yPos = current.y();
-        assert (grid[xPos][yPos].value() != 0);
-        grid[xPos][yPos] = new Field(xPos, yPos, 0);
-        if (new Solver(grid).allSolutions2().size() == 1) {
-            if (createPuzzle2(grid)) return true;
-            else grid[xPos][yPos] = new Field(xPos, yPos, 0);
-        } else {
-            grid[xPos][yPos] = new Field(xPos, yPos, 0);
-            return false;
-        }
-        return false;
     }
 
     private boolean completeRandom(Field[][] grid) {

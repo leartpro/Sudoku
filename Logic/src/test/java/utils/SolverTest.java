@@ -225,7 +225,7 @@ class SolverTest extends GridUtils {
                 }
         );
         solver = new Solver(grid);
-        List<Field[][]> solutions = new ArrayList<>(solver.allSolutions2());
+        List<Field[][]> solutions = new ArrayList<>(solver.allSolutions());
         assertEquals(2, solutions.size());
 
         StringBuilder output = new StringBuilder();
@@ -271,7 +271,7 @@ class SolverTest extends GridUtils {
         );
 
         solver = new Solver(grid);
-        List<Field[][]> solutions = new ArrayList<>(solver.allSolutions2());
+        List<Field[][]> solutions = new ArrayList<>(solver.allSolutions());
         assertEquals(44, solutions.size());
         StringBuilder output = new StringBuilder();
         output.append("""

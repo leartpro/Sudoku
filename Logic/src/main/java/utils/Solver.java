@@ -56,6 +56,8 @@ public final class Solver extends GridUtils {
         return null;
     }
 
+    //TODO: to calculate a difficulty for the grid:
+    // try first with easy solve-techniques and if there is no solution repeat with more advanced techniques
     private boolean calculateSolution(Field[][] grid) { //n = grid.length
         int xPos = -1;
         int yPos = -1;
@@ -90,7 +92,7 @@ public final class Solver extends GridUtils {
         return calculateSolution(newInstanceOf(grid));
     }
 
-    public List<Field[][]> allSolutions2() { //todo: find each solution twice
+    public List<Field[][]> allSolutions() { //todo: find each solution twice
         List<Field[][]> solutions = new ArrayList<>();
         @SuppressWarnings("unchecked") List<Integer>[][] values = new ArrayList[9][9];
         for (int x = 0; x < 9; x++) {

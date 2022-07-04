@@ -147,4 +147,15 @@ public class UserInterface {
         System.out.println("\033[H\033[2J");
         System.out.flush();
     }
+
+    public void displaySolution(int[][] solvedGrid) {
+        System.out.println("Solution: ");
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                System.out.print(solvedGrid[x][y] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
 }
