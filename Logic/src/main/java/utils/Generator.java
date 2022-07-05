@@ -10,6 +10,7 @@ import java.util.Random;
 public class Generator extends GridUtils {
     //TODO: give progress staus information of grid completion and puzzle completion
 
+    //todo: returns sometimes completed grids
     public Field[][] generate() {
         Field[][] grid = new Field[9][9];
         for (int x = 0; x < 9; x++) {
@@ -17,7 +18,9 @@ public class Generator extends GridUtils {
                 grid[x][y] = new Field(x, y, 0);
             }
         }
+        System.out.println("generating the grid...");
             completeRandom(grid);
+        System.out.println("generating the puzzle...");
             createPuzzle(grid);
         return grid;
     }
@@ -25,19 +28,25 @@ public class Generator extends GridUtils {
 
     //TODO: to generate for different difficulties:
     // use different strong solvers for different difficulty values
+    int debugCount = 0;
     public void createPuzzle(Field[][] grid) {
         List<Field> removable = new ArrayList<>(flatGrid(grid));
         for (Field current : removable) {
+            debugCount++;
+            System.out.println("in step: " + debugCount); //Todo: give progress to user-interface
             grid[current.x()][current.y()] = new Field(current.x(), current.y(), 0);
             int countOfSolutions = new Solver(grid).allSolutions().size();
-            if (countOfSolutions != 1) {
+            //todo: optimized allSolution() should return either true
+            // or false if there are more than one solution
+            if (new Solver(grid).uniqueSolution()) {
                 grid[current.x()][current.y()] = current;
-                assert (new Solver(grid).allSolutions().size() <= 1);
+                assert (new Solver(grid).uniqueSolution());
             }
         }
     }
 
-    private boolean completeRandom(Field[][] grid) {
+    //TODO: performance tests
+    private boolean completeRandom(Field[][] grid) { //todo: requires sometimes a long time to give a valid result
         List<Field> available = new ArrayList<>();
         boolean completed = true;
         for (Field field : flatGrid(grid)) {

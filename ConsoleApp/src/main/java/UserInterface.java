@@ -133,10 +133,11 @@ public class UserInterface {
                 "the value you want to insert");
     }
 
-    public void displayGameInput() {
-        System.out.println("column " + TerminalUtils.toColorString("X", TerminalColors.cyan) +
-                " row " + TerminalUtils.toColorString("X", TerminalColors.black) +
-                " value " + TerminalUtils.toColorString("X", TerminalColors.black));
+    public void displayGameInput(int[] inGameProgress) {
+        assert (inGameProgress.length == 3);
+        System.out.println("column " + TerminalUtils.toColorString("X", inGameProgress[1] != -1 ? TerminalColors.black : TerminalColors.cyan) +
+                " row " + TerminalUtils.toColorString("X", inGameProgress[1] != -1 ? TerminalColors.black : TerminalColors.cyan) +
+                " value " + TerminalUtils.toColorString("X", inGameProgress[1] != -1 ? TerminalColors.black : TerminalColors.cyan));
     }
 
     public void displayGameIntro() {

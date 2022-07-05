@@ -3,7 +3,6 @@ import utils.TerminalUtils;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.List;
 
 public class Game implements InputHandler {
 
@@ -42,24 +41,24 @@ public class Game implements InputHandler {
                 for(int i = 0; i < point.length; i++) {
                     if (point[i] == -1) {
                         point[i] = selected;
+                        break;
                     }
                 }
             boolean isCompleted = true;
-            for(int i : point) {
-                if (point[i] == -1) {
+            for (int i : point) {
+                if (i == -1) {
                     isCompleted = false;
                     break;
                 }
             }
             if(isCompleted) {
-                Arrays.stream(point).forEach(System.out::print);
-                System.out.println();
                 //TODO: set value on position in controller and display
-                Arrays.stream(point).forEach(i -> i = -1);
+
+                Arrays.fill(point, -1);
             }
             //todo: valid inputs are row, column and value all other inputs are commands
             userInterface.displayGame(controller.getGrid()); //todo: insert value by controller
-            userInterface.displayGameInput();
+            userInterface.displayGameInput(point);
         }
     }
 
@@ -72,7 +71,7 @@ public class Game implements InputHandler {
                     userInterface.displayGameIntro();
                     userInterface.displayGameUsages();
                     userInterface.displayGame(controller.getGrid());
-                    userInterface.displayGameInput();
+                    userInterface.displayGameInput(point);
                     this.inGame = true;
                 } else {
                     TerminalUtils.printWarning("can not use that command here");

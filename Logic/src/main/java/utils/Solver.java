@@ -126,4 +126,41 @@ public final class Solver extends GridUtils {
         }
         return solutions;
     }
+
+    //TODO: returns as early as possible
+    public boolean uniqueSolution() { //todo: find each solution twice
+        List<Field[][]> solutions = new ArrayList<>();
+        @SuppressWarnings("unchecked") List<Integer>[][] values = new ArrayList[9][9];
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                if (grid[x][y].value() == 0) {
+                    List<Integer> available = new ArrayList<>();
+                    for (int i = 0; i < 9; i++) {
+                        if (isUnique(grid, new Field(x, y, i))) available.add(i);
+                    }
+                    values[x][y] = new ArrayList<>(available);
+                } else {
+                    values[x][y] = new ArrayList<>();
+                }
+            }
+        }
+        List<Field> available = new ArrayList<>();
+        for (Field current : flatGrid(newInstanceOf(grid))) {
+            if (current.value() == 0) available.add(current);
+        }
+        for (Field current : available) {
+            if(values[current.x()][current.y()].size() == 0) continue;
+            Field[][] solution = newInstanceOf(grid);
+            Integer value = values[current.x()][current.y()].get(0);
+            solution[current.x()][current.y()] = new Field(current.x(), current.y(), value);
+            values[current.x()][current.y()].remove(value);
+            if (calculateSolution(solution)) {
+                if (!inList(solutions, solution)) solutions.add(solution);
+                if(solutions.size() > 1) return false;
+                //todo: optimize the values[][][] handle
+                // so the same solution is never calculated more than once
+            }
+        }
+        return true;
+    }
 }
