@@ -28,23 +28,24 @@ public class Generator extends GridUtils {
 
     //TODO: to generate for different difficulties:
     // use different strong solvers for different difficulty values
-    int debugCount = 0;
+    int debugPuzzleCount = 0;
     public void createPuzzle(Field[][] grid) {
         List<Field> removable = new ArrayList<>(flatGrid(grid));
         for (Field current : removable) {
-            debugCount++;
-            System.out.println("in step: " + debugCount); //Todo: give progress to user-interface
+            debugPuzzleCount++;
+            System.out.println("createPuzzle in step: " + debugPuzzleCount + " / 81"); //Todo: give progress to user-interface
             grid[current.x()][current.y()] = new Field(current.x(), current.y(), 0);
-            int countOfSolutions = new Solver(grid).allSolutions().size();
+            //int countOfSolutions = new Solver(grid).allSolutions().size();
             //todo: optimized allSolution() should return either true
             // or false if there are more than one solution
-            if (new Solver(grid).uniqueSolution()) {
+            if (!new Solver(grid).uniqueSolution()) {
                 grid[current.x()][current.y()] = current;
                 assert (new Solver(grid).uniqueSolution());
             }
         }
     }
 
+    int debugCompleteCount = 0;
     //TODO: performance tests
     private boolean completeRandom(Field[][] grid) { //todo: requires sometimes a long time to give a valid result
         List<Field> available = new ArrayList<>();
@@ -63,6 +64,8 @@ public class Generator extends GridUtils {
         for (int value : values) {
             assert (grid[xPos][yPos].value() == 0);
             if (isUnique(grid, new Field(xPos, yPos, value))) {
+                debugCompleteCount++;
+                System.out.println("completeRandom in step: " + debugCompleteCount + " / max.729"); //Todo: give progress to user-interface
                 grid[xPos][yPos] = new Field(xPos, yPos, value);
                 if (new Solver(grid).isSolvable()) { //todo: is necessary?
                     if (completeRandom(grid)) return true;

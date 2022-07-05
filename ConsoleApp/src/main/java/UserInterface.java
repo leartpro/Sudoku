@@ -134,10 +134,19 @@ public class UserInterface {
     }
 
     public void displayGameInput(int[] inGameProgress) {
+        //TODO: first 'X' in a different signal color to display the current step
         assert (inGameProgress.length == 3);
-        System.out.println("column " + TerminalUtils.toColorString("X", inGameProgress[1] != -1 ? TerminalColors.black : TerminalColors.cyan) +
-                " row " + TerminalUtils.toColorString("X", inGameProgress[1] != -1 ? TerminalColors.black : TerminalColors.cyan) +
-                " value " + TerminalUtils.toColorString("X", inGameProgress[1] != -1 ? TerminalColors.black : TerminalColors.cyan));
+        System.out.println(
+                "column " + (inGameProgress[0] == -1 ?
+                        TerminalUtils.toColorString("X", TerminalColors.cyan) :
+                        TerminalUtils.toColorString(String.valueOf(inGameProgress[0]), TerminalColors.green)) +
+                " row " + (inGameProgress[1] == -1 ?
+                        TerminalUtils.toColorString("X", TerminalColors.cyan) :
+                        TerminalUtils.toColorString(String.valueOf(inGameProgress[1]), TerminalColors.green)) +
+                " value " + (inGameProgress[2] == -1 ?
+                        TerminalUtils.toColorString("X", TerminalColors.cyan) :
+                        TerminalUtils.toColorString(String.valueOf(inGameProgress[2]), TerminalColors.green))
+        );
     }
 
     public void displayGameIntro() {

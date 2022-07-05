@@ -56,9 +56,12 @@ public final class Solver extends GridUtils {
         return null;
     }
 
+    int debugCalculateCount = 0;
     //TODO: to calculate a difficulty for the grid:
     // try first with easy solve-techniques and if there is no solution repeat with more advanced techniques
     private boolean calculateSolution(Field[][] grid) { //n = grid.length
+        //TODO: need sometimes a lot of time
+        // display progress in user-interface and find better optimisations
         int xPos = -1;
         int yPos = -1;
         boolean completed = true;
@@ -80,8 +83,11 @@ public final class Solver extends GridUtils {
         for (int value = 1; value <= 9; value++) {
             assert (grid[xPos][yPos].value() == 0);
             if (isUnique(grid, new Field(xPos, yPos, value))) {
+                debugCalculateCount++;
                 grid[xPos][yPos] = new Field(xPos, yPos, value);
-                if (calculateSolution(grid)) return true;
+                if (calculateSolution(grid)) {
+                    return true;
+                }
                 else grid[xPos][yPos] = new Field(xPos, yPos, 0); // replace
             }
         }
@@ -89,7 +95,10 @@ public final class Solver extends GridUtils {
     }
 
     public boolean isSolvable() {
-        return calculateSolution(newInstanceOf(grid));
+        boolean v = calculateSolution(newInstanceOf(grid));
+        System.out.println("calculateSolution needed: " + debugCalculateCount + " to calculate"); //Todo: give progress to user-interface
+        debugCalculateCount = 0;
+        return v;
     }
 
     public List<Field[][]> allSolutions() { //todo: find each solution twice

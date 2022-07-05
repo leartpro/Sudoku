@@ -53,7 +53,7 @@ public class Game implements InputHandler {
             }
             if(isCompleted) {
                 //TODO: set value on position in controller and display
-
+                userInterface.displayGameInput(point);
                 Arrays.fill(point, -1);
             }
             //todo: valid inputs are row, column and value all other inputs are commands
