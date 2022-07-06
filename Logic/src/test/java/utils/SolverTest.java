@@ -146,6 +146,7 @@ class SolverTest extends GridUtils {
         assertFalse(solver.isSolved());
     }
 
+    /*
     @Test
     void solveEasyTest() { //TODO: create multiple test methods for different difficulties of grids
         int[][] input = new int[][]{ //unsolved
@@ -298,4 +299,5 @@ class SolverTest extends GridUtils {
         }
         System.out.println(output);
     }
+    */
 }

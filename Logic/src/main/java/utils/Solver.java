@@ -32,7 +32,6 @@ public final class Solver extends GridUtils {
                     }
                     if (grid[i][y].value() == current.value()) return false;
                 }
-
                 //check square for current
                 int squareXStart = x - x % 3;
                 int squareYStart = y - y % 3;
@@ -42,7 +41,6 @@ public final class Solver extends GridUtils {
                         if (grid[i][j].value() == current.value()) return false;
                     }
                 }
-
             }
         }
         return true;
@@ -59,6 +57,8 @@ public final class Solver extends GridUtils {
     int debugCalculateCount = 0;
     //TODO: to calculate a difficulty for the grid:
     // try first with easy solve-techniques and if there is no solution repeat with more advanced techniques
+
+    //TODO:
     private boolean calculateSolution(Field[][] grid) { //n = grid.length
         //TODO: need sometimes a lot of time
         // display progress in user-interface and find better optimisations
@@ -94,13 +94,15 @@ public final class Solver extends GridUtils {
         return false;
     }
 
+    //has debug counter
     public boolean isSolvable() {
         boolean v = calculateSolution(newInstanceOf(grid));
-        System.out.println("calculateSolution needed: " + debugCalculateCount + " to calculate"); //Todo: give progress to user-interface
+        Generator.totalSteps += debugCalculateCount;
         debugCalculateCount = 0;
         return v;
     }
 
+    /*
     public List<Field[][]> allSolutions() { //todo: find each solution twice
         List<Field[][]> solutions = new ArrayList<>();
         @SuppressWarnings("unchecked") List<Integer>[][] values = new ArrayList[9][9];
@@ -135,7 +137,9 @@ public final class Solver extends GridUtils {
         }
         return solutions;
     }
+    */
 
+    int debugUniqueCount = 0;
     //TODO: returns as early as possible
     public boolean uniqueSolution() { //todo: find each solution twice
         List<Field[][]> solutions = new ArrayList<>();
@@ -157,19 +161,28 @@ public final class Solver extends GridUtils {
         for (Field current : flatGrid(newInstanceOf(grid))) {
             if (current.value() == 0) available.add(current);
         }
-        for (Field current : available) {
+        for (Field current : available) { //runs max.81 times
             if(values[current.x()][current.y()].size() == 0) continue;
             Field[][] solution = newInstanceOf(grid);
             Integer value = values[current.x()][current.y()].get(0);
             solution[current.x()][current.y()] = new Field(current.x(), current.y(), value);
             values[current.x()][current.y()].remove(value);
             if (calculateSolution(solution)) {
+                debugUniqueCount += debugCalculateCount;
+                debugCalculateCount = 0;
                 if (!inList(solutions, solution)) solutions.add(solution);
-                if(solutions.size() > 1) return false;
+                if(solutions.size() > 1) {
+                    Generator.totalSteps += debugUniqueCount;
+                    return false;
+                }
                 //todo: optimize the values[][][] handle
                 // so the same solution is never calculated more than once
+            } else { //else is only in use for debug print
+                debugUniqueCount += debugCalculateCount;
+                debugCalculateCount = 0;
             }
         }
+        Generator.totalSteps += debugUniqueCount;
         return true;
     }
 }
