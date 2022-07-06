@@ -137,6 +137,40 @@ class SolverTest extends GridUtils {
         assertEquals(new Field(5, 5, 5), compareTo(actual, expected).get(0));
     }
 
+    @Test
+    void uniqueCandidates() {
+        Field[][] actual = toComparableGrid(
+                new int[][]{
+                        {0, 0, 4, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 4, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {5, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 4, 0, 0, 0}
+                }
+        );
+        Field[][] expected = toComparableGrid(
+                new int[][]{
+                        {0, 0, 4, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 4, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {5, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {0/**/, 0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 4, 0, 0, 0}
+                }
+        );
+        solver = new Solver(actual);
+        solver.uniqueCandidates();
+        displaySmall(actual);
+        assertEquals(new Field(7, 0, 4), compareTo(actual, expected).get(0));
+    }
+
     /*
     @Test
     void solveEasyTest() { //TODO: create multiple test methods for different difficulties of grids

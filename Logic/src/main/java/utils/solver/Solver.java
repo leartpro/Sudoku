@@ -184,7 +184,7 @@ public final class Solver extends GridUtils {
         }
     }
 
-    private void uniqueCandidates() {
+    public void uniqueCandidates() {
         //first check for each if there is a unique candidate
         //do this again for each only if changes have been made
         //if there were no changes the method returns
@@ -194,19 +194,34 @@ public final class Solver extends GridUtils {
             for (Field[] constrain : allConstrains(grid)) {
                 //check for each constrain for each available point for each value
                 //if in the  current constrain in no other point where the current value is unique
-                boolean isUnique = false; //TODO: check if on multiple positions available...
-                for (Field current : constrain) {
-                    if (current.value() != 0) continue; //if not available skip
-                    for(int i = 1; i <= 9; i++) {
-                        if(isUnique) {
-
+                for (int i = 1; i <= 9; i++) {
+                    List<Field> available = new ArrayList<>();
+                    for (Field current : constrain) {
+                        if (current.value() != 0) continue; //if not available skip
+                        if (isUnique(grid, new Field(current.x(), current.y(), i))) {
+                            available.add(new Field(current.x(), current.y(), i));
                         }
+                    }
+                    if(available.size() == 1) {
+                        grid[available.get(0).x()][available.get(0).y()] = available.get(0);
                     }
                 }
             }
         }
-
     }
+
+    //TODO:
+    // first store an array with values from 1 to 9 for each point
+    // :A
+    // then remove all not unique numbers
+    // then check for sole candidates //optimize for possible candidates
+    //  if changes have been made goto :A
+    // then check for unique candidates //optimize for possible candidates
+    //  if changes have been made goto :A
+    // then repeat this pattern with techniques for removing candidates
+    // e.g block/column, block/row, block/block - interactions
+    // or naked, hidden - subset
+    // or x-wing, swordfish or forcing chain
 
 
 }
