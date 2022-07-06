@@ -1,6 +1,8 @@
-package utils;
+package utils.generator;
 
 import domain.Field;
+import utils.GridUtils;
+import utils.solver.Solver;
 
 import java.util.ArrayList;
 import java.util.Collections;

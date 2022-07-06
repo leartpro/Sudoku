@@ -1,6 +1,8 @@
-package utils;
+package utils.solver;
 
 import domain.Field;
+import utils.generator.Generator;
+import utils.GridUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,40 +12,6 @@ public final class Solver extends GridUtils {
 
     public Solver(Field[][] grid) {
         this.grid = grid;
-    }
-
-    public boolean isSolved() {
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
-                Field current = grid[x][y];
-
-                //check row for current
-                for (int i = 0; i < 9; i++) {
-                    if (i == current.y()) {
-                        continue;
-                    }
-                    if (grid[x][i].value() == current.value()) return false;
-                }
-
-                //check column for current
-                for (int i = 0; i < 9; i++) {
-                    if (i == current.x()) {
-                        continue;
-                    }
-                    if (grid[i][y].value() == current.value()) return false;
-                }
-                //check square for current
-                int squareXStart = x - x % 3;
-                int squareYStart = y - y % 3;
-                for (int i = squareXStart; i < squareXStart + 3; i++) {
-                    for (int j = squareYStart; j < squareYStart + 3; j++) {
-                        if (i == current.x() && y == current.y()) continue;
-                        if (grid[i][j].value() == current.value()) return false;
-                    }
-                }
-            }
-        }
-        return true;
     }
 
     public List<Field> solve() {
@@ -87,8 +55,7 @@ public final class Solver extends GridUtils {
                 grid[xPos][yPos] = new Field(xPos, yPos, value);
                 if (calculateSolution(grid)) {
                     return true;
-                }
-                else grid[xPos][yPos] = new Field(xPos, yPos, 0); // replace
+                } else grid[xPos][yPos] = new Field(xPos, yPos, 0); // replace
             }
         }
         return false;
@@ -140,6 +107,7 @@ public final class Solver extends GridUtils {
     */
 
     int debugUniqueCount = 0;
+
     //TODO: returns as early as possible
     public boolean uniqueSolution() { //todo: find each solution twice
         List<Field[][]> solutions = new ArrayList<>();
@@ -162,7 +130,7 @@ public final class Solver extends GridUtils {
             if (current.value() == 0) available.add(current);
         }
         for (Field current : available) { //runs max.81 times
-            if(values[current.x()][current.y()].size() == 0) continue;
+            if (values[current.x()][current.y()].size() == 0) continue;
             Field[][] solution = newInstanceOf(grid);
             Integer value = values[current.x()][current.y()].get(0);
             solution[current.x()][current.y()] = new Field(current.x(), current.y(), value);
@@ -171,7 +139,7 @@ public final class Solver extends GridUtils {
                 debugUniqueCount += debugCalculateCount;
                 debugCalculateCount = 0;
                 if (!inList(solutions, solution)) solutions.add(solution);
-                if(solutions.size() > 1) {
+                if (solutions.size() > 1) {
                     Generator.totalSteps += debugUniqueCount;
                     return false;
                 }
@@ -185,4 +153,60 @@ public final class Solver extends GridUtils {
         Generator.totalSteps += debugUniqueCount;
         return true;
     }
+
+    public void soleCandidates() {
+        List<Field> available = new ArrayList<>();
+        for (Field current : flatGrid(newInstanceOf(grid))) {
+            if (current.value() == 0) available.add(current);
+        }
+        //first check for each if there is a sole candidate
+        //do this again for each only if changes have been made
+        //if there were no changes the method returns
+        boolean changes = true;
+        while (changes) {
+            changes = false;
+            for (Field current : available) {
+                assert (current.value() == 0);
+                List<Field[]> constrains = constrainsOf(grid, current);
+                List<Integer> availableValues = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
+                //check if there is every number between 1 and 9 and
+                //if only one is missing place this one
+                for (Field[] constrain : constrains) {
+                    for (Field field : constrain) {
+                        availableValues.remove(new Integer(field.value()));
+                    }
+                }
+                if (availableValues.size() == 1) {
+                    grid[current.x()][current.y()] = new Field(current.x(), current.y(), availableValues.get(0));
+                    changes = true;
+                }
+            }
+        }
+    }
+
+    private void uniqueCandidates() {
+        //first check for each if there is a unique candidate
+        //do this again for each only if changes have been made
+        //if there were no changes the method returns
+        boolean changes = true;
+        while (changes) {
+            changes = false;
+            for (Field[] constrain : allConstrains(grid)) {
+                //check for each constrain for each available point for each value
+                //if in the  current constrain in no other point where the current value is unique
+                boolean isUnique = false; //TODO: check if on multiple positions available...
+                for (Field current : constrain) {
+                    if (current.value() != 0) continue; //if not available skip
+                    for(int i = 1; i <= 9; i++) {
+                        if(isUnique) {
+
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+
 }

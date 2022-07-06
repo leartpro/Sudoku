@@ -1,0 +1,5 @@
+1. Refactor Solver to BacktrackingSolver
+2. Create an Interface named Solver
+3. Make Solver extends GridUtils
+4. Create class TechnicalSolver
+5. Cleanup

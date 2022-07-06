@@ -180,4 +180,38 @@ public abstract class GridUtils {
         }
         return solution;
     }
+
+    public boolean isSolved(Field[][] grid) {
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                Field current = grid[x][y];
+
+                //check row for current
+                for (int i = 0; i < 9; i++) {
+                    if (i == current.y()) {
+                        continue;
+                    }
+                    if (grid[x][i].value() == current.value()) return false;
+                }
+
+                //check column for current
+                for (int i = 0; i < 9; i++) {
+                    if (i == current.x()) {
+                        continue;
+                    }
+                    if (grid[i][y].value() == current.value()) return false;
+                }
+                //check square for current
+                int squareXStart = x - x % 3;
+                int squareYStart = y - y % 3;
+                for (int i = squareXStart; i < squareXStart + 3; i++) {
+                    for (int j = squareYStart; j < squareYStart + 3; j++) {
+                        if (i == current.x() && y == current.y()) continue;
+                        if (grid[i][j].value() == current.value()) return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 }

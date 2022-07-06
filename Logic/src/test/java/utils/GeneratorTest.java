@@ -1,12 +1,6 @@
 package utils;
 
-import domain.Field;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
-import org.opentest4j.AssertionFailedError;
-
-import java.util.ArrayList;
-import java.util.List;
+import utils.generator.Generator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

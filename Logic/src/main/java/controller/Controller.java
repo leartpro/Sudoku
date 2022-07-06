@@ -1,8 +1,8 @@
 package controller;
 
-import utils.Generator;
+import utils.generator.Generator;
 import utils.GridUtils;
-import utils.Solver;
+import utils.solver.Solver;
 
 public final class Controller extends GridUtils {
     private int[][] grid;
@@ -20,7 +20,7 @@ public final class Controller extends GridUtils {
     }
 
     public boolean isSolved() {
-        return solver.isSolved();
+        return solver.isSolved(toComparableGrid(grid));
     }
 
     public int[][] getGrid() {
