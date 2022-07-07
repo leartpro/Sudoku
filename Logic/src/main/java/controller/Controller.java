@@ -30,4 +30,12 @@ public final class Controller extends GridUtils {
     public int[][] solvedGrid() {
         return addAll(grid, solver.solve());
     }
+
+    public boolean isAvailable(int x, int y) {
+        return grid[x][y] == 0;
+    }
+
+    public void insert(int x, int y, int value) {
+        grid[x][y] = value;
+    }
 }

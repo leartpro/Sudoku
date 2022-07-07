@@ -25,7 +25,7 @@ public class Generator extends GridUtils {
             completeRandom(grid);
         System.out.println("generating the puzzle...");
             createPuzzle(grid);
-        System.out.println("Needed " + totalSteps + " to generate");
+        System.out.println("Needed " + totalSteps + " steps to generate");
         return grid;
     }
 

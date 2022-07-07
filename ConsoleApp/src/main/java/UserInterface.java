@@ -43,7 +43,7 @@ public class UserInterface {
         );
     }
 
-    public void displayGame(int[][] grid) {
+    public void displayGame(int[][] grid) { //TODO: improve the design
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
                 System.out.print(grid[x][y] + " ");
@@ -137,10 +137,10 @@ public class UserInterface {
         //TODO: first 'X' in a different signal color to display the current step
         assert (inGameProgress.length == 3);
         System.out.println(
-                "column " + (inGameProgress[0] == -1 ?
+                "row " + (inGameProgress[0] == -1 ?
                         TerminalUtils.toColorString("X", TerminalColors.cyan) :
                         TerminalUtils.toColorString(String.valueOf(inGameProgress[0]), TerminalColors.green)) +
-                " row " + (inGameProgress[1] == -1 ?
+                " column " + (inGameProgress[1] == -1 ?
                         TerminalUtils.toColorString("X", TerminalColors.cyan) :
                         TerminalUtils.toColorString(String.valueOf(inGameProgress[1]), TerminalColors.green)) +
                 " value " + (inGameProgress[2] == -1 ?

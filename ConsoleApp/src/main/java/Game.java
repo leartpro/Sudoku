@@ -37,28 +37,36 @@ public class Game implements InputHandler {
             TerminalUtils.printWarning("input have to be a command or a number");
             userInterface.displayGameUsages();
         }
-        if(validInput) { //TODO: point should reset
-                for(int i = 0; i < point.length; i++) {
+        if(validInput) {
+            if(selected > 0 && selected < 9) {
+                for (int i = 0; i < point.length; i++) {
                     if (point[i] == -1) {
                         point[i] = selected;
                         break;
                     }
                 }
-            boolean isCompleted = true;
-            for (int i : point) {
-                if (i == -1) {
-                    isCompleted = false;
-                    break;
+                boolean isCompleted = true;
+                for (int i : point) {
+                    if (i == -1) {
+                        isCompleted = false;
+                        break;
+                    }
                 }
-            }
-            if(isCompleted) {
-                //TODO: set value on position in controller and display
+                if (isCompleted) {
+                    if (controller.isAvailable(point[0]-1, point[1]-1)) {
+                        controller.insert(point[0]-1, point[1]-1, point[2]);
+                    } else {
+                        TerminalUtils.printWarning("this point is not available");
+                    }
+                    userInterface.displayGameInput(point);
+                    Arrays.fill(point, -1);
+                }
+                //todo: valid inputs are row, column and value all other inputs are commands
+                userInterface.displayGame(controller.getGrid()); //todo: insert value by controller
                 userInterface.displayGameInput(point);
-                Arrays.fill(point, -1);
+            } else {
+                TerminalUtils.printWarning("digit have to be between one and nine");
             }
-            //todo: valid inputs are row, column and value all other inputs are commands
-            userInterface.displayGame(controller.getGrid()); //todo: insert value by controller
-            userInterface.displayGameInput(point);
         }
     }
 
