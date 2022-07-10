@@ -169,16 +169,19 @@ public final class Solver extends GridUtils {
             for (Field current : available) {
                 assert (current.value() == 0);
                 List<Field[]> constrains = constrainsOf(grid, current);
-                List<Integer> availableValues = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
                 //check if there is every number between 1 and 9 and
                 //if only one is missing place this one
                 for (Field[] constrain : constrains) {
                     for (Field field : constrain) {
-                        availableValues.remove(Integer.valueOf((field.value())));
+                        values[current.x()][current.y()].remove(Integer.valueOf((field.value())));
                     }
                 }
-                if (availableValues.size() == 1) {
-                    grid[current.x()][current.y()] = new Field(current.x(), current.y(), availableValues.get(0));
+                if (available.size() == 1) {
+                    grid[current.x()][current.y()] = new Field(
+                            current.x(),
+                            current.y(),
+                            ((Field)values[current.x()][current.y()].get(0)).value()
+                    );
                     changes = true;
                     totalChanges = true;
                 }
@@ -243,20 +246,20 @@ public final class Solver extends GridUtils {
         // or x-wing, swordfish or forcing chain
     }
 
-    private List[][] validValues(Field[][] solution, List[][] values) {
+    private List[][] validValues(Field[][] grid, List[][] values) {
         //TODO: remove instead of add
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
-                if (solution[x][y].value() == 0) {
+                if (grid[x][y].value() == 0) {
                     List<Field> available = new ArrayList<>();
                     for (int i = 0; i < 9; i++) {
-                        if (isUnique(solution, new Field(x, y, i))) {
+                        if (isUnique(grid, new Field(x, y, i))) {
                             available.add(new Field(x, y, i));
                         }
                     }
                     values[x][y] = new ArrayList<>(available);
                 } else {
-                    values[x][y] = null;
+                    values[x][y] = new ArrayList();
                 }
             }
         }
