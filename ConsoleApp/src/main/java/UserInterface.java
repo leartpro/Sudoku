@@ -25,7 +25,7 @@ public class UserInterface {
     public void displayUsages() {
         System.out.println("These are the available commands...");
         System.out.println(
-                        TerminalUtils.toColorString(".start", TerminalColors.blue) + " ".repeat(11) +
+                TerminalUtils.toColorString(".start", TerminalColors.blue) + " ".repeat(11) +
                         "start a game" + " ".repeat(18) +
                         "(only in the main menu)" + "\n" +
                         TerminalUtils.toColorString(".menu", TerminalColors.blue) + " ".repeat(12) +
@@ -44,13 +44,23 @@ public class UserInterface {
     }
 
     public void displayGame(int[][] grid) { //TODO: improve the design
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
-                System.out.print(grid[x][y] + " ");
+        StringBuilder builder = new StringBuilder();
+        int j = 3, n = 0;
+        for (int i = 0; i < 3; i++) {
+            builder.append("+ - - - + - - - + - - - +\n");
+            for (int row = n; row < j; row++) {
+                builder.append("| ");
+                for (int column = 0; column < 9; column++) {
+                    builder.append(grid[row][column]).append(" ");
+                    if(column == 2 || column == 5 || column == 8) builder.append("| ");
+                }
+                builder.append("\n");
             }
-            System.out.println();
+            j += 3;
+            n += 3;
         }
-        System.out.println();
+        builder.append("+ - - - + - - - + - - - +");
+        System.out.println(builder);
     }
 
     public void displayMenu() {
@@ -140,10 +150,10 @@ public class UserInterface {
                 "row " + (inGameProgress[0] == -1 ?
                         TerminalUtils.toColorString("X", TerminalColors.cyan) :
                         TerminalUtils.toColorString(String.valueOf(inGameProgress[0]), TerminalColors.green)) +
-                " column " + (inGameProgress[1] == -1 ?
+                        " column " + (inGameProgress[1] == -1 ?
                         TerminalUtils.toColorString("X", TerminalColors.cyan) :
                         TerminalUtils.toColorString(String.valueOf(inGameProgress[1]), TerminalColors.green)) +
-                " value " + (inGameProgress[2] == -1 ?
+                        " value " + (inGameProgress[2] == -1 ?
                         TerminalUtils.toColorString("X", TerminalColors.cyan) :
                         TerminalUtils.toColorString(String.valueOf(inGameProgress[2]), TerminalColors.green))
         );

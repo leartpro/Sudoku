@@ -38,7 +38,7 @@ public class Game implements InputHandler {
             userInterface.displayGameUsages();
         }
         if(validInput) {
-            if(selected > 0 && selected < 9) {
+            if(selected > 0 && selected < 10) {
                 for (int i = 0; i < point.length; i++) {
                     if (point[i] == -1) {
                         point[i] = selected;

@@ -154,7 +154,7 @@ public final class Solver extends GridUtils {
         return true;
     }
 
-    public void soleCandidates() {
+    public boolean soleCandidates(Field[][] grid, List[][] values) {
         List<Field> available = new ArrayList<>();
         for (Field current : flatGrid(newInstanceOf(grid))) {
             if (current.value() == 0) available.add(current);
@@ -163,6 +163,7 @@ public final class Solver extends GridUtils {
         //do this again for each only if changes have been made
         //if there were no changes the method returns
         boolean changes = true;
+        boolean totalChanges = false;
         while (changes) {
             changes = false;
             for (Field current : available) {
@@ -179,16 +180,16 @@ public final class Solver extends GridUtils {
                 if (availableValues.size() == 1) {
                     grid[current.x()][current.y()] = new Field(current.x(), current.y(), availableValues.get(0));
                     changes = true;
+                    totalChanges = true;
                 }
             }
         }
+        return totalChanges;
     }
 
-    public void uniqueCandidates() {
-        //first check for each if there is a unique candidate
-        //do this again for each only if changes have been made
-        //if there were no changes the method returns
+    public boolean uniqueCandidates(Field[][] grid, List[][] values) {
         boolean changes = true;
+        boolean totalChanges = false;
         while (changes) {
             changes = false;
             for (Field[] constrain : allConstrains(grid)) {
@@ -204,29 +205,42 @@ public final class Solver extends GridUtils {
                     }
                     if (available.size() == 1) {
                         grid[available.get(0).x()][available.get(0).y()] = available.get(0);
+                        changes = true;
+                        totalChanges = true;
                     }
                 }
             }
         }
+        return totalChanges;
     }
 
-    public List<Field> solve2() {
+    public List<Field> solve2() { //todo
+        /*
+        first insert all of grid into solution and then add every solid value into solution
+        until solution is completed or solver failed t solve
+         */
         Field[][] solution = newInstanceOf(grid);
-        List[][] values = validValues(solution, new List[9][9]);
+        List[][] values = new List[9][9];
+        boolean changes = true;
+        while(changes) {
+            changes = false;
+            values = validValues(solution, values);
+            removingCandidates(values);
+            if(soleCandidates(solution, values)) {
+                changes = true;
+            }
+            if(uniqueCandidates(solution, values)) {
+                changes = true;
+            }
+        }
+        return compareTo(solution, this.grid);
+    }
 
-        //...
-        // :A
-        // then remove all not unique numbers
-        // then check for sole candidates //optimize for possible candidates
-        //  if changes have been made goto :A
-        // then check for unique candidates //optimize for possible candidates
-        //  if changes have been made goto :A
-        // then repeat this pattern with techniques for removing candidates
+    public void removingCandidates(List[][] values) {
+
         // e.g. block/column, block/row, block/block - interactions
         // or naked, hidden - subset
         // or x-wing, swordfish or forcing chain
-        //...
-        return compareTo(solution, this.grid);
     }
 
     private List[][] validValues(Field[][] solution, List[][] values) {
