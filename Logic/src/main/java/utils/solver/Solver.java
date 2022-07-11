@@ -199,7 +199,14 @@ public final class Solver extends GridUtils {
                 //check for each constrain for each available point for each value
                 //if in the  current constrain in no other point where the current value is unique
                 for (int i = 1; i <= 9; i++) {
-                    List<Field> available = new ArrayList<>();
+                    //TODO: values[][] already contains this
+                    // iterate the constrain through values and if there is only
+                    // one times (i == current.value()) then insert
+                    // else continue with the next constrain
+                    //TODO: => method -valuesOfConstrain(Field[] constrain): List<Integer>
+                    //TODO: => method -pointsWithoutValue(Field[] searchArea, int value): Field
+                    List<Field> available = new ArrayList<>(); //stores all field that contain the current point
+                    //alternativ: modify values[][] instead ?!
                     for (Field current : constrain) {
                         if (current.value() != 0) continue; //if not available skip
                         if (isUnique(grid, new Field(current.x(), current.y(), i))) {
