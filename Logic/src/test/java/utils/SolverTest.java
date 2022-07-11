@@ -108,7 +108,7 @@ class SolverTest extends GridUtils {
         assertFalse(solver.isUnique(grid, insert));
     }
 
-    /*
+
     @Test
     void soleCandidates() {
         Field[][] actual = toComparableGrid(
@@ -138,10 +138,9 @@ class SolverTest extends GridUtils {
                 }
         );
         solver = new Solver(actual);
-        solver.soleCandidates(solution, values);
+        solver.soleCandidates(actual, solver.validValues(actual, new List[9][9]));
         assertEquals(new Field(5, 5, 5), compareTo(actual, expected).get(0));
     }
-    */
 
     /*
     @Test
@@ -180,8 +179,8 @@ class SolverTest extends GridUtils {
     */
 
     @Test
-    void solve2() {
-        int[][] input = new int[][]{ //unsolved
+    void solve2() { //TODO: make inputs from photo...
+        /*int[][] input = new int[][]{ //EASY
                 {4, 0, 0, 0, 9, 1, 0, 0, 0},
                 {0, 0, 9, 0, 0, 7, 4, 2, 5},
                 {0, 5, 8, 3, 4, 0, 1, 9, 0},
@@ -191,8 +190,30 @@ class SolverTest extends GridUtils {
                 {0, 8, 7, 0, 2, 6, 5, 3, 0},
                 {3, 1, 5, 8, 0, 0, 6, 0, 0},
                 {0, 0, 0, 1, 5, 0, 0, 0, 9}
+        };*/
+        int[][] input = new int[][]{ //MEDIUM
+                {0, 0, 0, 9, 0, 0, 0, 6, 7},
+                {0, 9, 0, 0, 0, 0, 2, 0, 8},
+                {4, 6, 0, 0, 7, 8, 0, 0, 0},
+                {3, 2, 0, 0, 9, 4, 0, 7, 0},
+                {7, 0, 0, 6, 0, 3, 0, 0, 2},
+                {0, 1, 0, 7, 8, 0, 0, 4, 3},
+                {0, 0, 0, 8, 5, 0, 0, 1, 6},
+                {5, 0, 1, 0, 0, 0, 0, 9, 0},
+                {6, 7, 0, 0, 0, 9, 0, 0, 0}
         };
-        int[][] expected = new int[][]{ //solution
+        /*int[][] input = new int[][]{ //HARD
+                {9, 0, 6, 0, 1, 3, 0, 0, 8},
+                {0, 5, 8, 0, 0, 0, 0, 9, 0},
+                {0, 3, 0, 0, 0, 0, 0, 1, 0},
+                {0, 6, 0, 8, 0, 0, 9, 2, 0},
+                {0, 0, 3, 4, 0, 9, 1, 0, 0},
+                {0, 4, 9, 0, 0, 6, 0, 3, 0},
+                {0, 9, 0, 0, 0, 0, 0, 8, 0},
+                {0, 1, 0, 0, 0, 0, 6, 7, 0},
+                {4, 0, 0, 9, 6, 0, 3, 0, 1}
+        };*/
+        /*int[][] expected = new int[][]{ //EASY
                 {4, 6, 2, 5, 9, 1, 3, 8, 7},
                 {1, 3, 9, 6, 8, 7, 4, 2, 5},
                 {7, 5, 8, 3, 4, 2, 1, 9, 6},
@@ -202,16 +223,38 @@ class SolverTest extends GridUtils {
                 {9, 8, 7, 4, 2, 6, 5, 3, 1},
                 {3, 1, 5, 8, 7, 9, 6, 4, 2},
                 {2, 4, 6, 1, 5, 3, 8, 7, 9}
+        };*/
+        int[][] expected = new int[][]{ //MEDIUM
+                {8, 3, 5, 9, 2, 1, 4, 6, 7},
+                {1, 9, 7, 4, 6, 5, 2, 3, 8},
+                {4, 6, 2, 3, 7, 8, 1, 5, 9},
+                {3, 2, 8, 5, 9, 4, 6, 7, 1},
+                {7, 5, 4, 6, 1, 3/*4|5*/, 9, 8, 2},
+                {9, 1, 6, 7, 8, 2/*5|5*/, 5, 4, 3},
+                {2, 4, 9, 8, 5, 7, 3, 1, 6},
+                {5, 8, 1, 2, 3, 6, 7, 9, 4},
+                {6, 7, 3, 1, 4, 9, 8, 2, 5}
         };
+        /*int[][] expected = new int[][]{ //HARD //TODO not completed!
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        };*/
+        System.out.println(expected[4][5]);
+        assert new Solver(toComparableGrid(expected)).isSolved(toComparableGrid(expected));
+        //noinspection AssertWithSideEffects (not relevant)
+        assert new Solver(toComparableGrid(input)).isSolvable();
         solver = new Solver(toComparableGrid(input));
-        List<Field> result = new ArrayList<>(solver.solve2());
-        int[][] actual = addAll(input, result);
-        if (new Solver(toComparableGrid(actual)).isSolved(toComparableGrid(actual))) System.out.println("correctly solved");
+        int[][] actual = addAll(input, new ArrayList<>(solver.solve2()));
+        if (new Solver(toComparableGrid(actual)).isSolved(toComparableGrid(actual)))
+            System.out.println("correctly solved");
         else System.out.println("unsolved or incorrect");
-        for(Field f : result) {
-            System.out.println(f);
-        }
-
         boolean success = true;
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {

@@ -168,15 +168,16 @@ public final class Solver extends GridUtils {
             changes = false;
             for (Field current : available) {
                 assert (current.value() == 0);
-                List<Field[]> constrains = constrainsOf(grid, current);
+                //List<Field[]> constrains = constrainsOf(grid, current);
                 //check if there is every number between 1 and 9 and
                 //if only one is missing place this one
-                for (Field[] constrain : constrains) {
+                /*for (Field[] constrain : constrains) {
                     for (Field field : constrain) {
                         values[current.x()][current.y()].remove(Integer.valueOf((field.value())));
                     }
-                }
-                if (available.size() == 1) {
+                }*/
+                values = validValues(grid, values);
+                if (values[current.x()][current.y()].size() == 1) {
                     grid[current.x()][current.y()] = new Field(
                             current.x(),
                             current.y(),
@@ -246,7 +247,7 @@ public final class Solver extends GridUtils {
         // or x-wing, swordfish or forcing chain
     }
 
-    private List[][] validValues(Field[][] grid, List[][] values) {
+    public List[][] validValues(Field[][] grid, List[][] values) {
         //TODO: remove instead of add
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
