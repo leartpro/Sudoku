@@ -104,8 +104,8 @@ class SolverTest extends GridUtils {
                 }
         );
         solver = new Solver(grid);
-        Field insert = new Field(0, 1, 1);
-        assertFalse(solver.isUnique(grid, insert));
+        Field insert = new Field(1, 0, 1);
+        assertTrue(solver.isUnique(grid, insert));
     }
 
 
@@ -139,10 +139,11 @@ class SolverTest extends GridUtils {
         );
         solver = new Solver(actual);
         solver.soleCandidates(actual, solver.validValues(actual, new List[9][9]));
+        displaySmall(actual);
         assertEquals(new Field(5, 5, 5), compareTo(actual, expected).get(0));
     }
 
-    /*
+
     @Test
     void uniqueCandidates() {
         Field[][] actual = toComparableGrid(
@@ -172,11 +173,11 @@ class SolverTest extends GridUtils {
                 }
         );
         solver = new Solver(actual);
-        solver.uniqueCandidates(solution, values);
+        solver.uniqueCandidates(actual, new List[9][9]);
         displaySmall(actual);
         assertEquals(new Field(7, 0, 4), compareTo(actual, expected).get(0));
     }
-    */
+
 
     @Test
     void solve2() { //TODO: make inputs from photo...
@@ -292,6 +293,34 @@ class SolverTest extends GridUtils {
     @Test
     void removingCandidates() {
 
+    }
+
+    @Test
+    void testRemovingCandidates() {
+    }
+
+    @Test
+    void blockLineInteraction() {
+    }
+
+    @Test
+    void blockBlockInteraction() {
+    }
+
+    @Test
+    void nakedSubset() {
+    }
+
+    @Test
+    void hiddenSubset() {
+    }
+
+    @Test
+    void xWing() {
+    }
+
+    @Test
+    void swordfish() {
     }
 
     /*

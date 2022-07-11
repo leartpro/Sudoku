@@ -83,7 +83,8 @@ public abstract class GridUtils {
         return result;
     }
 
-    public boolean isUnique(Field[][] grid, Field insert) {
+    public boolean isUnique(Field[][] grid, Field insert) { //TODO: make sure the result is 100% valid
+        // make tests for row, column and square
         for (int y = 0; y < 9; y++) {
             if (grid[insert.x()][y].value() == insert.value()) return false;
         }

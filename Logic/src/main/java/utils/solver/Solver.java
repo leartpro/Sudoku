@@ -154,6 +154,8 @@ public final class Solver extends GridUtils {
         return true;
     }
 
+    //check for each unsolved field  if there is only one valid value to insert
+    //if this condition is true insert this value
     public boolean soleCandidates(Field[][] grid, List[][] values) {
         List<Field> available = new ArrayList<>();
         for (Field current : flatGrid(newInstanceOf(grid))) {
@@ -168,14 +170,8 @@ public final class Solver extends GridUtils {
             changes = false;
             for (Field current : available) {
                 assert (current.value() == 0);
-                //List<Field[]> constrains = constrainsOf(grid, current);
                 //check if there is every number between 1 and 9 and
                 //if only one is missing place this one
-                /*for (Field[] constrain : constrains) {
-                    for (Field field : constrain) {
-                        values[current.x()][current.y()].remove(Integer.valueOf((field.value())));
-                    }
-                }*/
                 values = validValues(grid, values);
                 if (values[current.x()][current.y()].size() == 1) {
                     grid[current.x()][current.y()] = new Field(
@@ -191,6 +187,9 @@ public final class Solver extends GridUtils {
         return totalChanges;
     }
 
+    //check for each field the row, the column and the square
+    // and if there is no other point where the current value is unique
+    //then insert this value
     public boolean uniqueCandidates(Field[][] grid, List[][] values) {
         boolean changes = true;
         boolean totalChanges = false;
@@ -247,7 +246,32 @@ public final class Solver extends GridUtils {
         // or x-wing, swordfish or forcing chain
     }
 
-    public List[][] validValues(Field[][] grid, List[][] values) {
+    //TODO: all sub-methods of removingCandidates should modify values[][]
+    public void blockLineInteraction(List[][] values) { //TODO
+
+    }
+
+    public void blockBlockInteraction(List[][] values) { //TODO
+
+    }
+
+    public void nakedSubset(List[][] values){
+
+    }
+
+    public void hiddenSubset(List[][] values) {
+
+    }
+
+    public void xWing(List[][] values) {
+
+    }
+
+    public void swordfish(List[][] values) {
+
+    }
+
+    public List[][] validValues(Field[][] grid, List[][] values) { //TODO: make void method because param 'values' is modified
         //TODO: remove instead of add
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
