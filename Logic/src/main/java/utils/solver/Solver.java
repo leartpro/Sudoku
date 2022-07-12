@@ -161,6 +161,7 @@ public final class Solver extends GridUtils {
         for (Field current : flatGrid(newInstanceOf(grid))) {
             if (current.value() == 0) available.add(current);
         }
+        validValues(grid, values);
         //first check for each if there is a sole candidate
         //do this again for each only if changes have been made
         //if there were no changes the method returns
@@ -172,7 +173,7 @@ public final class Solver extends GridUtils {
                 assert (current.value() == 0);
                 //check if there is every number between 1 and 9 and
                 //if only one is missing place this one
-                values = validValues(grid, values);
+                validValues(grid, values);
                 if (values[current.x()][current.y()].size() == 1) {
                     grid[current.x()][current.y()] = new Field(
                             current.x(),
@@ -230,12 +231,20 @@ public final class Solver extends GridUtils {
         until solution is completed or solver failed t solve
          */
         Field[][] solution = newInstanceOf(grid);
-        List[][] values = new List[9][9];
+        List[][] values = new ArrayList[9][9];
+        for(int x = 0; x < 9; x++) {
+            for(int y = 0; y < 9; y++) {
+                values[x][y] = new ArrayList();
+                for(int i = 1; i < 10; i++) {
+                    values[x][y].add(new Field(x, y, i));
+                }
+            }
+        }
         boolean changes = true;
         while(changes) {
             changes = false;
-            values = validValues(solution, values);
-            removingCandidates(values);
+            validValues(solution, values);
+            removingCandidates(solution, values);
             if(soleCandidates(solution, values)) {
                 changes = true;
             }
@@ -246,40 +255,59 @@ public final class Solver extends GridUtils {
         return compareTo(solution, this.grid);
     }
 
-    public void removingCandidates(List[][] values) {
-
+    public void removingCandidates(Field[][] grid, List[][] values) {
+        boolean changes = true;
+        while(changes) {
+            changes = false;
+            validValues(grid, values);
+            if(blockLineInteraction(grid, values)) {
+                changes = true;
+            }
+            if(blockBlockInteraction(grid, values)) {
+                changes = true;
+            }
+        }
         // e.g. block/column, block/row, block/block - interactions
         // or naked, hidden - subset
         // or x-wing, swordfish or forcing chain
     }
 
-    //TODO: all sub-methods of removingCandidates should modify values[][]
-    public void blockLineInteraction(List[][] values) { //TODO
+    // all sub-methods of removingCandidates should modify values[][]
+    public boolean blockLineInteraction(Field[][] grid, List[][] values) { //TODO
+        /*
+        for each square for each value from one to nine
+            if
+         */
+        return false;
+    }
+
+    public boolean blockBlockInteraction(Field[][] grid, List[][] values) { //TODO
+        return false;
 
     }
 
-    public void blockBlockInteraction(List[][] values) { //TODO
+    public boolean nakedSubset(List[][] values){
+        return true;
 
     }
 
-    public void nakedSubset(List[][] values){
+    public boolean hiddenSubset(List[][] values) {
+        return true;
 
     }
 
-    public void hiddenSubset(List[][] values) {
+    public boolean xWing(List[][] values) {
+        return true;
 
     }
 
-    public void xWing(List[][] values) {
+    public boolean swordfish(List[][] values) {
+        return true;
 
     }
 
-    public void swordfish(List[][] values) {
-
-    }
-
-    public List[][] validValues(Field[][] grid, List[][] values) { //TODO: make void method because param 'values' is modified
-        //TODO: remove instead of add
+    public void validValues(Field[][] grid, List[][] values) {
+        List[][] removable = new ArrayList[9][9];
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
                 if (grid[x][y].value() == 0) {
@@ -289,13 +317,17 @@ public final class Solver extends GridUtils {
                             available.add(new Field(x, y, i));
                         }
                     }
-                    values[x][y] = new ArrayList<>(available);
+                    removable[x][y] = new ArrayList<>(available);
                 } else {
-                    values[x][y] = new ArrayList();
+                    removable[x][y] = new ArrayList();
                 }
             }
         }
-        return values;
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                ((List<Field>)values[x][y]).retainAll(((List<Field>)removable[x][y]));
+            }
+        }
     }
 
         //TODO:

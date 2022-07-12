@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GridUtilsTest extends GridUtils{
+class GridUtilsTest extends GridUtils {
     Field[][] grid;
 
     @BeforeEach
@@ -120,7 +120,7 @@ class GridUtilsTest extends GridUtils{
 
     @Test
     void testAllConstrains() {
-        for(Field[] constrain : allConstrains(grid)) {
+        for (Field[] constrain : allConstrains(grid)) {
             System.out.print("Constrain: ");
             for (Field field : constrain) {
                 System.out.print(field + " ");
@@ -135,10 +135,38 @@ class GridUtilsTest extends GridUtils{
 
     @Test
     void testConstrainsOf() {
-        for(Field[] constrain : constrainsOf(grid, grid[5][5])) {
+        for (Field[] constrain : constrainsOf(grid, grid[5][5])) {
             System.out.print("Constrain: ");
             for (Field field : constrain) {
                 System.out.print(field + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    @Test
+    void testSquares() {
+        Field[][] grid = toComparableGrid(
+                new int[][]{
+                        {2, 9, 5, 7, 4, 3, 8, 6, 1},
+                        {4, 3, 1, 8, 6, 5, 9, 2, 7},
+                        {8, 7, 6, 1, 9, 2, 5, 4, 3},
+                        {3, 8, 7, 4, 5, 9, 2, 1, 6},
+                        {6, 1, 2, 3, 8, 7, 4, 9, 5},
+                        {5, 4, 9, 2, 1, 6, 7, 3, 8},
+                        {7, 6, 3, 5, 3, 4, 1, 8, 9},
+                        {9, 2, 8, 6, 7, 1, 3, 5, 4},
+                        {1, 5, 4, 9, 3, 8, 6, 7, 2}
+                }
+        );
+        displaySmall(grid);
+        List<Field[][]> squares = new ArrayList<>(squares(grid));
+        for (Field[][] square : squares) {
+            for (int x = 0; x < 3; x++) {
+                for (int y = 0; y < 3; y++) {
+                    System.out.print(square[x][y].value() + " ");
+                }
+                System.out.println();
             }
             System.out.println();
         }

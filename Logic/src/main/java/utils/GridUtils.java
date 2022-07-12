@@ -138,6 +138,36 @@ public abstract class GridUtils {
         return constrains;
     }
 
+    //TODO: split in squares
+    //TODO: (for the test-method) complete squares to one grid
+    public List<Field[][]> squares(Field[][] grid) {
+        List<Field[][]> constrains = new ArrayList<>();
+        for (int x = 1; x < 9; x += 3) {
+            for (int y = 1; y < 9; y += 3) {
+                constrains.add(
+                        new Field[][]{
+                                new Field[]{
+                                        new Field(x - 1, y - 1, grid[x - 1][y - 1].value()),
+                                        new Field(x - 1, y, grid[x - 1][y].value()),
+                                        new Field(x - 1, y + 1, grid[x - 1][y + 1].value()),
+                                },
+                                new Field[]{
+                                        new Field(x, y - 1, grid[x][y - 1].value()),
+                                        new Field(x, y, grid[x][y].value()),
+                                        new Field(x, y + 1, grid[x][y + 1].value()),
+                                },
+                                new Field[]{
+                                        new Field(x + 1, y - 1, grid[x + 1][y - 1].value()),
+                                        new Field(x + 1, y, grid[x + 1][y].value()),
+                                        new Field(x + 1, y + 1, grid[x + 1][y + 1].value()),
+                                }
+                        }
+                );
+            }
+        }
+        return constrains;
+    }
+
     public List<Field[]> constrainsOf(Field[][] grid, Field field) { //TODO: use this for solver
         List<Field[]> constrains = new ArrayList<>();
         Field[] column = new Field[9];
@@ -192,7 +222,6 @@ public abstract class GridUtils {
                     continue;
                 }
                 if (grid[current.x()][i].value() == current.value()) {
-                    System.out.println("Conflict between " + grid[current.x()][i] + " and " + current + " (row)");
                     return false;
                 }
             }
@@ -203,7 +232,6 @@ public abstract class GridUtils {
                     continue;
                 }
                 if (grid[i][current.y()].value() == current.value()) {
-                    System.out.println("Conflict between " + grid[i][current.y()] + " and " + current + " (column)");
                     return false;
                 }
             }
@@ -214,7 +242,6 @@ public abstract class GridUtils {
                 for (int j = squareYStart; j < squareYStart + 3; j++) {
                     if (i == current.x()) continue;
                     if (grid[i][j].value() == current.value()) {
-                        System.out.println("Conflict between " + grid[current.x()][i] + " and " + current + " (square)");
                         return false;
                     }
                 }
