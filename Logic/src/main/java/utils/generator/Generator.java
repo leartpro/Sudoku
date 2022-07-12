@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Random;
 
 public class Generator extends GridUtils {
-    public static int totalSteps = 0;
-    //TODO: give progress staus information of grid completion and puzzle completion
 
     //todo: returns sometimes completed grids
     public Field[][] generate() {
@@ -21,36 +19,27 @@ public class Generator extends GridUtils {
                 grid[x][y] = new Field(x, y, 0);
             }
         }
-        System.out.println("generating the grid...");
-            completeRandom(grid);
-        System.out.println("generating the puzzle...");
-            createPuzzle(grid);
-        System.out.println("Needed " + totalSteps + " steps to generate");
+        completeRandom(grid);
+        displaySmall(grid);
+        createPuzzle(grid);
+        displaySmall(grid);
         return grid;
     }
 
 
     //TODO: to generate for different difficulties:
     // use different strong solvers for different difficulty values
-    //int debugPuzzleCount = 0;
     public void createPuzzle(Field[][] grid) {
         List<Field> removable = new ArrayList<>(flatGrid(grid));
         for (Field current : removable) {
-            //debugPuzzleCount++;
-            //System.out.println("createPuzzle in step: " + debugPuzzleCount + " / 81"); //Todo: give progress to user-interface
             grid[current.x()][current.y()] = new Field(current.x(), current.y(), 0);
-            //int countOfSolutions = new Solver(grid).allSolutions().size();
-            //todo: optimized allSolution() should return either true
-            // or false if there are more than one solution
             if (!new Solver(grid).uniqueSolution()) {
                 grid[current.x()][current.y()] = current;
-                //assert (new Solver(grid).uniqueSolution());
             }
         }
     }
 
-   // int debugCompleteCount = 0;
-    //TODO: performance tests
+    //TODO: optimize this method
     private boolean completeRandom(Field[][] grid) { //todo: requires sometimes a long time to give a valid result
         List<Field> available = new ArrayList<>();
         boolean completed = true;
@@ -68,10 +57,8 @@ public class Generator extends GridUtils {
         for (int value : values) {
             assert (grid[xPos][yPos].value() == 0);
             if (isUnique(grid, new Field(xPos, yPos, value))) {
-                //debugCompleteCount++;
-                //System.out.println("completeRandom in step: " + debugCompleteCount + " / max.729"); //Todo: give progress to user-interface
                 grid[xPos][yPos] = new Field(xPos, yPos, value);
-                if (new Solver(grid).isSolvable()) { //todo: is necessary?
+                if (new Solver(grid).isSolvable()) {
                     if (completeRandom(grid)) return true;
                     else grid[xPos][yPos] = new Field(xPos, yPos, 0);
                 } else grid[xPos][yPos] = new Field(xPos, yPos, 0);

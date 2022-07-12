@@ -14,104 +14,14 @@ public final class Solver extends GridUtils {
         this.grid = grid;
     }
 
-    public List<Field> solve() {
-        Field[][] solution = newInstanceOf(grid);
-        if (calculateSolution(solution)) {
-            return compareTo(solution, this.grid);
-        }
-        return null;
-    }
-
-    int debugCalculateCount = 0;
-    //TODO: to calculate a difficulty for the grid:
-    // try first with easy solve-techniques and if there is no solution repeat with more advanced techniques
-
-    //TODO:
-    private boolean calculateSolution(Field[][] grid) { //n = grid.length
-        //TODO: need sometimes a lot of time
-        // display progress in user-interface and find better optimisations
-        int xPos = -1;
-        int yPos = -1;
-        boolean completed = true;
-        int x = 0;
-        while (x < 9 && completed) {
-            int y = 0;
-            while (y < 9 && completed) {
-                if (grid[x][y].value() == 0) {
-                    completed = false;
-                    xPos = x;
-                    yPos = y;
-                }
-                y++;
-            }
-            x++;
-        }
-        if (completed) return true;
-        //backtrack
-        for (int value = 1; value <= 9; value++) {
-            assert (grid[xPos][yPos].value() == 0);
-            if (isUnique(grid, new Field(xPos, yPos, value))) {
-                debugCalculateCount++;
-                grid[xPos][yPos] = new Field(xPos, yPos, value);
-                if (calculateSolution(grid)) {
-                    return true;
-                } else grid[xPos][yPos] = new Field(xPos, yPos, 0); // replace
-            }
-        }
-        return false;
-    }
-
-    //has debug counter
     public boolean isSolvable() {
-        boolean v = calculateSolution(newInstanceOf(grid));
-        Generator.totalSteps += debugCalculateCount;
-        debugCalculateCount = 0;
-        return v;
+        return calculateSolution(newInstanceOf(grid));
     }
-
-    /*
-    public List<Field[][]> allSolutions() { //todo: find each solution twice
-        List<Field[][]> solutions = new ArrayList<>();
-        @SuppressWarnings("unchecked") List<Integer>[][] values = new ArrayList[9][9];
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
-                if (grid[x][y].value() == 0) {
-                    List<Integer> available = new ArrayList<>();
-                    for (int i = 0; i < 9; i++) {
-                        if (isUnique(grid, new Field(x, y, i))) available.add(i);
-                    }
-                    values[x][y] = new ArrayList<>(available);
-                } else {
-                    values[x][y] = new ArrayList<>();
-                }
-            }
-        }
-        List<Field> available = new ArrayList<>();
-        for (Field current : flatGrid(newInstanceOf(grid))) {
-            if (current.value() == 0) available.add(current);
-        }
-        for (Field current : available) {
-            if(values[current.x()][current.y()].size() == 0) continue;
-            Field[][] solution = newInstanceOf(grid);
-            Integer value = values[current.x()][current.y()].get(0);
-            solution[current.x()][current.y()] = new Field(current.x(), current.y(), value);
-            values[current.x()][current.y()].remove(value);
-            if (calculateSolution(solution)) {
-                if (!inList(solutions, solution)) solutions.add(solution);
-                //todo: optimize the values[][][] handle
-                // so the same solution is never calculated more than once
-            }
-        }
-        return solutions;
-    }
-    */
-
-    int debugUniqueCount = 0;
 
     //TODO: returns as early as possible
-    public boolean uniqueSolution() { //todo: find each solution twice
+    public boolean uniqueSolution() { //todo: finds each solution twice
         List<Field[][]> solutions = new ArrayList<>();
-        @SuppressWarnings("unchecked") ArrayList<Integer>[][] values = new ArrayList[9][9];
+        List<Integer>[][] values = new ArrayList[9][9];
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
                 if (grid[x][y].value() == 0) {
@@ -136,23 +46,78 @@ public final class Solver extends GridUtils {
             solution[current.x()][current.y()] = new Field(current.x(), current.y(), value);
             values[current.x()][current.y()].remove(value);
             if (calculateSolution(solution)) {
-                debugUniqueCount += debugCalculateCount;
-                debugCalculateCount = 0;
                 if (!inList(solutions, solution)) solutions.add(solution);
                 if (solutions.size() > 1) {
-                    Generator.totalSteps += debugUniqueCount;
                     return false;
                 }
                 //todo: optimize the values[][][] handle
                 // so the same solution is never calculated more than once
-            } else { //else is only in use for debug print
-                debugUniqueCount += debugCalculateCount;
-                debugCalculateCount = 0;
             }
         }
-        Generator.totalSteps += debugUniqueCount;
         return true;
     }
+
+    /*
+    private boolean calculateSolution(Field[][] solution) {
+        List[][] values = new ArrayList[9][9];
+        for(int x = 0; x < 9; x++) {
+            for(int y = 0; y < 9; y++) {
+                values[x][y] = new ArrayList();
+                for(int i = 1; i < 10; i++) {
+                    values[x][y].add(new Field(x, y, i));
+                }
+            }
+        }
+        boolean changes = true;
+        while(changes) {
+            changes = false;
+            validValues(solution, values);
+            //removingCandidates(solution, values);
+            if(soleCandidates(solution, values)) {
+                changes = true;
+            }
+            if(uniqueCandidates(solution, values)) {
+                changes = true;
+            }
+        }
+        return isSolved(solution);
+    }
+    */
+
+
+    private boolean calculateSolution(Field[][] grid) { //n = grid.length
+        //TODO: need sometimes a lot of time
+        // display progress in user-interface and find better optimisations
+        int xPos = -1;
+        int yPos = -1;
+        boolean completed = true;
+        int x = 0;
+        while (x < 9 && completed) {
+            int y = 0;
+            while (y < 9 && completed) {
+                if (grid[x][y].value() == 0) {
+                    completed = false;
+                    xPos = x;
+                    yPos = y;
+                }
+                y++;
+            }
+            x++;
+        }
+        if (completed) return true;
+        //backtrack
+        for (int value = 1; value <= 9; value++) {
+            assert (grid[xPos][yPos].value() == 0);
+            if (isUnique(grid, new Field(xPos, yPos, value))) {
+                grid[xPos][yPos] = new Field(xPos, yPos, value);
+                if (calculateSolution(grid)) {
+                    return true;
+                } else grid[xPos][yPos] = new Field(xPos, yPos, 0); // replace
+            }
+        }
+        return false;
+    }
+
 
     //check for each unsolved field  if there is only one valid value to insert
     //if this condition is true insert this value
@@ -225,7 +190,7 @@ public final class Solver extends GridUtils {
         return totalChanges;
     }
 
-    public List<Field> solve2() { //todo
+    public List<Field> solve() { //todo
         /*
         first insert all of grid into solution and then add every solid value into solution
         until solution is completed or solver failed t solve
@@ -244,7 +209,7 @@ public final class Solver extends GridUtils {
         while(changes) {
             changes = false;
             validValues(solution, values);
-            removingCandidates(solution, values);
+            //removingCandidates(solution, values);
             if(soleCandidates(solution, values)) {
                 changes = true;
             }
@@ -278,11 +243,11 @@ public final class Solver extends GridUtils {
         for each square for each value from one to nine
             if
          */
-        return false;
+        return true;
     }
 
     public boolean blockBlockInteraction(Field[][] grid, List[][] values) { //TODO
-        return false;
+        return true;
 
     }
 

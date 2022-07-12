@@ -20,7 +20,7 @@ public final class Controller extends GridUtils {
     }
 
     public boolean isSolved() {
-        return solver.isSolved(toComparableGrid(grid));
+        return isSolved(toComparableGrid(grid));
     }
 
     public int[][] getGrid() {
