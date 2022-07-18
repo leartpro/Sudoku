@@ -20,7 +20,14 @@ public class Generator extends GridUtils {
             }
         }
         completeRandom(grid);
+        assert allUnique(grid) == true;
+        assert isSolved(grid) == true;
+        System.out.println("Input:");
+        displaySmall(grid);
         createPuzzle(grid);
+        System.out.println("Result:");
+        completeRandom(grid);
+        System.out.println();
         return grid;
     }
 
@@ -31,7 +38,8 @@ public class Generator extends GridUtils {
         Collections.shuffle(removable);
         for (Field current : removable) {
             grid[current.x()][current.y()] = new Field(current.x(), current.y(), 0);
-            if (!new Solver(grid).uniqueSolution()) {
+            if (!uniqueSolution(grid)) {
+                System.out.println("cant remove " + current);
                 grid[current.x()][current.y()] = current;
             }
         }

@@ -13,51 +13,34 @@ public final class Solver extends GridUtils {
         this.grid = grid;
     }
 
-    //TODO: returns as early as possible
-    public boolean uniqueSolution() { //todo: finds each solution twice
-        List<Field[][]> solutions = new ArrayList<>();
-        List<Integer>[][] values = new ArrayList[9][9];
-
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
-                if (grid[x][y].value() == 0) {
-                    List<Integer> available = new ArrayList<>();
-                    for (int i = 0; i < 9; i++) {
-                        if (isUnique(grid, new Field(x, y, i))) available.add(i);
-                    }
-                    values[x][y] = new ArrayList<>(available);
-                } else {
-                    values[x][y] = new ArrayList<>();
+    public Field[][] solve(Field[][] grid) { //todo order methods
+        /*
+        first insert all of grid into solution and then add every solid value into solution
+        until solution is completed or solver failed t solve
+         */
+        Field[][] solution = newInstanceOf(grid);
+        List[][] values = new ArrayList[9][9];
+        for(int x = 0; x < 9; x++) {
+            for(int y = 0; y < 9; y++) {
+                values[x][y] = new ArrayList();
+                for(int i = 1; i < 10; i++) {
+                    values[x][y].add(new Field(x, y, i));
                 }
             }
         }
-
-        List<Field> available = new ArrayList<>();
-        for (Field current : flatGrid(newInstanceOf(grid))) {
-            if (current.value() == 0) available.add(current);
-        }
-
-        if(81 - available.size() < 17) return false;
-
-        for (Field current : available) { //runs max.81 times
-            if (values[current.x()][current.y()].size() == 0) continue;
-            Field[][] solution = newInstanceOf(grid);
-            Integer value = values[current.x()][current.y()].get(0);
-            solution[current.x()][current.y()] = new Field(current.x(), current.y(), value);
-            values[current.x()][current.y()].remove(value);
-            if (isSolvable(solution)) {
-                if (!inList(solutions, solution)) solutions.add(solution);
-                if (solutions.size() > 1) return false;
-                } else return false;
+        boolean changes = true;
+        while(changes) {
+            changes = false;
+            validValues(solution, values);
+            //removingCandidates(solution, values);
+            if(soleCandidates(solution, values)) {
+                changes = true;
             }
-
-        return true;
-    }
-
-    //solve the grid and returns true if success else return false
-    private boolean isSolvable(Field[][] grid) {
-        grid = addAll(grid, solve(grid));
-        return isSolved(grid);
+            if(uniqueCandidates(solution, values)) {
+                changes = true;
+            }
+        }
+        return solution;
     }
 
     //check for each unsolved field  if there is only one valid value to insert
@@ -129,36 +112,6 @@ public final class Solver extends GridUtils {
             }
         }
         return totalChanges;
-    }
-
-    public List<Field> solve(Field[][] grid) { //todo
-        /*
-        first insert all of grid into solution and then add every solid value into solution
-        until solution is completed or solver failed t solve
-         */
-        Field[][] solution = newInstanceOf(grid);
-        List[][] values = new ArrayList[9][9];
-        for(int x = 0; x < 9; x++) {
-            for(int y = 0; y < 9; y++) {
-                values[x][y] = new ArrayList();
-                for(int i = 1; i < 10; i++) {
-                    values[x][y].add(new Field(x, y, i));
-                }
-            }
-        }
-        boolean changes = true;
-        while(changes) {
-            changes = false;
-            validValues(solution, values);
-            //removingCandidates(solution, values);
-            if(soleCandidates(solution, values)) {
-                changes = true;
-            }
-            if(uniqueCandidates(solution, values)) {
-                changes = true;
-            }
-        }
-        return compareTo(solution, this.grid);
     }
 
     public void removingCandidates(Field[][] grid, List[][] values) {

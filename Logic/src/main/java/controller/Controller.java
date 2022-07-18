@@ -34,7 +34,7 @@ public final class Controller extends GridUtils {
     }
 
     public int[][] solvedGrid() {
-        return addAll(newInstanceOf(givenGrid), solver.solve(toComparableGrid(givenGrid)));
+        return mapComparableGrid(solver.solve(toComparableGrid(givenGrid)));
     }
 
     public boolean isAvailable(int x, int y) {

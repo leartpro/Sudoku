@@ -3,6 +3,7 @@ package utils;
 import domain.Field;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.solver.Solver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -176,17 +177,57 @@ class GridUtilsTest extends GridUtils {
     void testAllUnique() {
         Field[][] grid = toComparableGrid(
                 new int[][]{
-                {4, 0, 0, 0, 9, 1, 0, 0, 0},
-                {0, 0, 9, 0, 0, 7, 4, 2, 5},
-                {0, 5, 8, 3, 4, 0, 1, 9, 0},
-                {6, 9, 1, 0, 0, 0, 0, 0, 0},
-                {0, 0, 3, 9, 6, 4, 7, 0, 0},
-                {0, 0, 0, 0, 0, 0, 9, 6, 3},
-                {0, 8, 7, 0, 2, 6, 5, 3, 0},
-                {3, 1, 5, 8, 0, 0, 6, 0, 0},
-                {0, 0, 0, 1, 5, 0, 0, 0, 9}
-        }
+                        {4, 0, 0, 0, 9, 1, 0, 0, 0},
+                        {0, 0, 9, 0, 0, 7, 4, 2, 5},
+                        {0, 5, 8, 3, 4, 0, 1, 9, 0},
+                        {6, 9, 1, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 3, 9, 6, 4, 7, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 9, 6, 3},
+                        {0, 8, 7, 0, 2, 6, 5, 3, 0},
+                        {3, 1, 5, 8, 0, 0, 6, 0, 0},
+                        {0, 0, 0, 1, 5, 0, 0, 0, 9}
+                }
         );
         assertTrue(allUnique(grid));
+    }
+
+    @Test
+    void testUniqueSolution() {
+        Field[][] grid = toComparableGrid(
+                new int[][]{
+                        {0/*7*/, 8, 5, 3, 6, 1, 4, 2, 9},
+                        {9, 1, 4, 7, 8, 2, 6, 5, 3},
+                        {3, 6, 2, 9, 4, 5, 8, 1, 7},
+                        {1, 2, 8, 4, 7, 6, 5, 3, 0},
+                        {4, 3, 9, 5, 2, 8, 1, 6, 0},
+                        {5, 7, 6, 1, 3, 9, 2, 8, 4},
+                        {8, 9, 7, 6, 1, 4, 3, 0, 5},
+                        {6, 4, 3, 2, 5, 7, 9, 0, 1},
+                        {2, 5, 1, 8, 9, 3, 7, 4, 6}
+                }
+        );
+        displaySmall(new Solver(grid).solve(grid));
+        var v = uniqueSolution(grid);
+        assertTrue(v);
+    }
+
+    @Test
+    void testIsSolvable() {
+        Field[][] grid = toComparableGrid(
+                new int[][]{
+                        {0/*7*/, 8, 5, 3, 6, 1, 4, 2, 9},
+                        {9, 1, 4, 7, 8, 2, 6, 5, 3},
+                        {3, 6, 2, 9, 4, 5, 8, 1, 7},
+                        {1, 2, 8, 4, 7, 6, 5, 3, 0/*9*/},
+                        {4, 3, 9, 5, 2, 8, 1, 6, 0/*7*/},
+                        {5, 7, 6, 1, 3, 9, 2, 8, 4},
+                        {8, 9, 7, 6, 1, 4, 3, 0/*2*/, 5},
+                        {6, 4, 3, 2, 5, 7, 9, 0/*8*/, 1},
+                        {2, 5, 1, 8, 9, 3, 7, 4, 6}
+                }
+        );
+        displaySmall(new Solver(grid).solve(grid));
+        var v = isSolvable(grid);
+        assertTrue(v);
     }
 }

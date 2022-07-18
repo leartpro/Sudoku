@@ -294,7 +294,7 @@ class SolverTest extends GridUtils {
         //noinspection AssertWithSideEffects (not relevant)
         //assert new Solver(toComparableGrid(input)).isSolvable();
         solver = new Solver(toComparableGrid(input));
-        int[][] actual = addAll(input, new ArrayList<>(solver.solve(toComparableGrid(input))));
+        int[][] actual = mapComparableGrid(solver.solve(toComparableGrid(input)));
         if (new Solver(toComparableGrid(actual)).isSolved(toComparableGrid(actual)))
             System.out.println("correctly solved");
         else System.out.println("unsolved or incorrect");
