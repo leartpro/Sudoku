@@ -292,9 +292,9 @@ class SolverTest extends GridUtils {
         };
         assert new Solver(toComparableGrid(expected)).isSolved(toComparableGrid(expected));
         //noinspection AssertWithSideEffects (not relevant)
-        assert new Solver(toComparableGrid(input)).isSolvable();
+        //assert new Solver(toComparableGrid(input)).isSolvable();
         solver = new Solver(toComparableGrid(input));
-        int[][] actual = addAll(input, new ArrayList<>(solver.solve()));
+        int[][] actual = addAll(input, new ArrayList<>(solver.solve(toComparableGrid(input))));
         if (new Solver(toComparableGrid(actual)).isSolved(toComparableGrid(actual)))
             System.out.println("correctly solved");
         else System.out.println("unsolved or incorrect");
@@ -329,6 +329,7 @@ class SolverTest extends GridUtils {
             displaySmall(toComparableGrid(actual));
             display(toComparableGrid(actual));
         }
+        if(!success) throw new AssertionFailedError();
     }
 
     @Test

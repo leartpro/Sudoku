@@ -62,7 +62,7 @@ public class Game implements InputHandler {
                     Arrays.fill(point, -1);
                 }
                 //todo: valid inputs are row, column and value all other inputs are commands
-                userInterface.displayGame(controller.getGrid()); //todo: insert value by controller
+                userInterface.displayGame(controller.getCurrentGrid(), controller.getGivenGrid()); //todo: insert value by controller
                 userInterface.displayGameInput(point);
             } else {
                 TerminalUtils.printWarning("digit have to be between one and nine");
@@ -78,7 +78,7 @@ public class Game implements InputHandler {
                     userInterface.clear();
                     userInterface.displayGameIntro();
                     userInterface.displayGameUsages();
-                    userInterface.displayGame(controller.getGrid());
+                    userInterface.displayGame(controller.getCurrentGrid(), controller.getGivenGrid());
                     userInterface.displayGameInput(point);
                     this.inGame = true;
                 } else {
@@ -90,8 +90,8 @@ public class Game implements InputHandler {
                     //todo warn that all progress will be lost
                     this.inGame = false;
                     userInterface.clear();
-                    userInterface.displayUsages();
                     userInterface.displayMenu();
+                    userInterface.displayUsages();
                 } else {
                     TerminalUtils.printWarning("can not use that command here");
                 }
@@ -106,9 +106,9 @@ public class Game implements InputHandler {
             case "solve" -> { //in game -> finish game, return to menu,
                 // print game states, mistakes and solution...
                 if(inGame) {
-                    this.inGame = false;
                     if (controller.isSolved()) System.out.println("your solution is correct!");
-                    else userInterface.displaySolution(controller.solvedGrid());
+                    else userInterface.displaySolution(controller.solvedGrid(), controller.getGivenGrid());
+                    handleCommands("menu"); //TODO better solution?
                 } else {
                     TerminalUtils.printWarning("can not use that command here");
                 }

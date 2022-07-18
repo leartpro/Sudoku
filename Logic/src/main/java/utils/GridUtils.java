@@ -73,6 +73,14 @@ public abstract class GridUtils {
         return grid;
     }
 
+    public Field[][] addAll(Field[][] grid, List<Field> inserts) {
+        if (inserts == null) return grid;
+        inserts.forEach(i -> {
+            if (grid[i.x()][i.y()].value() == 0) grid[i.x()][i.y()] = i;
+        });
+        return grid;
+    }
+
     public int[][] mapComparableGrid(Field[][] grid) {
         int[][] result = new int[9][9];
         for (int x = 0; x < 9; x++) {
@@ -208,6 +216,13 @@ public abstract class GridUtils {
             for (int y = 0; y < 9; y++) {
                 solution[x][y] = new Field(x, y, grid[x][y].value());
             }
+        }
+        return solution;
+    }
+    public int[][] newInstanceOf(int[][] grid) {
+        int[][] solution = new int[9][9];
+        for (int x = 0; x < 9; x++) {
+            System.arraycopy(grid[x], 0, solution[x], 0, 9);
         }
         return solution;
     }

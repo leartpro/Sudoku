@@ -43,24 +43,8 @@ public class UserInterface {
         );
     }
 
-    public void displayGame(int[][] grid) { //TODO: improve the design
-        StringBuilder builder = new StringBuilder();
-        int j = 3, n = 0;
-        for (int i = 0; i < 3; i++) {
-            builder.append("+ - - - + - - - + - - - +\n");
-            for (int row = n; row < j; row++) {
-                builder.append("| ");
-                for (int column = 0; column < 9; column++) {
-                    builder.append(grid[row][column]).append(" ");
-                    if(column == 2 || column == 5 || column == 8) builder.append("| ");
-                }
-                builder.append("\n");
-            }
-            j += 3;
-            n += 3;
-        }
-        builder.append("+ - - - + - - - + - - - +");
-        System.out.println(builder);
+    public void displayGame(int[][] actual, int[][] given) { //TODO: make default digits in a different color
+        display(actual, given, TerminalColors.white);
     }
 
     public void displayMenu() {
@@ -168,14 +152,37 @@ public class UserInterface {
         System.out.flush();
     }
 
-    public void displaySolution(int[][] solvedGrid) {
-        System.out.println("Solution: ");
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
-                System.out.print(solvedGrid[x][y] + " ");
+    private void display(int[][] current, int[][] given, String color) {
+        StringBuilder builder = new StringBuilder();
+        int j = 3, n = 0, r = 1;
+        builder.append("  | ").append(TerminalUtils.toColorString("1 2 3", TerminalColors.purple))
+                .append(" | ").append(TerminalUtils.toColorString("4 5 6", TerminalColors.purple))
+                .append(" | ").append(TerminalUtils.toColorString("7 8 9", TerminalColors.purple)).append(" |\n");
+        for (int i = 0; i < 3; i++) {
+            builder.append("- + - - - + - - - + - - - +\n");
+            for (int row = n; row < j; row++) {
+                builder.append(TerminalUtils.toColorString(String.valueOf(row + 1), TerminalColors.purple)).append(" | ");
+                for (int column = 0; column < 9; column++) {
+                    builder.append(
+                                    TerminalUtils.toColorString(
+                                            String.valueOf(current[row][column]),
+                                            given[row][column] == 0 ? color : TerminalColors.black
+                                    )
+                            )
+                            .append(" ");
+                    if (column == 2 || column == 5 || column == 8) builder.append("| ");
+                }
+                builder.append("\n");
             }
-            System.out.println();
+            j += 3;
+            n += 3;
         }
-        System.out.println();
+        builder.append("- + - - - + - - - + - - - +");
+        System.out.println(builder);
+    }
+
+    public void displaySolution(int[][] solvedGrid, int[][] givenGrid) {
+        System.out.println("Solution:\n");
+        display(solvedGrid, givenGrid, TerminalColors.green);
     }
 }

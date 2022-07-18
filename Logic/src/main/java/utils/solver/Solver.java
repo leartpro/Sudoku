@@ -1,7 +1,6 @@
 package utils.solver;
 
 import domain.Field;
-import utils.generator.Generator;
 import utils.GridUtils;
 
 import java.util.ArrayList;
@@ -12,10 +11,6 @@ public final class Solver extends GridUtils {
 
     public Solver(Field[][] grid) {
         this.grid = grid;
-    }
-
-    public boolean isSolvable() {
-        return calculateSolution(newInstanceOf(grid));
     }
 
     //TODO: returns as early as possible
@@ -39,85 +34,30 @@ public final class Solver extends GridUtils {
         for (Field current : flatGrid(newInstanceOf(grid))) {
             if (current.value() == 0) available.add(current);
         }
+        if(81 - available.size() < 17) return false; //TODO: check this condition
         for (Field current : available) { //runs max.81 times
             if (values[current.x()][current.y()].size() == 0) continue;
             Field[][] solution = newInstanceOf(grid);
             Integer value = values[current.x()][current.y()].get(0);
             solution[current.x()][current.y()] = new Field(current.x(), current.y(), value);
             values[current.x()][current.y()].remove(value);
-            if (calculateSolution(solution)) {
+            if (isSolvable(solution)) {
                 if (!inList(solutions, solution)) solutions.add(solution);
-                if (solutions.size() > 1) {
-                    return false;
-                }
+                if (solutions.size() > 1) return false;
+                } else {
+                return false;
+            }
                 //todo: optimize the values[][][] handle
                 // so the same solution is never calculated more than once
             }
-        }
         return true;
     }
 
-    /*
-    private boolean calculateSolution(Field[][] solution) {
-        List[][] values = new ArrayList[9][9];
-        for(int x = 0; x < 9; x++) {
-            for(int y = 0; y < 9; y++) {
-                values[x][y] = new ArrayList();
-                for(int i = 1; i < 10; i++) {
-                    values[x][y].add(new Field(x, y, i));
-                }
-            }
-        }
-        boolean changes = true;
-        while(changes) {
-            changes = false;
-            validValues(solution, values);
-            //removingCandidates(solution, values);
-            if(soleCandidates(solution, values)) {
-                changes = true;
-            }
-            if(uniqueCandidates(solution, values)) {
-                changes = true;
-            }
-        }
-        return isSolved(solution);
+    //solve the grid and returns true if success else return false
+    private boolean isSolvable(Field[][] grid) {
+        grid = addAll(grid, solve(grid));
+        return isSolved(grid);
     }
-    */
-
-
-    private boolean calculateSolution(Field[][] grid) { //n = grid.length
-        //TODO: need sometimes a lot of time
-        // display progress in user-interface and find better optimisations
-        int xPos = -1;
-        int yPos = -1;
-        boolean completed = true;
-        int x = 0;
-        while (x < 9 && completed) {
-            int y = 0;
-            while (y < 9 && completed) {
-                if (grid[x][y].value() == 0) {
-                    completed = false;
-                    xPos = x;
-                    yPos = y;
-                }
-                y++;
-            }
-            x++;
-        }
-        if (completed) return true;
-        //backtrack
-        for (int value = 1; value <= 9; value++) {
-            assert (grid[xPos][yPos].value() == 0);
-            if (isUnique(grid, new Field(xPos, yPos, value))) {
-                grid[xPos][yPos] = new Field(xPos, yPos, value);
-                if (calculateSolution(grid)) {
-                    return true;
-                } else grid[xPos][yPos] = new Field(xPos, yPos, 0); // replace
-            }
-        }
-        return false;
-    }
-
 
     //check for each unsolved field  if there is only one valid value to insert
     //if this condition is true insert this value
@@ -190,7 +130,7 @@ public final class Solver extends GridUtils {
         return totalChanges;
     }
 
-    public List<Field> solve() { //todo
+    public List<Field> solve(Field[][] grid) { //todo
         /*
         first insert all of grid into solution and then add every solid value into solution
         until solution is completed or solver failed t solve
@@ -231,6 +171,18 @@ public final class Solver extends GridUtils {
             if(blockBlockInteraction(grid, values)) {
                 changes = true;
             }
+            if(nakedSubset(grid, values)) {
+                changes = true;
+            }
+            if(hiddenSubset(grid, values)) {
+                changes = true;
+            }
+            if(xWing(grid, values)) {
+                changes = true;
+            }
+            if(swordfish(grid, values)) {
+                changes = true;
+            }
         }
         // e.g. block/column, block/row, block/block - interactions
         // or naked, hidden - subset
@@ -251,22 +203,22 @@ public final class Solver extends GridUtils {
 
     }
 
-    public boolean nakedSubset(List[][] values){
+    public boolean nakedSubset(Field[][] grid, List[][] values){
         return true;
 
     }
 
-    public boolean hiddenSubset(List[][] values) {
+    public boolean hiddenSubset(Field[][] grid, List[][] values) {
         return true;
 
     }
 
-    public boolean xWing(List[][] values) {
+    public boolean xWing(Field[][] grid, List[][] values) {
         return true;
 
     }
 
-    public boolean swordfish(List[][] values) {
+    public boolean swordfish(Field[][] grid, List[][] values) {
         return true;
 
     }
