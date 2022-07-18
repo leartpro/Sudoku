@@ -147,7 +147,7 @@ class GridUtilsTest extends GridUtils {
     @Test
     void testSquares() {
         Field[][] grid = toComparableGrid(
-                new int[][]{
+                new int[][]{ //TODO: invalid Grid ->2x 3 in x=7 y=2,4 value=3
                         {2, 9, 5, 7, 4, 3, 8, 6, 1},
                         {4, 3, 1, 8, 6, 5, 9, 2, 7},
                         {8, 7, 6, 1, 9, 2, 5, 4, 3},
@@ -170,5 +170,23 @@ class GridUtilsTest extends GridUtils {
             }
             System.out.println();
         }
+    }
+
+    @Test
+    void testAllUnique() {
+        Field[][] grid = toComparableGrid(
+                new int[][]{
+                {4, 0, 0, 0, 9, 1, 0, 0, 0},
+                {0, 0, 9, 0, 0, 7, 4, 2, 5},
+                {0, 5, 8, 3, 4, 0, 1, 9, 0},
+                {6, 9, 1, 0, 0, 0, 0, 0, 0},
+                {0, 0, 3, 9, 6, 4, 7, 0, 0},
+                {0, 0, 0, 0, 0, 0, 9, 6, 3},
+                {0, 8, 7, 0, 2, 6, 5, 3, 0},
+                {3, 1, 5, 8, 0, 0, 6, 0, 0},
+                {0, 0, 0, 1, 5, 0, 0, 0, 9}
+        }
+        );
+        assertTrue(allUnique(grid));
     }
 }

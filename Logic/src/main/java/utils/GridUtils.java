@@ -111,6 +111,21 @@ public abstract class GridUtils {
         return true;
     }
 
+    public boolean allUnique(Field[][] grid) {
+        for (Field current : flatGrid(grid)) {
+            if (current.value() == 0) continue;
+            for (Field[] constrain : constrainsOf(grid, current)) {
+                for (Field value : constrain) {
+                    if (value.value() == 0 || value.equals(current)) continue;
+                    if (value.value() == current.value()) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     public List<Field[]> allConstrains(Field[][] grid) { //TODO: use this for solver
         List<Field[]> constrains = new ArrayList<>();
         //rows
@@ -219,6 +234,7 @@ public abstract class GridUtils {
         }
         return solution;
     }
+
     public int[][] newInstanceOf(int[][] grid) {
         int[][] solution = new int[9][9];
         for (int x = 0; x < 9; x++) {
