@@ -183,7 +183,7 @@ public final class Solver extends GridUtils {
             for (int y = 0; y < 9; y++) {
                 if (grid[x][y].value() == 0) {
                     List<Field> available = new ArrayList<>();
-                    for (int i = 0; i < 9; i++) {
+                    for (int i = 1; i <= 9; i++) {
                         if (isUnique(grid, new Field(x, y, i))) {
                             available.add(new Field(x, y, i));
                         }
