@@ -231,7 +231,9 @@ public abstract class GridUtils {
 
     public boolean isSolved(Field[][] grid) { //TODO: validate method result
         for (Field current : flatGrid(grid)) {
-            if (current.value() == 0) return false;
+            if (current.value() == 0) {
+                return false;
+            }
 
             //check column for current
             for (int i = 0; i < 9; i++) {
@@ -275,25 +277,16 @@ public abstract class GridUtils {
             for (int y = 0; y < 9; y++) {
                 if (grid[x][y].value() == 0) {
                     List<Integer> available = new ArrayList<>();
-                    for (int i = 0; i < 9; i++) {
-                        if (isUnique(grid, new Field(x, y, i))) available.add(i);
-                    }
+                    for (int i = 0; i < 9; i++) if (isUnique(grid, new Field(x, y, i))) available.add(i);
                     values[x][y] = new ArrayList<>(available);
-                } else {
-                    values[x][y] = new ArrayList<>();
-                }
+                } else values[x][y] = new ArrayList<>();
             }
         }
 
         List<Field> available = new ArrayList<>();
-        for (Field current : flatGrid(newInstanceOf(grid))) {
-            if (current.value() == 0) available.add(current);
-        }
+        for (Field current : flatGrid(newInstanceOf(grid))) if (current.value() == 0) available.add(current);
 
-        if(81 - available.size() < 17) {
-            System.out.println("To less given numbers");
-            return false;
-        }
+        if(81 - available.size() < 17) return false;
 
         for (Field current : available) { //runs max.81 times
             if (values[current.x()][current.y()].size() == 0) continue;
@@ -301,43 +294,18 @@ public abstract class GridUtils {
             Integer value = values[current.x()][current.y()].get(0);
             solution[current.x()][current.y()] = new Field(current.x(), current.y(), value);
             values[current.x()][current.y()].remove(value);
-            if (this.isSolvable(solution)) { //TODO: s. main-problem
+            if (this.isSolvable(solution)) {
                 if (!inList(solutions, solution)) solutions.add(solution);
-                if (solutions.size() > 1) {
-                    System.out.println("To many solutions");
-                    System.out.println("Solutions:");
-                    solutions.forEach(this::displaySmall);
-                    System.out.println("");
-                    return false;
-                }
-            } else {
-                System.out.println("is not solvable");
-                return false;
-            }
+                if (solutions.size() > 1) return false;
+            } else return false;
         }
+
         return true;
     }
 
     //solve the grid and returns true if success else return false
-    public boolean isSolvable(Field[][] grid) { //TODO: main problem:
-        /*
-0 8 5 3 6 1 4 2 9
-9 1 4 7 8 2 6 5 3
-3 6 2 9 4 5 8 1 7
-1 2 8 4 7 6 5 3 0
-4 3 9 5 2 8 1 6 0
-5 7 6 1 3 9 2 8 4
-8 9 7 6 1 4 3 0 5
-6 4 3 2 5 7 9 0 1
-2 5 1 8 9 3 7 4 6
-
-is not solvable
-but why?
-         */
+    public boolean isSolvable(Field[][] grid) {
         grid = new Solver(grid).solve(grid);
-        System.out.println("is Solvable- Solution:");
-        displaySmall(grid);
-        System.out.println();
         return isSolved(grid);
     }
 }

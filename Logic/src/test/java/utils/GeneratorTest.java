@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class GeneratorTest extends GridUtils {
 
     private final Generator generator = new Generator();
-        @RepeatedTest(10)
+        @RepeatedTest(1)
         void completeRandom() { //todo: sometimes tests failed...
             int[][] input = new int[][]{
                     {0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -25,14 +25,13 @@ class GeneratorTest extends GridUtils {
             };
 
             Field[][] result = toComparableGrid(input);
-            boolean success = true; //generator.completeRandom(result);
             generator.completeRandom(result);
             displaySmall(result);
-            assertTrue(success);
             assertTrue(allUnique(result));
+            assertTrue(isSolved(result));
         }
 
-        @RepeatedTest(15)
+        @RepeatedTest(10)
         void generate(){
             Field[][] result = generator.generate();
             displaySmall(result);

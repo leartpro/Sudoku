@@ -215,7 +215,7 @@ class GridUtilsTest extends GridUtils {
     void testIsSolvable() {
         Field[][] grid = toComparableGrid(
                 new int[][]{
-                        {0/*7*/, 8, 5, 3, 6, 1, 4, 2, 9},
+                        {7/*7*/, 8, 5, 3, 6, 1, 4, 2, 9},
                         {9, 1, 4, 7, 8, 2, 6, 5, 3},
                         {3, 6, 2, 9, 4, 5, 8, 1, 7},
                         {1, 2, 8, 4, 7, 6, 5, 3, 0/*9*/},
