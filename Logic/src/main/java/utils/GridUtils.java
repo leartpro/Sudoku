@@ -269,7 +269,7 @@ public abstract class GridUtils {
         return true;
     }
 
-    public boolean uniqueSolution(Field[][] grid) { //todo: finds each solution twice
+    public boolean uniqueSolution(Field[][] grid) { //todo: returns to many times incorrectly 'false'
         List<Field[][]> solutions = new ArrayList<>();
         List<Integer>[][] values = new ArrayList[9][9];
 
@@ -277,7 +277,7 @@ public abstract class GridUtils {
             for (int y = 0; y < 9; y++) {
                 if (grid[x][y].value() == 0) {
                     List<Integer> available = new ArrayList<>();
-                    for (int i = 0; i < 9; i++) if (isUnique(grid, new Field(x, y, i))) available.add(i);
+                    for (int i = 1; i <= 9; i++) if (isUnique(grid, new Field(x, y, i))) available.add(i);
                     values[x][y] = new ArrayList<>(available);
                 } else values[x][y] = new ArrayList<>();
             }

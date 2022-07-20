@@ -2,6 +2,7 @@ package utils;
 
 import domain.Field;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 import utils.generator.Generator;
 
@@ -37,18 +38,36 @@ class GeneratorTest extends GridUtils {
             displaySmall(result);
             try {
                 boolean allUnique = allUnique(result);
-                System.out.println("all unique: " + allUnique);
                 assertTrue(allUnique);
             } catch (AssertionFailedError e) {
                 throw new AssertionFailedError();
             }
             try {
                 boolean isSolvable = isSolvable(result);
-                System.out.println("is solvable: " + isSolvable);
                 assertTrue(isSolvable);
             } catch (AssertionFailedError e) {
                 throw new AssertionFailedError();
             }
 
         }
+
+    @Test
+    void isInFutureSolvable() {
+        int[][] input = new int[][]{
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0}
+        };
+
+        Field[][] result = toComparableGrid(input);
+        generator.completeRandom(result);
+        displaySmall(result);
+
     }
+}
