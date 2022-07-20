@@ -12,7 +12,7 @@ public class Game implements InputHandler {
     private final int[] point = {-1, -1, -1}; //[0]=column; [1]=row; [2]=value
     public Game(InputStream input) {
         userInterface = new UserInterface(input, this);
-        controller = new Controller();
+        controller = new Controller(userInterface);
         inGame = false;
     }
 

@@ -4,6 +4,7 @@ import domain.Field;
 import utils.GridUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class Solver extends GridUtils {
@@ -14,33 +15,22 @@ public final class Solver extends GridUtils {
     }
 
     public Field[][] solve(Field[][] grid) { //todo order methods
-        /*
-        first insert all of grid into solution and then add every solid value into solution
-        until solution is completed or solver failed t solve
-         */
         Field[][] solution = newInstanceOf(grid);
         ArrayList<Field>[][] values = new ArrayList[9][9];
-        for(int x = 0; x < 9; x++) {
-            for(int y = 0; y < 9; y++) {
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
                 values[x][y] = new ArrayList();
-                for(int i = 1; i < 10; i++) {
-                    values[x][y].add(new Field(x, y, i));
-                }
+                for (int i = 1; i < 10; i++) values[x][y].add(new Field(x, y, i));
             }
         }
         boolean changes = true;
-        while(changes) {
+        while (changes) {
             changes = false;
             validValues(solution, values);
             //removingCandidates(solution, values);
-            if(soleCandidates(solution, values)) {
-                changes = true;
-            }
-            if(uniqueCandidates(solution, values)) {
-                changes = true;
-            }
+            if (soleCandidates(solution, values)) changes = true;
+            if (uniqueCandidates(solution, values)) changes = true;
         }
-        //assert isSolved(solution);
         return solution;
     }
 
@@ -52,23 +42,18 @@ public final class Solver extends GridUtils {
             if (current.value() == 0) available.add(current);
         }
         validValues(grid, values);
-        //first check for each if there is a sole candidate
-        //do this again for each only if changes have been made
-        //if there were no changes the method returns
         boolean changes = true;
         boolean totalChanges = false;
         while (changes) {
             changes = false;
             for (Field current : available) {
                 assert (current.value() == 0);
-                //check if there is every number between 1 and 9 and
-                //if only one is missing place this one
                 validValues(grid, values);
                 if (values[current.x()][current.y()].size() == 1) {
                     grid[current.x()][current.y()] = new Field(
                             current.x(),
                             current.y(),
-                            ((Field)values[current.x()][current.y()].get(0)).value()
+                            ((Field) values[current.x()][current.y()].get(0)).value()
                     );
                     changes = true;
                     totalChanges = true;
@@ -87,17 +72,8 @@ public final class Solver extends GridUtils {
         while (changes) {
             changes = false;
             for (Field[] constrain : allConstrains(grid)) {
-                //check for each constrain for each available point for each value
-                //if in the  current constrain in no other point where the current value is unique
                 for (int i = 1; i <= 9; i++) {
-                    //TODO: values[][] already contains this
-                    // iterate the constrain through values and if there is only
-                    // one times (i == current.value()) then insert
-                    // else continue with the next constrain
-                    //TODO: => method -valuesOfConstrain(Field[] constrain): List<Integer>
-                    //TODO: => method -pointsWithoutValue(Field[] searchArea, int value): Field
-                    List<Field> available = new ArrayList<>(); //stores all field that contain the current point
-                    //alternativ: modify values[][] instead ?!
+                    List<Field> available = new ArrayList<>();
                     for (Field current : constrain) {
                         if (current.value() != 0) continue; //if not available skip
                         if (isUnique(grid, new Field(current.x(), current.y(), i))) {
@@ -117,34 +93,20 @@ public final class Solver extends GridUtils {
 
     public void removingCandidates(Field[][] grid, List[][] values) {
         boolean changes = true;
-        while(changes) {
+        while (changes) {
             changes = false;
             validValues(grid, values);
-            if(blockLineInteraction(grid, values)) {
-                changes = true;
-            }
-            if(blockBlockInteraction(grid, values)) {
-                changes = true;
-            }
-            if(nakedSubset(grid, values)) {
-                changes = true;
-            }
-            if(hiddenSubset(grid, values)) {
-                changes = true;
-            }
-            if(xWing(grid, values)) {
-                changes = true;
-            }
-            if(swordfish(grid, values)) {
-                changes = true;
-            }
+            if (blockLineInteraction(grid, values)) changes = true;
+            if (blockInteractions(grid, values)) changes = true;
+            if (nakedSubset(grid, values)) changes = true;
+            if (hiddenSubset(grid, values)) changes = true;
+            if (xWing(grid, values)) changes = true;
+            if (swordfish(grid, values)) changes = true;
+            if (forcingChain(grid, values)) changes = true;
         }
-        // e.g. block/column, block/row, block/block - interactions
-        // or naked, hidden - subset
-        // or x-wing, swordfish or forcing chain
     }
 
-    // all sub-methods of removingCandidates should modify values[][]
+    //TODO: all sub-methods of removingCandidates should modify values[][]
     public boolean blockLineInteraction(Field[][] grid, List[][] values) { //TODO
         /*
         for each square for each value from one to nine
@@ -153,12 +115,12 @@ public final class Solver extends GridUtils {
         return true;
     }
 
-    public boolean blockBlockInteraction(Field[][] grid, List[][] values) { //TODO
+    public boolean blockInteractions(Field[][] grid, List[][] values) { //TODO
         return true;
 
     }
 
-    public boolean nakedSubset(Field[][] grid, List[][] values){
+    public boolean nakedSubset(Field[][] grid, List[][] values) {
         return true;
 
     }
@@ -174,6 +136,11 @@ public final class Solver extends GridUtils {
     }
 
     public boolean swordfish(Field[][] grid, List[][] values) {
+        return true;
+
+    }
+
+    public boolean forcingChain(Field[][] grid, List[][] values) {
         return true;
 
     }
@@ -196,24 +163,36 @@ public final class Solver extends GridUtils {
             }
         }
         for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
-                ((List<Field>)values[x][y]).retainAll(((List<Field>)removable[x][y]));
-            }
+            for (int y = 0; y < 9; y++) ((List<Field>) values[x][y]).retainAll(((List<Field>) removable[x][y]));
         }
     }
 
-        //TODO:
-        // first store an array with values from 1 to 9 for each point
-        // :A
-        // then remove all not unique numbers
-        // then check for sole candidates //optimize for possible candidates
-        //  if changes have been made goto :A
-        // then check for unique candidates //optimize for possible candidates
-        //  if changes have been made goto :A
-        // then repeat this pattern with techniques for removing candidates
-        // e.g block/column, block/row, block/block - interactions
-        // or naked, hidden - subset
-        // or x-wing, swordfish or forcing chain
-
-
+    private List<Field[]> allConstrains(Field[][] grid) {
+        List<Field[]> constrains = new ArrayList<>(Arrays.asList(grid).subList(0, 9));
+        for (int y = 0; y < 9; y++) {
+            Field[] constrain = new Field[9];
+            for (int x = 0; x < 9; x++) {
+                constrain[x] = grid[x][y];
+            }
+            constrains.add(constrain);
+        }
+        for (int x = 1; x < 9; x += 3) {
+            for (int y = 1; y < 9; y += 3) {
+                constrains.add(
+                        new Field[]{
+                                new Field(x - 1, y + 1, grid[x - 1][y + 1].value()),
+                                new Field(x, y + 1, grid[x][y + 1].value()),
+                                new Field(x + 1, y + 1, grid[x + 1][y + 1].value()),
+                                new Field(x - 1, y, grid[x - 1][y].value()),
+                                new Field(x, y, grid[x][y].value()),
+                                new Field(x + 1, y, grid[x + 1][y].value()),
+                                new Field(x - 1, y - 1, grid[x - 1][y - 1].value()),
+                                new Field(x, y - 1, grid[x][y - 1].value()),
+                                new Field(x + 1, y - 1, grid[x + 1][y - 1].value())
+                        }
+                );
+            }
+        }
+        return constrains;
     }
+}

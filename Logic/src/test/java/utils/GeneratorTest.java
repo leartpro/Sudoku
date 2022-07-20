@@ -1,5 +1,6 @@
 package utils;
 
+import controller.ProgressMonitor;
 import domain.Field;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -11,8 +12,24 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GeneratorTest extends GridUtils {
+    ProgressMonitor progressMonitor = new ProgressMonitor() {
+        @Override
+        public void displayLoading(String name, int totalSteps) {
 
-    private final Generator generator = new Generator();
+        }
+
+        @Override
+        public void increaseProgress() {
+
+        }
+
+        @Override
+        public void completeProgress() {
+
+        }
+    };
+
+    private final Generator generator = new Generator(progressMonitor);
         @RepeatedTest(1)
         void completeRandom() { //todo: sometimes tests failed...
             int[][] input = new int[][]{

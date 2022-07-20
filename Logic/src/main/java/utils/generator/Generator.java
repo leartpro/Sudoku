@@ -1,17 +1,24 @@
 package utils.generator;
 
+import controller.ProgressMonitor;
 import domain.Field;
 import utils.GridUtils;
 import utils.solver.Solver;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class Generator extends GridUtils {
 
-    //todo: returns sometimes completed grids
+    private final ProgressMonitor progressMonitor;
+
+    public Generator(ProgressMonitor progressMonitor) {
+        this.progressMonitor = progressMonitor;
+    }
     public Field[][] generate() {
+        progressMonitor.displayLoading("Generating Grid", 5265); //worst case I guess
         Field[][] grid = new Field[9][9];
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
@@ -23,26 +30,28 @@ public class Generator extends GridUtils {
         assert isSolved(grid);
         createPuzzle(grid);
         assert !isSolved(grid);
-        //assert isSolvable(grid);
+        progressMonitor.completeProgress();
         return grid;
     }
 
     //TODO: to generate for different difficulties:
     // use different strong solvers for different difficulty values
-    public void createPuzzle(Field[][] grid) { //TODO: removes to much
+    public void createPuzzle(Field[][] grid) {
         List<Field> removable = new ArrayList<>(flatGrid(grid));
         Collections.shuffle(removable);
         for (Field current : removable) {
             grid[current.x()][current.y()] = new Field(current.x(), current.y(), 0);
-            if (!uniqueSolvable(grid)) {
-                System.out.println("cant remove " + current);
+            if (!uniqueSolvable(grid)) { //TODO: this method call requires a lot of time
                 grid[current.x()][current.y()] = current;
-                //System.exit(0);
+            } else {
+                assert isSolved(new Solver(grid).solve(grid));
             }
+            progressMonitor.increaseProgress();
         }
     }
 
     private boolean uniqueSolvable(Field[][] grid) {
+        if(!isSolved(new Solver(grid).solve(grid))) return false;
         ArrayList<Integer>[][] values = new ArrayList[9][9];
         cleanupValues(grid, values);
         if(!allPossible(grid, values)) return false;
@@ -59,13 +68,14 @@ public class Generator extends GridUtils {
                 assert allUnique(solution);
                 values[f.x()][f.y()].remove(Integer.valueOf(value));
                 solution = new Solver(solution).solve(solution);
-                if(isSolved(solution)/*completeRandom(solution)*/) { //TODO: use Solver.solve() instead
+                if(isSolved(solution)) {
                     if (!inList(solutions, solution)) solutions.add(solution);
                 }
+                progressMonitor.increaseProgress();
             }
             if(solutions.size() > 1) return false;
         }
-        return solutions.size() > 0;
+        return solutions.size() != 0;
     }
 
     public boolean completeRandom(Field[][] grid) {
@@ -92,7 +102,10 @@ public class Generator extends GridUtils {
             assert (grid[xPos][yPos].value() == 0);
             if (isUnique(grid, new Field(xPos, yPos, value))) {
                 grid[xPos][yPos] = new Field(xPos, yPos, value);
-                if (this.completeRandom(grid)) return true;  //backtracking
+                if (this.completeRandom(grid)) {
+                    progressMonitor.increaseProgress();
+                    return true;
+                }
                 else grid[xPos][yPos] = new Field(xPos, yPos, 0); // replace
             }
         }
@@ -120,5 +133,53 @@ public class Generator extends GridUtils {
             }
         }
         return true;
+    }
+
+    private boolean allUnique(Field[][] grid) {
+        for (Field current : flatGrid(grid)) {
+            if (current.value() == 0) continue;
+            for (Field[] constrain : constrainsOf(grid, current)) {
+                for (Field value : constrain) {
+                    if (value.value() == 0 || value.equals(current)) continue;
+                    if (value.value() == current.value()) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean inList(List<Field[][]> list, Field[][] value) {
+        for (Field[][] current : list) {
+            boolean equals = true;
+            for (int x = 0; x < 9; x++) {
+                for (int y = 0; y < 9; y++) {
+                    if (current[x][y].value() != value[x][y].value()) {
+                        equals = false;
+                        break;
+                    }
+                }
+            }
+            if (equals) return true;
+        }
+        return false;
+    }
+
+    private List<Field[]> constrainsOf(Field[][] grid, Field field) { //TODO: use this for solver
+        List<Field[]> constrains = new ArrayList<>();
+        Field[] column = new Field[9];
+        System.arraycopy(grid[field.x()], 0, column, 0, 9);
+        constrains.add(column);
+        Field[] row = new Field[9];
+        for (int x = 0; x < 9; x++) row[x] = grid[x][field.y()];
+        constrains.add(row);
+        List<Field> square = new ArrayList<>();
+        int squareXStart = field.x() - field.x() % 3;
+        int squareYStart = field.y() - field.y() % 3;
+        for (int x = squareXStart; x < squareXStart + 3; x++)
+            square.addAll(Arrays.asList(grid[x]).subList(squareYStart, squareYStart + 3));
+        constrains.add(square.toArray(new Field[9]));
+        return constrains;
     }
 }

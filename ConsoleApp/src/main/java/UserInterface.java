@@ -1,3 +1,4 @@
+import controller.ProgressMonitor;
 import utils.ProgressBar;
 import utils.TerminalColors;
 import utils.TerminalUtils;
@@ -7,10 +8,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class UserInterface {
+public class UserInterface implements ProgressMonitor {
     private final InputHandler handler;
     private final BufferedReader reader;
     private boolean status;
+
+    private ProgressBar progressBar;
 
     public UserInterface(InputStream input, InputHandler handler) {
         this.reader = new BufferedReader(new InputStreamReader(input));
@@ -51,7 +54,7 @@ public class UserInterface {
         System.out.println("You are in the menu");
     }
 
-    public void displayLoading(String name) {
+    /*public void displayLoading(String name) {
         ProgressBar progressBar = new ProgressBar(name);
         for (int i = 0; i < 100; i++) {
             progressBar.addProgress();
@@ -61,21 +64,22 @@ public class UserInterface {
                 throw new RuntimeException(e);
             }
         }
+    }*/
+
+    @Override
+    public void displayLoading(String name, int totalSteps) {
+        this.progressBar = new ProgressBar(name, totalSteps);
+        this.progressBar.display();
     }
 
-    public void displayLoading(String name, int totalSteps) {
-        ProgressBar progressBar2 = new ProgressBar(name, totalSteps);
-        int i = 0;
-        while (!progressBar2.isCompleted()) {
-            progressBar2.addProgress();
-            if (i > 30) progressBar2.addProgress(12);
-            try {
-                Thread.sleep(15);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            i++;
-        }
+    @Override
+    public void increaseProgress() {
+        this.progressBar.addProgress();
+    }
+
+    @Override
+    public void completeProgress() {
+        if (!this.progressBar.isCompleted()) this.progressBar.complete();
     }
 
     public boolean getStatus() {
@@ -166,7 +170,15 @@ public class UserInterface {
                     builder.append(
                                     TerminalUtils.toColorString(
                                             String.valueOf(current[row][column]),
-                                            given[row][column] == 0 ? color : TerminalColors.black
+                                            given[row][column] == 0 ?
+                                                    (
+                                                            color.equals(TerminalColors.green) ? color :
+                                                                    (
+                                                                            current[row][column] == 0 ? color :
+                                                                                    TerminalColors.cyan
+                                                                    )
+                                                    ) :
+                                                    TerminalColors.black
                                     )
                             )
                             .append(" ");

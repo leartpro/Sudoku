@@ -30,6 +30,16 @@ public class ProgressBar {
         return bar.isCompleted;
     }
 
+    public void complete() {
+        bar.progress = 100;
+        if(bar.totalSteps != null) bar.progressSteps = bar.totalSteps;
+        System.out.print(bar);
+    }
+
+    public void display() {
+        System.out.print(bar);
+    }
+
     private static class Bar {
 
         private final String name;
