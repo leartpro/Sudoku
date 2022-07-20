@@ -2,6 +2,7 @@ package utils.generator;
 
 import domain.Field;
 import utils.GridUtils;
+import utils.solver.Solver;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +29,7 @@ public class Generator extends GridUtils {
 
     //TODO: to generate for different difficulties:
     // use different strong solvers for different difficulty values
-    public void createPuzzle(Field[][] grid) {
+    public void createPuzzle(Field[][] grid) { //TODO: removes to much
         List<Field> removable = new ArrayList<>(flatGrid(grid));
         Collections.shuffle(removable);
         for (Field current : removable) {
@@ -42,50 +43,28 @@ public class Generator extends GridUtils {
     }
 
     private boolean uniqueSolvable(Field[][] grid) {
-        //System.out.println("Given Grid:");
-        //displaySmall(grid);
         ArrayList<Integer>[][] values = new ArrayList[9][9];
         cleanupValues(grid, values);
-        if(!allPossible(grid, values)) {
-            //System.out.println("RETURN FALSE: invalid grid");
-            return false;
-        }
+        if(!allPossible(grid, values)) return false;
         List<Field> available = new ArrayList<>(flatGrid(grid));
         available.removeIf(f -> f.value() != 0);
-        if(81 - available.size() < 17) {
-            //System.out.println("RETURN FALSE: To less given numbers");
-            //((available.forEach(System.out::print);
-            return false;
-        }
+        if(81 - available.size() < 17) return false;
         List<Field[][]> solutions = new ArrayList<>();
         for(Field f : available) {
             assert  (values[f.x()][f.y()].size() != 0);
             List<Integer> possibleValues = new ArrayList<>(values[f.x()][f.y()]);
-            //System.out.println("Solution");
-            //displaySmall(solution);
-            //System.out.println("Possible values " + possibleValues + " for point " + f);
-            //System.out.println("Should be all unique there");
             for(int value : possibleValues) {
                 Field[][] solution = newInstanceOf(grid);
-                solution[f.x()][f.y()] = new Field(f.x(), f.y(), value); //TODO value is sometimes not unique
-                //System.out.println("Solution after insert");
-                //displaySmall(solution);
-                // see assertion below
+                solution[f.x()][f.y()] = new Field(f.x(), f.y(), value);
                 assert allUnique(solution);
                 values[f.x()][f.y()].remove(Integer.valueOf(value));
-                if(completeRandom(solution)) {
+                solution = new Solver(solution).solve(solution);
+                if(isSolved(solution)/*completeRandom(solution)*/) { //TODO: use Solver.solve() instead
                     if (!inList(solutions, solution)) solutions.add(solution);
                 }
             }
-
-            if(solutions.size() > 1) {
-                //System.out.println("RETURN FALSE: to many solutions");
-                //System.out.println("Solutions:");
-                //solutions.forEach(this::displaySmall);
-                return false;
-            }
+            if(solutions.size() > 1) return false;
         }
-        //System.out.println("RETURN '(solutions.size() > 0) == " + (solutions.size() > 0) + "'");
         return solutions.size() > 0;
     }
 

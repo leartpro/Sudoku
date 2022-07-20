@@ -40,8 +40,6 @@ public final class Solver extends GridUtils {
                 changes = true;
             }
         }
-        //System.out.println("Solution from Solver:");
-        //displaySmall(solution);
         //assert isSolved(solution);
         return solution;
     }
