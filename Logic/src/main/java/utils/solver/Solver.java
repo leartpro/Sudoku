@@ -19,7 +19,7 @@ public final class Solver extends GridUtils {
         until solution is completed or solver failed t solve
          */
         Field[][] solution = newInstanceOf(grid);
-        List[][] values = new ArrayList[9][9];
+        ArrayList<Field>[][] values = new ArrayList[9][9];
         for(int x = 0; x < 9; x++) {
             for(int y = 0; y < 9; y++) {
                 values[x][y] = new ArrayList();
@@ -40,6 +40,9 @@ public final class Solver extends GridUtils {
                 changes = true;
             }
         }
+        //System.out.println("Solution from Solver:");
+        //displaySmall(solution);
+        //assert isSolved(solution);
         return solution;
     }
 

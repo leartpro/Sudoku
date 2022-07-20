@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 import utils.generator.Generator;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GeneratorTest extends GridUtils {
@@ -32,9 +33,11 @@ class GeneratorTest extends GridUtils {
             assertTrue(isSolved(result));
         }
 
-        @RepeatedTest(10)
+        @RepeatedTest(1)
         void generate(){
             Field[][] result = generator.generate();
+            System.out.flush();
+            System.out.println("Result:");
             displaySmall(result);
             try {
                 boolean allUnique = allUnique(result);
@@ -45,6 +48,12 @@ class GeneratorTest extends GridUtils {
             try {
                 boolean isSolvable = isSolvable(result);
                 assertTrue(isSolvable);
+            } catch (AssertionFailedError e) {
+                throw new AssertionFailedError();
+            }
+            try {
+                boolean isSolved = isSolved(result);
+                 assertFalse(isSolved);
             } catch (AssertionFailedError e) {
                 throw new AssertionFailedError();
             }

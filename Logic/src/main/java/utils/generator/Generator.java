@@ -21,6 +21,8 @@ public class Generator extends GridUtils {
         assert allUnique(grid);
         assert isSolved(grid);
         createPuzzle(grid);
+        assert !isSolved(grid);
+        //assert isSolvable(grid);
         return grid;
     }
 
@@ -31,11 +33,60 @@ public class Generator extends GridUtils {
         Collections.shuffle(removable);
         for (Field current : removable) {
             grid[current.x()][current.y()] = new Field(current.x(), current.y(), 0);
-            if (!uniqueSolution(grid)) {
-                //System.out.println("cant remove " + current);
+            if (!uniqueSolvable(grid)) {
+                System.out.println("cant remove " + current);
                 grid[current.x()][current.y()] = current;
+                //System.exit(0);
             }
         }
+    }
+
+    private boolean uniqueSolvable(Field[][] grid) {
+        //System.out.println("Given Grid:");
+        //displaySmall(grid);
+        ArrayList<Integer>[][] values = new ArrayList[9][9];
+        cleanupValues(grid, values);
+        if(!allPossible(grid, values)) {
+            //System.out.println("RETURN FALSE: invalid grid");
+            return false;
+        }
+        List<Field> available = new ArrayList<>(flatGrid(grid));
+        available.removeIf(f -> f.value() != 0);
+        if(81 - available.size() < 17) {
+            //System.out.println("RETURN FALSE: To less given numbers");
+            //((available.forEach(System.out::print);
+            return false;
+        }
+        List<Field[][]> solutions = new ArrayList<>();
+        for(Field f : available) {
+            assert  (values[f.x()][f.y()].size() != 0);
+            List<Integer> possibleValues = new ArrayList<>(values[f.x()][f.y()]);
+            //System.out.println("Solution");
+            //displaySmall(solution);
+            //System.out.println("Possible values " + possibleValues + " for point " + f);
+            //System.out.println("Should be all unique there");
+            for(int value : possibleValues) {
+                Field[][] solution = newInstanceOf(grid);
+                solution[f.x()][f.y()] = new Field(f.x(), f.y(), value); //TODO value is sometimes not unique
+                //System.out.println("Solution after insert");
+                //displaySmall(solution);
+                // see assertion below
+                assert allUnique(solution);
+                values[f.x()][f.y()].remove(Integer.valueOf(value));
+                if(completeRandom(solution)) {
+                    if (!inList(solutions, solution)) solutions.add(solution);
+                }
+            }
+
+            if(solutions.size() > 1) {
+                //System.out.println("RETURN FALSE: to many solutions");
+                //System.out.println("Solutions:");
+                //solutions.forEach(this::displaySmall);
+                return false;
+            }
+        }
+        //System.out.println("RETURN '(solutions.size() > 0) == " + (solutions.size() > 0) + "'");
+        return solutions.size() > 0;
     }
 
     public boolean completeRandom(Field[][] grid) {
@@ -67,5 +118,28 @@ public class Generator extends GridUtils {
             }
         }
         return false;
+    }
+
+    private void cleanupValues(Field[][] grid, ArrayList<Integer>[][] values) {
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                if (grid[x][y].value() == 0) {
+                    List<Integer> temp = new ArrayList<>();
+                    for (int j = 1; j <= 9; j++) if (isUnique(grid, new Field(x, y, j))) temp.add(j);
+                    values[x][y] = new ArrayList<>(temp);
+                } else values[x][y] = new ArrayList<>();
+            }
+        }
+    }
+
+    private boolean allPossible(Field[][] grid, ArrayList<Integer>[][] values) {
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 9; y++) {
+                if (grid[x][y].value() == 0 && values[x][y].size() == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

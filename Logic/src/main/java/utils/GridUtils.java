@@ -103,6 +103,7 @@ public abstract class GridUtils {
                 for (Field value : constrain) {
                     if (value.value() == 0 || value.equals(current)) continue;
                     if (value.value() == current.value()) {
+                        System.out.println("Conflict between " + value + " and " + current);
                         return false;
                     }
                 }
@@ -230,8 +231,11 @@ public abstract class GridUtils {
     }
 
     public boolean isSolved(Field[][] grid) { //TODO: validate method result
+        //System.out.println("check is solved for grid:");
+        //displaySmall(grid);
         for (Field current : flatGrid(grid)) {
             if (current.value() == 0) {
+                //System.out.println("missing values!!! " + current);
                 return false;
             }
 
@@ -270,6 +274,8 @@ public abstract class GridUtils {
     }
 
     public boolean uniqueSolution(Field[][] grid) { //todo: returns to many times incorrectly 'false'
+        //System.out.println("Given Grid:");
+        //displaySmall(grid);
         List<Field[][]> solutions = new ArrayList<>();
         List<Integer>[][] values = new ArrayList[9][9];
 
@@ -286,7 +292,10 @@ public abstract class GridUtils {
         List<Field> available = new ArrayList<>();
         for (Field current : flatGrid(newInstanceOf(grid))) if (current.value() == 0) available.add(current);
 
-        if(81 - available.size() < 17) return false;
+        if (81 - available.size() < 17) {
+            //System.out.println("To less given numbers");
+            return false;
+        }
 
         for (Field current : available) { //runs max.81 times
             if (values[current.x()][current.y()].size() == 0) continue;
@@ -294,18 +303,34 @@ public abstract class GridUtils {
             Integer value = values[current.x()][current.y()].get(0);
             solution[current.x()][current.y()] = new Field(current.x(), current.y(), value);
             values[current.x()][current.y()].remove(value);
-            if (this.isSolvable(solution)) {
+            if (this.isSolvable(solution)) { //TODO: isSolvable should modify the given grid to solved
+                //System.out.println("Run assertion");
+                assert isSolved(solution);
+                //System.out.println("Current Solution:");
+                //displaySmall(solution);
+                //TODO: solution is not complete (only one value is inserted
+                // should be completely solved!!!
                 if (!inList(solutions, solution)) solutions.add(solution);
-                if (solutions.size() > 1) return false;
-            } else return false;
+                if (solutions.size() > 1) {
+                    //System.out.println("To many solutions");
+                    //System.out.println("Solutions:");
+                    //solutions.forEach(this::displaySmall);
+                    //System.out.println("");
+                    return false;
+                }
+            } else {
+                //System.out.println("is not solvable");
+                return false;
+            }
         }
-
+        //System.out.println("unique solvable");
         return true;
     }
 
     //solve the grid and returns true if success else return false
     public boolean isSolvable(Field[][] grid) {
-        grid = new Solver(grid).solve(grid);
-        return isSolved(grid);
+        //System.out.println("Modified grid:");
+        //displaySmall(grid);
+        return isSolved(new Solver(grid).solve(grid));
     }
 }
