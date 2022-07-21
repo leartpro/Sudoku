@@ -5,11 +5,17 @@ import utils.generator.Generator;
 import utils.GridUtils;
 import utils.solver.Solver;
 
+/**
+ *
+ */
 public final class Controller extends GridUtils {
     private int[][] currentGrid, givenGrid;
     private final Generator generator;
     private final Solver solver;
 
+    /**
+     * @param progressMonitor
+     */
     public Controller(ProgressMonitor progressMonitor) {
         this.currentGrid = new int[9][9];
         this.givenGrid = new int[9][9];
@@ -17,35 +23,64 @@ public final class Controller extends GridUtils {
         this.solver = new Solver();
     }
 
+    /**
+     *
+     */
     public void generateNewPuzzle() {
         this.givenGrid = mapComparableGrid(generator.generate());
         this.currentGrid = newInstanceOf(givenGrid);
     }
 
+    /**
+     * @return
+     */
     public boolean isSolved() {
         return isSolved(toComparableGrid(currentGrid));
     }
 
+    /**
+     * @return
+     */
     public int[][] getGivenGrid() {
         return givenGrid;
     }
 
+    /**
+     * @return
+     */
     public int[][] getCurrentGrid() {
         return currentGrid;
     }
 
+    /**
+     * @return
+     */
     public int[][] solvedGrid() {
         return mapComparableGrid(solver.solve(toComparableGrid(givenGrid)));
     }
 
+    /**
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean isAvailable(int x, int y) {
         return givenGrid[x][y] == 0;
     }
 
+    /**
+     * @param x
+     * @param y
+     * @param value
+     */
     public void insert(int x, int y, int value) {
         currentGrid[x][y] = value;
     }
 
+    /**
+     * @param grid
+     * @return
+     */
     private Field[][] toComparableGrid(int[][] grid) {
         Field[][] result = new Field[9][9];
         for (int x = 0; x < 9; x++) {
@@ -56,6 +91,10 @@ public final class Controller extends GridUtils {
         return result;
     }
 
+    /**
+     * @param grid
+     * @return
+     */
     private int[][] mapComparableGrid(Field[][] grid) {
         int[][] result = new int[9][9];
         for (int x = 0; x < 9; x++) {
@@ -66,6 +105,10 @@ public final class Controller extends GridUtils {
         return result;
     }
 
+    /**
+     * @param grid
+     * @return
+     */
     private int[][] newInstanceOf(int[][] grid) {
         int[][] solution = new int[9][9];
         for (int x = 0; x < 9; x++) {

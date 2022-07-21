@@ -7,15 +7,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ *
+ */
 @SuppressWarnings("rawtypes")
 public final class Solver extends GridUtils {
 
+    /**
+     * @param grid
+     * @return
+     */
+    @SuppressWarnings("unchecked")
     public Field[][] solve(Field[][] grid) { //todo order methods
         Field[][] solution = newInstanceOf(grid);
-        @SuppressWarnings("unchecked") ArrayList<Field>[][] values = new ArrayList[9][9];
+        ArrayList<Field>[][] values = new ArrayList[9][9];
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
-                //noinspection unchecked
                 values[x][y] = new ArrayList();
                 for (int i = 1; i < 10; i++) values[x][y].add(new Field(x, y, i));
             }
@@ -24,16 +31,21 @@ public final class Solver extends GridUtils {
         while (changes) {
             changes = false;
             validValues(solution, values);
-            //removingCandidates(solution, values);
+            //removingCandidates(solution, values); TODO
             if (soleCandidates(solution, values)) changes = true;
             if (uniqueCandidates(solution, values)) changes = true;
         }
         return solution;
     }
 
+    /**
+     * @param grid
+     * @param values
+     * @return
+     */
     //check for each unsolved field  if there is only one valid value to insert
     //if this condition is true insert this value
-    private boolean soleCandidates(Field[][] grid, List[][] values) {
+    private boolean soleCandidates(Field[][] grid, ArrayList<Field>[][] values) {
         List<Field> available = new ArrayList<>();
         for (Field current : flatGrid(newInstanceOf(grid))) {
             if (current.value() == 0) available.add(current);
@@ -50,7 +62,7 @@ public final class Solver extends GridUtils {
                     grid[current.x()][current.y()] = new Field(
                             current.x(),
                             current.y(),
-                            ((Field) values[current.x()][current.y()].get(0)).value()
+                            values[current.x()][current.y()].get(0).value()
                     );
                     changes = true;
                     totalChanges = true;
@@ -60,6 +72,11 @@ public final class Solver extends GridUtils {
         return totalChanges;
     }
 
+    /**
+     * @param grid
+     * @param values
+     * @return
+     */
     //check for each field the row, the column and the square
     // and if there is no other point where the current value is unique
     //then insert this value
@@ -88,7 +105,11 @@ public final class Solver extends GridUtils {
         return totalChanges;
     }
 
-    private void removingCandidates(Field[][] grid, List[][] values) {
+    /**
+     * @param grid
+     * @param values
+     */
+    private void removingCandidates(Field[][] grid, ArrayList<Field>[][] values) {
         boolean changes = true;
         while (changes) {
             changes = false;
@@ -103,6 +124,11 @@ public final class Solver extends GridUtils {
         }
     }
 
+    /**
+     * @param grid
+     * @param values
+     * @return
+     */
     //TODO: all sub-methods of removingCandidates should modify values[][]
     private boolean blockLineInteraction(Field[][] grid, List[][] values) { //TODO
         /*
@@ -112,38 +138,72 @@ public final class Solver extends GridUtils {
         return true;
     }
 
+    /**
+     * @param grid
+     * @param values
+     * @return
+     */
     private boolean blockInteractions(Field[][] grid, List[][] values) { //TODO
         return true;
 
     }
 
+    /**
+     * @param grid
+     * @param values
+     * @return
+     */
     private boolean nakedSubset(Field[][] grid, List[][] values) {
         return true;
 
     }
 
+    /**
+     * @param grid
+     * @param values
+     * @return
+     */
     private boolean hiddenSubset(Field[][] grid, List[][] values) {
         return true;
 
     }
 
+    /**
+     * @param grid
+     * @param values
+     * @return
+     */
     private boolean xWing(Field[][] grid, List[][] values) {
         return true;
 
     }
 
+    /**
+     * @param grid
+     * @param values
+     * @return
+     */
     private boolean swordfish(Field[][] grid, List[][] values) {
         return true;
 
     }
 
+    /**
+     * @param grid
+     * @param values
+     * @return
+     */
     private boolean forcingChain(Field[][] grid, List[][] values) {
         return true;
 
     }
 
-    private void validValues(Field[][] grid, List[][] values) {
-        List[][] removable = new ArrayList[9][9];
+    /**
+     * @param grid
+     * @param values
+     */
+    private void validValues(Field[][] grid, ArrayList<Field>[][] values) {
+        ArrayList<Field>[][] removable = new ArrayList[9][9];
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
                 if (grid[x][y].value() == 0) {
@@ -160,11 +220,15 @@ public final class Solver extends GridUtils {
             }
         }
         for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) //noinspection unchecked
-                ((List<Field>) values[x][y]).retainAll(((List<Field>) removable[x][y]));
+            for (int y = 0; y < 9; y++)
+            ((List<Field>) values[x][y]).retainAll(((List<Field>) removable[x][y]));
         }
     }
 
+    /**
+     * @param grid
+     * @return
+     */
     private List<Field[]> allConstrains(Field[][] grid) {
         List<Field[]> constrains = new ArrayList<>(Arrays.asList(grid).subList(0, 9));
         for (int y = 0; y < 9; y++) {

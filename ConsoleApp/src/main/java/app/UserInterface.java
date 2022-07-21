@@ -1,3 +1,5 @@
+package app;
+
 import controller.ProgressMonitor;
 import utils.ProgressBar;
 import utils.TerminalColors;
@@ -8,22 +10,35 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+/**
+ *
+ */
 public class UserInterface implements ProgressMonitor {
     private final InputHandler handler;
     private final BufferedReader reader;
     private boolean status;
     private ProgressBar progressBar;
 
+    /**
+     * @param input
+     * @param handler
+     */
     public UserInterface(InputStream input, InputHandler handler) {
         this.reader = new BufferedReader(new InputStreamReader(input));
         this.handler = handler;
         this.status = true;
     }
 
+    /**
+     *
+     */
     public void displayIntro() {
         TerminalUtils.printStatus("Welcome to Sudoku!" + "\n");
     }
 
+    /**
+     *
+     */
     public void displayUsages() {
         System.out.println("These are the available commands...");
         System.out.println(
@@ -45,6 +60,10 @@ public class UserInterface implements ProgressMonitor {
         );
     }
 
+    /**
+     * @param current
+     * @param given
+     */
     public void displayGame(int[][] current, int[][] given) { //TODO: make default digits in a different color
         @SuppressWarnings("Duplicated Code")
         StringBuilder builder = new StringBuilder();
@@ -80,26 +99,42 @@ public class UserInterface implements ProgressMonitor {
         System.out.println(builder);
     }
 
+    /**
+     *
+     */
     public void displayMenu() {
         System.out.println("You are in the menu");
     }
 
+    /**
+     * @param name
+     * @param totalSteps
+     */
     @Override
     public void displayLoading(String name, int totalSteps) {
         this.progressBar = new ProgressBar(name, totalSteps);
         this.progressBar.display();
     }
 
+    /**
+     *
+     */
     @Override
     public void increaseProgress() {
         this.progressBar.addProgress();
     }
 
+    /**
+     *
+     */
     @Override
     public void completeProgress() {
         if (!this.progressBar.isCompleted()) this.progressBar.complete();
     }
 
+    /**
+     *
+     */
     public void listen() {
         Thread listen = new Thread(() -> {
             String message;
@@ -125,6 +160,9 @@ public class UserInterface implements ProgressMonitor {
         listen.start();
     }
 
+    /**
+     *
+     */
     public void close() {
         TerminalUtils.printWarning("Do not receive any input from the user anymore");
         status = false;
@@ -135,12 +173,18 @@ public class UserInterface implements ProgressMonitor {
         }
     }
 
+    /**
+     *
+     */
     public void displayGameUsages() {
-        System.out.println("Game Usages\n" +
+        System.out.println("app.Game Usages\n" +
                 "type at first your row, then your column and finally " +
                 "the value you want to insert");
     }
 
+    /**
+     * @param inGameProgress
+     */
     public void displayGameInput(int[] inGameProgress) {
         //TODO: first 'X' in a different signal color to display the current step
         assert (inGameProgress.length == 3);
@@ -157,15 +201,26 @@ public class UserInterface implements ProgressMonitor {
         );
     }
 
+    /**
+     *
+     */
     public void displayGameIntro() {
         System.out.println("Your are now in a game");
     }
 
+    /**
+     *
+     */
     public void clear() {
         System.out.println("\033[H\033[2J");
         System.out.flush();
     }
 
+    /**
+     * @param current
+     * @param given
+     * @param solved
+     */
     public void displaySolution(int[][] current, int[][] given, int[][] solved) {
         System.out.println("Solution:\n");
         StringBuilder builder = new StringBuilder();

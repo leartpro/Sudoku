@@ -6,8 +6,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ *
+ */
 public abstract class GridUtils {
 
+    /**
+     * @param grid
+     * @param insert
+     * @return
+     */
     public boolean isUnique(Field[][] grid, Field insert) {
         for (int y = 0; y < 9; y++) if (grid[insert.x()][y].value() == insert.value()) return false;
         for (int x = 0; x < 9; x++) if (grid[x][insert.y()].value() == insert.value()) return false;
@@ -21,6 +29,10 @@ public abstract class GridUtils {
         return true;
     }
 
+    /**
+     * @param grid
+     * @return
+     */
     public List<Field> flatGrid(Field[][] grid) {
         List<Field> result = new ArrayList<>();
         for (Field[] array : grid) {
@@ -30,6 +42,10 @@ public abstract class GridUtils {
         return result;
     }
 
+    /**
+     * @param grid
+     * @return
+     */
     public Field[][] newInstanceOf(Field[][] grid) {
         Field[][] solution = new Field[9][9];
         for (int x = 0; x < 9; x++) {
@@ -40,6 +56,10 @@ public abstract class GridUtils {
         return solution;
     }
 
+    /**
+     * @param grid
+     * @return
+     */
     public boolean isSolved(Field[][] grid) {
         for (Field current : flatGrid(grid)) {
             if (current.value() == 0) return false;
@@ -62,6 +82,4 @@ public abstract class GridUtils {
         }
         return true;
     }
-
-
 }

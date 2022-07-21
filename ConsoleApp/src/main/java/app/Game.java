@@ -1,21 +1,33 @@
+package app;
+
 import controller.Controller;
 import utils.TerminalUtils;
 
 import java.io.InputStream;
 import java.util.Arrays;
 
+/**
+ *
+ */
 public class Game implements InputHandler {
 
     private final UserInterface userInterface;
     private final Controller controller;
     private boolean inGame;
     private final int[] point = {-1, -1, -1}; //[0]=column; [1]=row; [2]=value
+
+    /**
+     * @param input
+     */
     public Game(InputStream input) {
         userInterface = new UserInterface(input, this);
         controller = new Controller(userInterface);
         inGame = false;
     }
 
+    /**
+     * @param input
+     */
     @Override
     public void handel(String input) { //todo display used tips and mistakes in solution
         assert (input != null);
@@ -27,6 +39,9 @@ public class Game implements InputHandler {
         }
     }
 
+    /**
+     * @param input
+     */
     private void handleGameInput(String input) {
         int selected = -1;
         boolean validInput = true;
@@ -70,6 +85,9 @@ public class Game implements InputHandler {
         }
     }
 
+    /**
+     * @param input
+     */
     private void handleCommands(String input) {
         switch (input.substring(0, input.contains(" ") ? input.indexOf(" ") : input.length())) {
             case "start" -> { //in menu -> to game
@@ -123,6 +141,9 @@ public class Game implements InputHandler {
         }
     }
 
+    /**
+     *
+     */
     public void init() {
         userInterface.clear();
         userInterface.displayIntro();
