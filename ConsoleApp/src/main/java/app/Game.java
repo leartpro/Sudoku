@@ -53,8 +53,11 @@ public class Game implements InputHandler {
             userInterface.displayGameUsages();
         }
         if(validInput) {
-            userInterface.clear();
-            if(selected > 0 && selected < 10) {
+            if(
+                    selected >= 1 && selected <= 9 ||
+                    (point[0] != -1 && point[1] != -1 && point[2] == -1 && selected == 0)
+            ) {
+                userInterface.clear();
                 for (int i = 0; i < point.length; i++) {
                     if (point[i] == -1) {
                         point[i] = selected;
@@ -133,6 +136,16 @@ public class Game implements InputHandler {
                     this.inGame = false;
                     userInterface.displayMenu();
                     userInterface.displayUsages();
+                } else {
+                    TerminalUtils.printWarning("can not use that command here");
+                }
+            }
+            case "hint" -> {
+                if(inGame) {
+                    controller.giveHint();
+                    userInterface.clear();
+                    userInterface.displayGame(controller.getCurrentGrid(), controller.getGivenGrid());
+                    userInterface.displayGameInput(point);
                 } else {
                     TerminalUtils.printWarning("can not use that command here");
                 }

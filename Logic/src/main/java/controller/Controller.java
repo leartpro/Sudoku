@@ -116,4 +116,8 @@ public final class Controller extends GridUtils {
         }
         return solution;
     }
+
+    public void giveHint() {
+        //TODO: insert random correct value into the currentGrid
+    }
 }
