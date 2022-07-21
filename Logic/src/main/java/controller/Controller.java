@@ -120,6 +120,9 @@ public final class Controller extends GridUtils {
         return solution;
     }
 
+    /**
+     *
+     */
     public void giveHint() {
         List<Field> values = flatGrid(solver.solve(toComparableGrid(givenGrid)));
         values.removeIf(f -> currentGrid[f.x()][f.y()] != 0);
