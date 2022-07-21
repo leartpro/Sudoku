@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>/Users/lenniprotte/Documents/Projects/IntelliJ/Sudoku/Logic</OriginalElement>
+  <nodes>
+    <node x="-85.74670748422301" y="144.36009786808472">controller.Controller</node>
+    <node x="274.30243872481856" y="-13.443496835859207">utils.GridUtils</node>
+    <node x="109.194181966332" y="589.7314898989448">controller.ProgressMonitor</node>
+    <node x="246.12340060019415" y="189.16134228166334">utils.solver.Solver</node>
+    <node x="451.0832127077342" y="590.03285650821">domain.Field</node>
+    <node x="695.1463611264603" y="205.69399117987183">utils.generator.Generator</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="controller.Controller" target="utils.GridUtils" relationship="GENERALIZATION">
+      <point x="135.499707484223" y="-9.786808472256325E-5" />
+      <point x="216.0" y="304.36" />
+      <point x="216.0" y="57.557000000000016" />
+      <point x="-125.0004387248186" y="4.968358592236655E-4" />
+    </edge>
+    <edge source="controller.Controller" target="utils.solver.Solver" relationship="TO_ONE">
+      <point x="135.5" y="69.80090213191534" />
+      <point x="-194.5" y="14.99965771833672" />
+    </edge>
+    <edge source="utils.generator.Generator" target="utils.GridUtils" relationship="GENERALIZATION">
+      <point x="-3.61126460234118E-4" y="-125.99999117987184" />
+      <point x="878.146" y="171.661" />
+      <point x="216.0" y="171.661" />
+      <point x="216.0" y="57.557000000000016" />
+      <point x="-125.0004387248186" y="4.968358592236655E-4" />
+    </edge>
+    <edge source="utils.solver.Solver" target="utils.GridUtils" relationship="GENERALIZATION">
+      <point x="-194.50040060019413" y="-3.4228166327920917E-4" />
+      <point x="216.0" y="359.161" />
+      <point x="216.0" y="57.557000000000016" />
+      <point x="-125.0004387248186" y="4.968358592236655E-4" />
+    </edge>
+    <edge source="utils.generator.Generator" target="controller.ProgressMonitor" relationship="TO_ONE">
+      <point x="-0.0" y="126.0" />
+      <point x="878.1463611264603" y="749.53285650821" />
+      <point x="229.194181966332" y="749.53285650821" />
+      <point x="-0.0" y="48.5" />
+    </edge>
+    <edge source="controller.Controller" target="utils.generator.Generator" relationship="TO_ONE">
+      <point x="-0.0" y="-160.0" />
+      <point x="49.75329251577699" y="-30.943496835859207" />
+      <point x="893.1460000000001" y="-30.943496835859207" />
+      <point x="14.999638873539766" y="-126.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.6772260273972602" showDependencies="true" x="488.0" y="358.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

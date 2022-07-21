@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>/Users/lenniprotte/Documents/Projects/IntelliJ/Sudoku/ConsoleApp</OriginalElement>
+  <nodes>
+    <node x="139.29869212039034" y="7.852841307935208">app.Game</node>
+    <node x="436.28567296632684" y="157.70019847195897">utils.TerminalColors</node>
+    <node x="542.7128100237159" y="451.7941572083089">utils.ProgressBar.Bar</node>
+    <node x="-79.01723395174493" y="214.0622970225029">app.UserInterface</node>
+    <node x="316.75661771144337" y="266.50015413364935">utils.TerminalUtils</node>
+    <node x="657.921325283518" y="203.3686664167157">utils.ProgressBar</node>
+    <node x="305.1054137395241" y="505.06968152457296">app.App</node>
+    <node x="443.91984149557004" y="-13.297205860047585">app.InputHandler</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="app.UserInterface" target="app.InputHandler" relationship="TO_ONE">
+      <point x="0.0" y="-181.0" />
+      <point x="73.98276604825507" y="-9.647158692064792" />
+      <point x="-83.0" y="-22.84995283201721" />
+    </edge>
+    <edge source="utils.ProgressBar" target="utils.ProgressBar.Bar" relationship="TO_ONE">
+      <point x="-89.0" y="93.5" />
+      <point x="46.708515259802084" y="-138.0" />
+    </edge>
+    <edge source="utils.ProgressBar.Bar" target="utils.ProgressBar" relationship="INNER_CLASS">
+      <point x="31.708515259802084" y="-138.0" />
+      <point x="-104.0" y="93.5" />
+    </edge>
+    <edge source="app.UserInterface" target="utils.ProgressBar" relationship="TO_ONE">
+      <point x="153.0" y="-146.06214288885354" />
+      <point x="-111.5" y="-47.868512283066366" />
+    </edge>
+    <edge source="app.Game" target="app.InputHandler" relationship="REALIZATION">
+      <point x="117.5" y="-63.5" />
+      <point x="-83.0" y="2.150047167982793" />
+    </edge>
+    <edge source="app.Game" target="app.UserInterface" relationship="TO_ONE">
+      <point x="-37.315926072135255" y="70.99999999999999" />
+      <point x="145.5" y="-181.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.8063200815494393" showDependencies="true" x="410.5" y="367.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
