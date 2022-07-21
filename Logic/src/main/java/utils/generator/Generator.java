@@ -44,15 +44,15 @@ public class Generator extends GridUtils {
             if (!uniqueSolvable(grid)) { //TODO: this method call requires a lot of time
                 grid[current.x()][current.y()] = current;
             } else {
-                assert isSolved(new Solver(grid).solve(grid));
+                assert isSolved(new Solver().solve(grid));
             }
             progressMonitor.increaseProgress();
         }
     }
 
     private boolean uniqueSolvable(Field[][] grid) {
-        if(!isSolved(new Solver(grid).solve(grid))) return false;
-        ArrayList<Integer>[][] values = new ArrayList[9][9];
+        if(!isSolved(new Solver().solve(grid))) return false;
+        @SuppressWarnings("unchecked") ArrayList<Integer>[][] values = new ArrayList[9][9];
         cleanupValues(grid, values);
         if(!allPossible(grid, values)) return false;
         List<Field> available = new ArrayList<>(flatGrid(grid));
@@ -67,7 +67,7 @@ public class Generator extends GridUtils {
                 solution[f.x()][f.y()] = new Field(f.x(), f.y(), value);
                 assert allUnique(solution);
                 values[f.x()][f.y()].remove(Integer.valueOf(value));
-                solution = new Solver(solution).solve(solution);
+                solution = new Solver().solve(solution);
                 if(isSolved(solution)) {
                     if (!inList(solutions, solution)) solutions.add(solution);
                 }

@@ -14,7 +14,7 @@ public final class Controller extends GridUtils {
         this.currentGrid = new int[9][9];
         this.givenGrid = new int[9][9];
         this.generator = new Generator(progressMonitor);
-        this.solver = new Solver(toComparableGrid(currentGrid));
+        this.solver = new Solver();
     }
 
     public void generateNewPuzzle() {

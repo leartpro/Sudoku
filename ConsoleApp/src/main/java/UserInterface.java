@@ -12,7 +12,6 @@ public class UserInterface implements ProgressMonitor {
     private final InputHandler handler;
     private final BufferedReader reader;
     private boolean status;
-
     private ProgressBar progressBar;
 
     public UserInterface(InputStream input, InputHandler handler) {
@@ -47,24 +46,12 @@ public class UserInterface implements ProgressMonitor {
     }
 
     public void displayGame(int[][] actual, int[][] given) { //TODO: make default digits in a different color
-        display(actual, given, TerminalColors.white);
+        display(actual, given);
     }
 
     public void displayMenu() {
         System.out.println("You are in the menu");
     }
-
-    /*public void displayLoading(String name) {
-        ProgressBar progressBar = new ProgressBar(name);
-        for (int i = 0; i < 100; i++) {
-            progressBar.addProgress();
-            try {
-                Thread.sleep(30);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }*/
 
     @Override
     public void displayLoading(String name, int totalSteps) {
@@ -80,14 +67,6 @@ public class UserInterface implements ProgressMonitor {
     @Override
     public void completeProgress() {
         if (!this.progressBar.isCompleted()) this.progressBar.complete();
-    }
-
-    public boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
     }
 
     public void listen() {
@@ -136,13 +115,13 @@ public class UserInterface implements ProgressMonitor {
         assert (inGameProgress.length == 3);
         System.out.println(
                 "row " + (inGameProgress[0] == -1 ?
-                        TerminalUtils.toColorString("X", TerminalColors.cyan) :
+                        TerminalUtils.toColorString("X", TerminalColors.blue) :
                         TerminalUtils.toColorString(String.valueOf(inGameProgress[0]), TerminalColors.green)) +
                         " column " + (inGameProgress[1] == -1 ?
-                        TerminalUtils.toColorString("X", TerminalColors.cyan) :
+                        TerminalUtils.toColorString("X", (inGameProgress[0] == -1 ? TerminalColors.cyan : TerminalColors.blue)) :
                         TerminalUtils.toColorString(String.valueOf(inGameProgress[1]), TerminalColors.green)) +
                         " value " + (inGameProgress[2] == -1 ?
-                        TerminalUtils.toColorString("X", TerminalColors.cyan) :
+                        TerminalUtils.toColorString("X", (inGameProgress[0] == -1 ? TerminalColors.cyan : TerminalColors.blue)) :
                         TerminalUtils.toColorString(String.valueOf(inGameProgress[2]), TerminalColors.green))
         );
     }
@@ -156,9 +135,9 @@ public class UserInterface implements ProgressMonitor {
         System.out.flush();
     }
 
-    private void display(int[][] current, int[][] given, String color) {
+    private void display(int[][] current, int[][] given) {
         StringBuilder builder = new StringBuilder();
-        int j = 3, n = 0, r = 1;
+        int j = 3, n = 0;
         builder.append("  | ").append(TerminalUtils.toColorString("1 2 3", TerminalColors.purple))
                 .append(" | ").append(TerminalUtils.toColorString("4 5 6", TerminalColors.purple))
                 .append(" | ").append(TerminalUtils.toColorString("7 8 9", TerminalColors.purple)).append(" |\n");
@@ -172,13 +151,10 @@ public class UserInterface implements ProgressMonitor {
                                             String.valueOf(current[row][column]),
                                             given[row][column] == 0 ?
                                                     (
-                                                            color.equals(TerminalColors.green) ? color :
-                                                                    (
-                                                                            current[row][column] == 0 ? color :
-                                                                                    TerminalColors.cyan
-                                                                    )
-                                                    ) :
-                                                    TerminalColors.black
+                                                            current[row][column] == 0 ?
+                                                                    TerminalColors.white :
+                                                                    TerminalColors.cyan
+                                                    ) : TerminalColors.black
                                     )
                             )
                             .append(" ");
@@ -193,8 +169,38 @@ public class UserInterface implements ProgressMonitor {
         System.out.println(builder);
     }
 
-    public void displaySolution(int[][] solvedGrid, int[][] givenGrid) {
+    public void displaySolution(int[][] current, int[][] given, int[][] solved) {
         System.out.println("Solution:\n");
-        display(solvedGrid, givenGrid, TerminalColors.green);
+        StringBuilder builder = new StringBuilder();
+        int j = 3, n = 0;
+        builder.append("  | ").append(TerminalUtils.toColorString("1 2 3", TerminalColors.purple))
+                .append(" | ").append(TerminalUtils.toColorString("4 5 6", TerminalColors.purple))
+                .append(" | ").append(TerminalUtils.toColorString("7 8 9", TerminalColors.purple)).append(" |\n");
+        for (int i = 0; i < 3; i++) {
+            builder.append("- + - - - + - - - + - - - +\n");
+            for (int row = n; row < j; row++) {
+                builder.append(TerminalUtils.toColorString(String.valueOf(row + 1), TerminalColors.purple)).append(" | ");
+                for (int column = 0; column < 9; column++) {
+                    builder.append(
+                                    TerminalUtils.toColorString
+                                            (
+                                                    String.valueOf(solved[row][column]),
+                                                    given[row][column] == 0 ?
+                                                            (current[row][column] == solved[row][column] ?
+                                                                    TerminalColors.green :
+                                                                    TerminalColors.red) :
+                                                            TerminalColors.black
+                                            )
+                            )
+                            .append(" ");
+                    if (column == 2 || column == 5 || column == 8) builder.append("| ");
+                }
+                builder.append("\n");
+            }
+            j += 3;
+            n += 3;
+        }
+        builder.append("- + - - - + - - - + - - - +");
+        System.out.println(builder);
     }
 }

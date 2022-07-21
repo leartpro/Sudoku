@@ -4,10 +4,10 @@ public class ProgressBar {
     private final Bar bar;
     private final boolean hasSteps;
 
-    public ProgressBar(String name) {
+    /*public ProgressBar(String name) {
         this.bar = new Bar(name);
         hasSteps = false;
-    }
+    }*/
 
     public ProgressBar(String name, Integer totalSteps) {
         this.bar = new Bar(name, totalSteps);
@@ -20,11 +20,11 @@ public class ProgressBar {
         System.out.print(bar);
     }
 
-    public void addProgress(int steps) {
+    /*public void addProgress(int steps) {
         if (hasSteps) bar.addSteps(steps);
         else bar.addProgress(steps);
         System.out.print(bar);
-    }
+    }*/
 
     public boolean isCompleted() {
         return bar.isCompleted;
@@ -48,11 +48,11 @@ public class ProgressBar {
         private int progressSteps = 0;
         private boolean isCompleted = false;
 
-        public Bar(String name) {
+        /*public Bar(String name) {
             this.name = name;
             this.totalSteps = null;
 
-        }
+        }*/
 
         public Bar(String name, Integer totalSteps) {
             this.name = name;
@@ -82,12 +82,12 @@ public class ProgressBar {
             return progress + "%";
         }
 
-        public void addSteps(int value) {
+        /*public void addSteps(int value) {
             assert totalSteps != null;
             if (progressSteps + value >= totalSteps.hashCode()) progressSteps = totalSteps;
             else progressSteps += value;
             progress = (int) (float) (progressSteps * 100 / totalSteps);
-        }
+        }*/
 
         public void addStep() {
             assert totalSteps != null;
@@ -100,8 +100,8 @@ public class ProgressBar {
             if (progress + 1 <= 100) progress += 1;
         }
 
-        public void addProgress(int value) {
+        /*public void addProgress(int value) {
             if (progress + value <= 100) progress += value;
-        }
+        }*/
     }
 }

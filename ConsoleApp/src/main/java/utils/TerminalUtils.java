@@ -9,16 +9,7 @@ public abstract class TerminalUtils {
         System.out.println(toColorString(message, TerminalColors.cyan));
     }
 
-    public static void printError(String message) {
-        System.out.println(toColorString(message, TerminalColors.red));
-    }
-
     public static void printWarning(String message) {
         System.out.println(toColorString(message, TerminalColors.yellow));
-    }
-
-
-    private static void inputMarker() {
-        System.out.print(toColorString("> ", TerminalColors.green));
     }
 }

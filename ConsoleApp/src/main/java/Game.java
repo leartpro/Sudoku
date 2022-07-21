@@ -61,8 +61,7 @@ public class Game implements InputHandler {
                     userInterface.displayGameInput(point);
                     Arrays.fill(point, -1);
                 }
-                //todo: valid inputs are row, column and value all other inputs are commands
-                userInterface.displayGame(controller.getCurrentGrid(), controller.getGivenGrid()); //todo: insert value by controller
+                userInterface.displayGame(controller.getCurrentGrid(), controller.getGivenGrid());
                 userInterface.displayGameInput(point);
             } else {
                 TerminalUtils.printWarning("digit have to be between one and nine");
@@ -106,8 +105,11 @@ public class Game implements InputHandler {
             case "solve" -> { //in game -> finish game, return to menu,
                 // print game states, mistakes and solution...
                 if(inGame) {
-                    if (controller.isSolved()) System.out.println("your solution is correct!");
-                    else userInterface.displaySolution(controller.solvedGrid(), controller.getGivenGrid());
+                    if (controller.isSolved()) System.out.println("Your solution is correct!\n");
+                    userInterface.displaySolution(
+                            controller.getCurrentGrid(),
+                            controller.getGivenGrid(),
+                            controller.solvedGrid());
                     handleCommands("menu"); //TODO better solution?
                 } else {
                     TerminalUtils.printWarning("can not use that command here");

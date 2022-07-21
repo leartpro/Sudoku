@@ -7,18 +7,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("rawtypes")
 public final class Solver extends GridUtils {
-    private final Field[][] grid;
-
-    public Solver(Field[][] grid) {
-        this.grid = grid;
-    }
 
     public Field[][] solve(Field[][] grid) { //todo order methods
         Field[][] solution = newInstanceOf(grid);
-        ArrayList<Field>[][] values = new ArrayList[9][9];
+        @SuppressWarnings("unchecked") ArrayList<Field>[][] values = new ArrayList[9][9];
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
+                //noinspection unchecked
                 values[x][y] = new ArrayList();
                 for (int i = 1; i < 10; i++) values[x][y].add(new Field(x, y, i));
             }
@@ -163,7 +160,8 @@ public final class Solver extends GridUtils {
             }
         }
         for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) ((List<Field>) values[x][y]).retainAll(((List<Field>) removable[x][y]));
+            for (int y = 0; y < 9; y++) //noinspection unchecked
+                ((List<Field>) values[x][y]).retainAll(((List<Field>) removable[x][y]));
         }
     }
 
