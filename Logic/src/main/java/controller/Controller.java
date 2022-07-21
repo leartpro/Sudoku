@@ -5,6 +5,9 @@ import utils.generator.Generator;
 import utils.GridUtils;
 import utils.solver.Solver;
 
+import java.util.List;
+import java.util.Random;
+
 /**
  *
  */
@@ -118,6 +121,10 @@ public final class Controller extends GridUtils {
     }
 
     public void giveHint() {
-        //TODO: insert random correct value into the currentGrid
+        List<Field> values = flatGrid(solver.solve(toComparableGrid(givenGrid)));
+        values.removeIf(f -> currentGrid[f.x()][f.y()] != 0);
+        Field selected = values.get(new Random().nextInt(values.size()));
+        assert currentGrid[selected.x()][selected.y()] == selected.value();
+        this.currentGrid[selected.x()][selected.y()] = selected.value();
     }
 }

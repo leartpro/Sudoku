@@ -56,6 +56,9 @@ public class UserInterface implements ProgressMonitor {
                         "(everywhere)" + "\n" +
                         TerminalUtils.toColorString(".solve", TerminalColors.blue) + " ".repeat(11) +
                         "validate your solution" + " ".repeat(8) +
+                        "(only in a game)" + "\n" +
+                        TerminalUtils.toColorString(".hint", TerminalColors.blue) + " ".repeat(12) +
+                        "solve one field" + " ".repeat(15) +
                         "(only in a game)" + "\n"
         );
     }
