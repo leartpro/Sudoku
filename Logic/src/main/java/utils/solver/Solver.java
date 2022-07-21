@@ -33,7 +33,7 @@ public final class Solver extends GridUtils {
 
     //check for each unsolved field  if there is only one valid value to insert
     //if this condition is true insert this value
-    public boolean soleCandidates(Field[][] grid, List[][] values) {
+    private boolean soleCandidates(Field[][] grid, List[][] values) {
         List<Field> available = new ArrayList<>();
         for (Field current : flatGrid(newInstanceOf(grid))) {
             if (current.value() == 0) available.add(current);
@@ -63,7 +63,7 @@ public final class Solver extends GridUtils {
     //check for each field the row, the column and the square
     // and if there is no other point where the current value is unique
     //then insert this value
-    public boolean uniqueCandidates(Field[][] grid, List[][] values) {
+    private boolean uniqueCandidates(Field[][] grid, List[][] values) {
         boolean changes = true;
         boolean totalChanges = false;
         while (changes) {
@@ -88,7 +88,7 @@ public final class Solver extends GridUtils {
         return totalChanges;
     }
 
-    public void removingCandidates(Field[][] grid, List[][] values) {
+    private void removingCandidates(Field[][] grid, List[][] values) {
         boolean changes = true;
         while (changes) {
             changes = false;
@@ -104,7 +104,7 @@ public final class Solver extends GridUtils {
     }
 
     //TODO: all sub-methods of removingCandidates should modify values[][]
-    public boolean blockLineInteraction(Field[][] grid, List[][] values) { //TODO
+    private boolean blockLineInteraction(Field[][] grid, List[][] values) { //TODO
         /*
         for each square for each value from one to nine
             if
@@ -112,37 +112,37 @@ public final class Solver extends GridUtils {
         return true;
     }
 
-    public boolean blockInteractions(Field[][] grid, List[][] values) { //TODO
+    private boolean blockInteractions(Field[][] grid, List[][] values) { //TODO
         return true;
 
     }
 
-    public boolean nakedSubset(Field[][] grid, List[][] values) {
+    private boolean nakedSubset(Field[][] grid, List[][] values) {
         return true;
 
     }
 
-    public boolean hiddenSubset(Field[][] grid, List[][] values) {
+    private boolean hiddenSubset(Field[][] grid, List[][] values) {
         return true;
 
     }
 
-    public boolean xWing(Field[][] grid, List[][] values) {
+    private boolean xWing(Field[][] grid, List[][] values) {
         return true;
 
     }
 
-    public boolean swordfish(Field[][] grid, List[][] values) {
+    private boolean swordfish(Field[][] grid, List[][] values) {
         return true;
 
     }
 
-    public boolean forcingChain(Field[][] grid, List[][] values) {
+    private boolean forcingChain(Field[][] grid, List[][] values) {
         return true;
 
     }
 
-    public void validValues(Field[][] grid, List[][] values) {
+    private void validValues(Field[][] grid, List[][] values) {
         List[][] removable = new ArrayList[9][9];
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {

@@ -66,7 +66,7 @@ public final class Controller extends GridUtils {
         return result;
     }
 
-    public int[][] newInstanceOf(int[][] grid) {
+    private int[][] newInstanceOf(int[][] grid) {
         int[][] solution = new int[9][9];
         for (int x = 0; x < 9; x++) {
             System.arraycopy(grid[x], 0, solution[x], 0, 9);

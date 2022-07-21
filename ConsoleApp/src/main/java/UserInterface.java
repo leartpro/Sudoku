@@ -45,8 +45,39 @@ public class UserInterface implements ProgressMonitor {
         );
     }
 
-    public void displayGame(int[][] actual, int[][] given) { //TODO: make default digits in a different color
-        display(actual, given);
+    public void displayGame(int[][] current, int[][] given) { //TODO: make default digits in a different color
+        @SuppressWarnings("Duplicated Code")
+        StringBuilder builder = new StringBuilder();
+        int j = 3, n = 0;
+        builder.append("  | ").append(TerminalUtils.toColorString("1 2 3", TerminalColors.purple))
+                .append(" | ").append(TerminalUtils.toColorString("4 5 6", TerminalColors.purple))
+                .append(" | ").append(TerminalUtils.toColorString("7 8 9", TerminalColors.purple)).append(" |\n");
+        for (int i = 0; i < 3; i++) {
+            builder.append("- + - - - + - - - + - - - +\n");
+            for (int row = n; row < j; row++) {
+                builder.append(TerminalUtils.toColorString(String.valueOf(row + 1), TerminalColors.purple)).append(" | ");
+                for (int column = 0; column < 9; column++) {
+                    builder.append(
+                                    TerminalUtils.toColorString(
+                                            String.valueOf(current[row][column]),
+                                            given[row][column] == 0 ?
+                                                    (
+                                                            current[row][column] == 0 ?
+                                                                    TerminalColors.white :
+                                                                    TerminalColors.cyan
+                                                    ) : TerminalColors.black
+                                    )
+                            )
+                            .append(" ");
+                    if (column == 2 || column == 5 || column == 8) builder.append("| ");
+                }
+                builder.append("\n");
+            }
+            j += 3;
+            n += 3;
+        }
+        builder.append("- + - - - + - - - + - - - +");
+        System.out.println(builder);
     }
 
     public void displayMenu() {
@@ -121,7 +152,7 @@ public class UserInterface implements ProgressMonitor {
                         TerminalUtils.toColorString("X", (inGameProgress[0] == -1 ? TerminalColors.cyan : TerminalColors.blue)) :
                         TerminalUtils.toColorString(String.valueOf(inGameProgress[1]), TerminalColors.green)) +
                         " value " + (inGameProgress[2] == -1 ?
-                        TerminalUtils.toColorString("X", (inGameProgress[0] == -1 ? TerminalColors.cyan : TerminalColors.blue)) :
+                        TerminalUtils.toColorString("X", (inGameProgress[1] == -1 ? TerminalColors.cyan : TerminalColors.blue)) :
                         TerminalUtils.toColorString(String.valueOf(inGameProgress[2]), TerminalColors.green))
         );
     }
@@ -133,40 +164,6 @@ public class UserInterface implements ProgressMonitor {
     public void clear() {
         System.out.println("\033[H\033[2J");
         System.out.flush();
-    }
-
-    private void display(int[][] current, int[][] given) {
-        StringBuilder builder = new StringBuilder();
-        int j = 3, n = 0;
-        builder.append("  | ").append(TerminalUtils.toColorString("1 2 3", TerminalColors.purple))
-                .append(" | ").append(TerminalUtils.toColorString("4 5 6", TerminalColors.purple))
-                .append(" | ").append(TerminalUtils.toColorString("7 8 9", TerminalColors.purple)).append(" |\n");
-        for (int i = 0; i < 3; i++) {
-            builder.append("- + - - - + - - - + - - - +\n");
-            for (int row = n; row < j; row++) {
-                builder.append(TerminalUtils.toColorString(String.valueOf(row + 1), TerminalColors.purple)).append(" | ");
-                for (int column = 0; column < 9; column++) {
-                    builder.append(
-                                    TerminalUtils.toColorString(
-                                            String.valueOf(current[row][column]),
-                                            given[row][column] == 0 ?
-                                                    (
-                                                            current[row][column] == 0 ?
-                                                                    TerminalColors.white :
-                                                                    TerminalColors.cyan
-                                                    ) : TerminalColors.black
-                                    )
-                            )
-                            .append(" ");
-                    if (column == 2 || column == 5 || column == 8) builder.append("| ");
-                }
-                builder.append("\n");
-            }
-            j += 3;
-            n += 3;
-        }
-        builder.append("- + - - - + - - - + - - - +");
-        System.out.println(builder);
     }
 
     public void displaySolution(int[][] current, int[][] given, int[][] solved) {

@@ -38,6 +38,7 @@ public class Game implements InputHandler {
             userInterface.displayGameUsages();
         }
         if(validInput) {
+            userInterface.clear();
             if(selected > 0 && selected < 10) {
                 for (int i = 0; i < point.length; i++) {
                     if (point[i] == -1) {
@@ -58,7 +59,7 @@ public class Game implements InputHandler {
                     } else {
                         TerminalUtils.printWarning("this point is not available");
                     }
-                    userInterface.displayGameInput(point);
+                    //userInterface.displayGameInput(point);
                     Arrays.fill(point, -1);
                 }
                 userInterface.displayGame(controller.getCurrentGrid(), controller.getGivenGrid());
@@ -109,8 +110,11 @@ public class Game implements InputHandler {
                     userInterface.displaySolution(
                             controller.getCurrentGrid(),
                             controller.getGivenGrid(),
-                            controller.solvedGrid());
-                    handleCommands("menu"); //TODO better solution?
+                            controller.solvedGrid()
+                    );
+                    this.inGame = false;
+                    userInterface.displayMenu();
+                    userInterface.displayUsages();
                 } else {
                     TerminalUtils.printWarning("can not use that command here");
                 }

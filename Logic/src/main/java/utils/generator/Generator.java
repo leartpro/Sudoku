@@ -18,7 +18,7 @@ public class Generator extends GridUtils {
         this.progressMonitor = progressMonitor;
     }
     public Field[][] generate() {
-        progressMonitor.displayLoading("Generating Grid", 5265); //worst case I guess
+        progressMonitor.displayLoading("Generating the Grid", 5265); //worst case I guess
         Field[][] grid = new Field[9][9];
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
@@ -36,7 +36,7 @@ public class Generator extends GridUtils {
 
     //TODO: to generate for different difficulties:
     // use different strong solvers for different difficulty values
-    public void createPuzzle(Field[][] grid) {
+    private void createPuzzle(Field[][] grid) {
         List<Field> removable = new ArrayList<>(flatGrid(grid));
         Collections.shuffle(removable);
         for (Field current : removable) {
@@ -78,7 +78,7 @@ public class Generator extends GridUtils {
         return solutions.size() != 0;
     }
 
-    public boolean completeRandom(Field[][] grid) {
+    private boolean completeRandom(Field[][] grid) {
         int xPos = -1;
         int yPos = -1;
         boolean completed = true;
