@@ -33,14 +33,14 @@ public class UserInterface implements ProgressMonitor {
      *
      */
     public void displayIntro() {
-        TerminalUtils.printStatus("Welcome to Sudoku!" + "\n");
+        TerminalUtils.printStatus("Welcome to Sudoku!");
     }
 
     /**
      *
      */
     public void displayUsages() {
-        System.out.println("These are the available commands...");
+        TerminalUtils.printStatus("\nThese are the available commands:");
         System.out.println(
                 TerminalUtils.toColorString(".start", TerminalColors.blue) + " ".repeat(11) +
                         "start a game" + " ".repeat(18) +
@@ -70,6 +70,7 @@ public class UserInterface implements ProgressMonitor {
     public void displayGame(int[][] current, int[][] given) { //TODO: make default digits in a different color
         @SuppressWarnings("Duplicated Code")
         StringBuilder builder = new StringBuilder();
+        builder.append("\n");
         int j = 3, n = 0;
         builder.append("  | ").append(TerminalUtils.toColorString("1 2 3", TerminalColors.purple))
                 .append(" | ").append(TerminalUtils.toColorString("4 5 6", TerminalColors.purple))
@@ -106,7 +107,7 @@ public class UserInterface implements ProgressMonitor {
      *
      */
     public void displayMenu() {
-        System.out.println("You are in the menu");
+        TerminalUtils.printStatus("\nYou are in the menu!");
     }
 
     /**
@@ -180,9 +181,10 @@ public class UserInterface implements ProgressMonitor {
      *
      */
     public void displayGameUsages() {
-        System.out.println("app.Game Usages\n" +
-                "type at first your row, then your column and finally " +
-                "the value you want to insert");
+        System.out.println("Game Usages:\n" +
+                " - Type at first your row\n" +
+                " - Then your column\n" +
+                " - And finally the value you want to insert");
     }
 
     /**
@@ -192,7 +194,7 @@ public class UserInterface implements ProgressMonitor {
         //TODO: first 'X' in a different signal color to display the current step
         assert (inGameProgress.length == 3);
         System.out.println(
-                "row " + (inGameProgress[0] == -1 ?
+                "\nrow " + (inGameProgress[0] == -1 ?
                         TerminalUtils.toColorString("X", TerminalColors.blue) :
                         TerminalUtils.toColorString(String.valueOf(inGameProgress[0]), TerminalColors.green)) +
                         " column " + (inGameProgress[1] == -1 ?
@@ -208,7 +210,7 @@ public class UserInterface implements ProgressMonitor {
      *
      */
     public void displayGameIntro() {
-        System.out.println("Your are now in a game");
+        TerminalUtils.printStatus("Your are now in a game");
     }
 
     /**
@@ -255,7 +257,7 @@ public class UserInterface implements ProgressMonitor {
             j += 3;
             n += 3;
         }
-        builder.append("- + - - - + - - - + - - - +");
+        builder.append("- + - - - + - - - + - - - +\n");
         System.out.println(builder);
     }
 }
