@@ -13,6 +13,13 @@ import java.util.List;
 @SuppressWarnings("rawtypes")
 public final class Solver extends GridUtils {
 
+    private final int difficulty;
+
+    public Solver(int difficulty) {
+        assert (difficulty > 0 && difficulty < 4);
+        this.difficulty = difficulty;
+    }
+
     /**
      * @param grid
      * @return
@@ -31,9 +38,9 @@ public final class Solver extends GridUtils {
         while (changes) {
             changes = false;
             validValues(solution, values);
-            //removingCandidates(solution, values); TODO
             if (soleCandidates(solution, values)) changes = true;
-            if (uniqueCandidates(solution, values)) changes = true;
+            if (difficulty > 1) if (uniqueCandidates(solution, values)) changes = true;
+            if (difficulty > 2) removingCandidates(solution, values);
         }
         return solution;
     }
@@ -121,6 +128,9 @@ public final class Solver extends GridUtils {
             if (xWing(grid, values)) changes = true;
             if (swordfish(grid, values)) changes = true;
             if (forcingChain(grid, values)) changes = true;
+            changes = false; //TODO: this line of code is only for test cases
+            // (suppressing infinity-loop)
+            // => remove this line to make method work
         }
     }
 

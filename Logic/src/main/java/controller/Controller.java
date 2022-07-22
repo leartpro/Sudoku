@@ -14,7 +14,8 @@ import java.util.Random;
 public final class Controller extends GridUtils {
     private int[][] currentGrid, givenGrid;
     private final Generator generator;
-    private final Solver solver;
+    private Solver solver;
+    private int difficulty;
 
     /**
      * @param progressMonitor
@@ -22,15 +23,24 @@ public final class Controller extends GridUtils {
     public Controller(ProgressMonitor progressMonitor) {
         this.currentGrid = new int[9][9];
         this.givenGrid = new int[9][9];
+        this.difficulty = 1;
         this.generator = new Generator(progressMonitor);
-        this.solver = new Solver();
+        this.solver = new Solver(difficulty);
+    }
+
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public int getDifficulty() {
+        return difficulty;
     }
 
     /**
      *
      */
     public void generateNewPuzzle() {
-        this.givenGrid = mapComparableGrid(generator.generate());
+        this.givenGrid = mapComparableGrid(generator.generate(this.difficulty));
         this.currentGrid = newInstanceOf(givenGrid);
     }
 
@@ -59,6 +69,7 @@ public final class Controller extends GridUtils {
      * @return
      */
     public int[][] solvedGrid() {
+        this.solver = new Solver(this.difficulty);
         return mapComparableGrid(solver.solve(toComparableGrid(givenGrid)));
     }
 
@@ -124,6 +135,7 @@ public final class Controller extends GridUtils {
      *
      */
     public void giveHint() {
+        this.solver = new Solver(this.difficulty);
         List<Field> values = flatGrid(solver.solve(toComparableGrid(givenGrid)));
         values.removeIf(f -> currentGrid[f.x()][f.y()] != 0);
         Field selected = values.get(new Random().nextInt(values.size()));

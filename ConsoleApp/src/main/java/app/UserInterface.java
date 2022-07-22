@@ -59,7 +59,10 @@ public class UserInterface implements ProgressMonitor {
                         "(only in a game)" + "\n" +
                         TerminalUtils.toColorString(".hint", TerminalColors.blue) + " ".repeat(12) +
                         "solve one field" + " ".repeat(15) +
-                        "(only in a game)" + "\n"
+                        "(only in a game)" + "\n" +
+                        TerminalUtils.toColorString(".difficulty", TerminalColors.blue) + " ".repeat(6) +
+                        "set the difficulty" + " ".repeat(12) +
+                        "(only in the main menu)" + "\n"
         );
     }
 
@@ -67,27 +70,44 @@ public class UserInterface implements ProgressMonitor {
      * @param current
      * @param given
      */
-    public void displayGame(int[][] current, int[][] given) { //TODO: make default digits in a different color
-        @SuppressWarnings("Duplicated Code")
+    public void displayGame(int[][] current, int[][] given, int[] selected) {
         StringBuilder builder = new StringBuilder();
         builder.append("\n");
         int j = 3, n = 0;
-        builder.append("  | ").append(TerminalUtils.toColorString("1 2 3", TerminalColors.purple))
-                .append(" | ").append(TerminalUtils.toColorString("4 5 6", TerminalColors.purple))
-                .append(" | ").append(TerminalUtils.toColorString("7 8 9", TerminalColors.purple)).append(" |\n");
+        for (int i = 1; i <= 9; i++) {
+            if (i == 1) builder.append("  | ");
+            if (i == 4 || i == 7) builder.append("| ");
+            builder.append(
+                    TerminalUtils.toColorString(
+                            i + " ",
+                            (selected[1] == i ? TerminalColors.red : TerminalColors.purple)
+                    )
+            );
+        }
+        builder.append("|\n");
         for (int i = 0; i < 3; i++) {
             builder.append("- + - - - + - - - + - - - +\n");
             for (int row = n; row < j; row++) {
-                builder.append(TerminalUtils.toColorString(String.valueOf(row + 1), TerminalColors.purple)).append(" | ");
+                builder.append(
+                                TerminalUtils.toColorString(
+                                        String.valueOf(row + 1),
+                                        (selected[0] == (row + 1) ? TerminalColors.red : TerminalColors.purple)
+                                )
+                        )
+                        .append(" | ");
                 for (int column = 0; column < 9; column++) {
                     builder.append(
                                     TerminalUtils.toColorString(
                                             String.valueOf(current[row][column]),
                                             given[row][column] == 0 ?
                                                     (
-                                                            current[row][column] == 0 ?
-                                                                    TerminalColors.white :
-                                                                    TerminalColors.cyan
+                                                            (selected[0] == (row+1) && selected[1] == (column+1)) ?
+                                                                    TerminalColors.blue :
+                                                                    (
+                                                                            current[row][column] == 0 ?
+                                                                                    TerminalColors.white :
+                                                                                    TerminalColors.cyan
+                                                                    )
                                                     ) : TerminalColors.black
                                     )
                             )
@@ -209,8 +229,16 @@ public class UserInterface implements ProgressMonitor {
     /**
      *
      */
-    public void displayGameIntro() {
+    public void displayGameIntro(int difficulty) {
         TerminalUtils.printStatus("Your are now in a game");
+        System.out.println("Your difficulty is " +
+                (
+                        difficulty == 1 ? "Noob" :
+                                difficulty == 2 ? "Easy" :
+                                        difficulty == 3 ? "Medium" :
+                                                TerminalUtils.toColorString("UNSET", TerminalColors.red)
+                )
+        );
     }
 
     /**
@@ -259,5 +287,25 @@ public class UserInterface implements ProgressMonitor {
         }
         builder.append("- + - - - + - - - + - - - +\n");
         System.out.println(builder);
+    }
+
+    public void introDifficulty() {
+        TerminalUtils.printStatus("Choose your difficulty you want to play on");
+    }
+
+    public void displayDifficultyUsages() {
+        System.out.println("Please enter one of the following digits:\n" +
+                "1 - Noob\n" +
+                "2 - Easy\n" +
+                "3 - Medium\n");
+    }
+
+    public void displayDifficultyCompletion() {
+        System.out.println(
+                TerminalUtils.toColorString(
+                        "Your difficulty was set.",
+                        TerminalColors.green
+                )
+        );
     }
 }

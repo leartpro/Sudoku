@@ -16,26 +16,39 @@ import java.util.List;
 public class Generator extends GridUtils {
 
     private final ProgressMonitor progressMonitor;
+    private int difficulty;
 
     /**
      * @param progressMonitor
      */
     public Generator(ProgressMonitor progressMonitor) {
         this.progressMonitor = progressMonitor;
+        this.difficulty = 1;
     }
 
     /**
      * @return
      */
-    public Field[][] generate() {
-        progressMonitor.displayLoading("Generating the Grid", 5265)/*worst case*/;
+    public Field[][] generate(int difficulty) {
+        assert (difficulty > 0 && difficulty < 4);
+        this.difficulty = difficulty;
+        /*
+            worst cases: //TODO: not calculated correctly
+            - 2888 runs for noob
+            - 3183 runs for easy
+            - 3348 runs for medium or higher
+         */
+        progressMonitor.displayLoading(
+                "Generating the Grid",
+                ((difficulty == 1) ? 1290 : (difficulty == 2) ? 1815 : 3348)/*5265*/
+        );
         Field[][] grid = new Field[9][9];
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
                 grid[x][y] = new Field(x, y, 0);
             }
         }
-        completeRandom(grid);
+        completeRandom(grid); //progress max. 81times
         assert allUnique(grid);
         assert isSolved(grid);
         createPuzzle(grid);
@@ -52,12 +65,12 @@ public class Generator extends GridUtils {
     private void createPuzzle(Field[][] grid) {
         List<Field> removable = new ArrayList<>(flatGrid(grid));
         Collections.shuffle(removable);
-        for (Field current : removable) {
+        for (Field current : removable) { //runs 81 times for one generation
             grid[current.x()][current.y()] = new Field(current.x(), current.y(), 0);
             if (!uniqueSolvable(grid)) { //TODO: this method call requires a lot of time
                 grid[current.x()][current.y()] = current;
             } else {
-                assert isSolved(new Solver().solve(grid));
+                assert isSolved(new Solver(this.difficulty).solve(grid));
             }
             progressMonitor.increaseProgress();
         }
@@ -67,16 +80,16 @@ public class Generator extends GridUtils {
      * @param grid
      * @return
      */
-    private boolean uniqueSolvable(Field[][] grid) {
-        if(!isSolved(new Solver().solve(grid))) return false;
+    private boolean uniqueSolvable(Field[][] grid) { //is called 81times for one generation
+        if(!isSolved(new Solver(this.difficulty).solve(grid))) return false;
         @SuppressWarnings("unchecked") ArrayList<Integer>[][] values = new ArrayList[9][9];
         cleanupValues(grid, values);
         if(!allPossible(grid, values)) return false;
         List<Field> available = new ArrayList<>(flatGrid(grid));
         available.removeIf(f -> f.value() != 0);
-        if(81 - available.size() < 17) return false;
+        if(81 - available.size() < ((difficulty == 1) ? 34 : (difficulty == 2) ? 24 : 17)) return false;
         List<Field[][]> solutions = new ArrayList<>();
-        for(Field f : available) {
+        for(Field f : available) { //runs int worst case 1081 times for one generation
             assert  (values[f.x()][f.y()].size() != 0);
             List<Integer> possibleValues = new ArrayList<>(values[f.x()][f.y()]);
             for(int value : possibleValues) {
@@ -84,12 +97,12 @@ public class Generator extends GridUtils {
                 solution[f.x()][f.y()] = new Field(f.x(), f.y(), value);
                 assert allUnique(solution);
                 values[f.x()][f.y()].remove(Integer.valueOf(value));
-                solution = new Solver().solve(solution);
+                solution = new Solver(this.difficulty).solve(solution);
                 if(isSolved(solution)) {
                     if (!inList(solutions, solution)) solutions.add(solution);
                 }
-                progressMonitor.increaseProgress();
             }
+            progressMonitor.increaseProgress(); //runs worst 3168 times for one generation
             if(solutions.size() > 1) return false;
         }
         return solutions.size() != 0;
@@ -99,7 +112,7 @@ public class Generator extends GridUtils {
      * @param grid
      * @return
      */
-    private boolean completeRandom(Field[][] grid) {
+    private boolean completeRandom(Field[][] grid) { //runs 81times for one generation
         int xPos = -1;
         int yPos = -1;
         boolean completed = true;

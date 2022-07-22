@@ -13,7 +13,7 @@ public class Game implements InputHandler {
 
     private final UserInterface userInterface;
     private final Controller controller;
-    private boolean inGame;
+    private boolean inGame, getDifficulty;
     private final int[] point = {-1, -1, -1}; //[0]=column; [1]=row; [2]=value
 
     /**
@@ -33,9 +33,31 @@ public class Game implements InputHandler {
         assert (input != null);
         if (input.charAt(0) == '.') handleCommands(input.substring(1));
         else if (inGame) handleGameInput(input);
+        else if (getDifficulty) handleDifficultyInput(input);
         else {
             TerminalUtils.printWarning("invalid input");
             userInterface.displayUsages();
+        }
+    }
+
+    private void handleDifficultyInput(String input) {
+        int selected = -1;
+        boolean validInput = true;
+        try {
+            selected = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            validInput = false;
+            TerminalUtils.printWarning("input have to be a command or a number");
+            userInterface.displayDifficultyUsages();
+        }
+        if(validInput) {
+            if(selected > 0 && selected < 4) {
+                this.controller.setDifficulty(selected);
+                userInterface.displayDifficultyCompletion();
+                this.getDifficulty = false;
+            } else {
+                TerminalUtils.printWarning("digit have to be between one and three");
+            }
         }
     }
 
@@ -80,7 +102,7 @@ public class Game implements InputHandler {
                     //userInterface.displayGameInput(point);
                     Arrays.fill(point, -1);
                 }
-                userInterface.displayGame(controller.getCurrentGrid(), controller.getGivenGrid());
+                userInterface.displayGame(controller.getCurrentGrid(), controller.getGivenGrid(), point);
                 userInterface.displayGameInput(point);
             } else {
                 TerminalUtils.printWarning("digit have to be between one and nine");
@@ -97,9 +119,9 @@ public class Game implements InputHandler {
                 if (!inGame) {
                     controller.generateNewPuzzle();
                     userInterface.clear();
-                    userInterface.displayGameIntro();
+                    userInterface.displayGameIntro(controller.getDifficulty());
                     userInterface.displayGameUsages();
-                    userInterface.displayGame(controller.getCurrentGrid(), controller.getGivenGrid());
+                    userInterface.displayGame(controller.getCurrentGrid(), controller.getGivenGrid(), point);
                     userInterface.displayGameInput(point);
                     this.inGame = true;
                 } else {
@@ -144,8 +166,17 @@ public class Game implements InputHandler {
                 if(inGame) {
                     controller.giveHint();
                     userInterface.clear();
-                    userInterface.displayGame(controller.getCurrentGrid(), controller.getGivenGrid());
+                    userInterface.displayGame(controller.getCurrentGrid(), controller.getGivenGrid(), point);
                     userInterface.displayGameInput(point);
+                } else {
+                    TerminalUtils.printWarning("can not use that command here");
+                }
+            }
+            case "difficulty" -> {
+                if(!inGame) {
+                    this.getDifficulty = true;
+                    userInterface.introDifficulty();
+                    userInterface.displayDifficultyUsages();
                 } else {
                     TerminalUtils.printWarning("can not use that command here");
                 }
