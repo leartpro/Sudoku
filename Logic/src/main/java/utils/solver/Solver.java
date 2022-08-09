@@ -8,21 +8,24 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
+ * used to solve grids
  */
 @SuppressWarnings("rawtypes")
 public final class Solver extends GridUtils {
 
     private final int difficulty;
 
+    /**
+     * @param difficulty the difficulty to solve on
+     */
     public Solver(int difficulty) {
         assert (difficulty > 0 && difficulty < 4);
         this.difficulty = difficulty;
     }
 
     /**
-     * @param grid
-     * @return
+     * @param grid the puzzle to solve
+     * @return a solved puzzle
      */
     @SuppressWarnings("unchecked")
     public Field[][] solve(Field[][] grid) { //todo order methods
@@ -46,9 +49,9 @@ public final class Solver extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @param values
-     * @return
+     * @param grid the current grid
+     * @param values the current values
+     * @return true if changes to the grid have been made
      */
     //check for each unsolved field  if there is only one valid value to insert
     //if this condition is true insert this value
@@ -80,14 +83,14 @@ public final class Solver extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @param values
-     * @return
+     * @param grid the current grid
+     * @param values the current values
+     * @return true if changes to the grid have been made
      */
     //check for each field the row, the column and the square
     // and if there is no other point where the current value is unique
     //then insert this value
-    private boolean uniqueCandidates(Field[][] grid, List[][] values) {
+    private boolean uniqueCandidates(Field[][] grid, List[][] values) { //TODO: make use of values
         boolean changes = true;
         boolean totalChanges = false;
         while (changes) {
@@ -113,8 +116,8 @@ public final class Solver extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @param values
+     * @param grid the current grid
+     * @param values the current values
      */
     private void removingCandidates(Field[][] grid, ArrayList<Field>[][] values) {
         boolean changes = true;
@@ -135,9 +138,9 @@ public final class Solver extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @param values
-     * @return
+     * @param grid the current grid
+     * @param values the current values
+     * @return true if changes to the grid have been made
      */
     //TODO: all sub-methods of removingCandidates should modify values[][]
     private boolean blockLineInteraction(Field[][] grid, List[][] values) { //TODO
@@ -149,9 +152,9 @@ public final class Solver extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @param values
-     * @return
+     * @param grid the current grid
+     * @param values the current values
+     * @return true if changes to the grid have been made
      */
     private boolean blockInteractions(Field[][] grid, List[][] values) { //TODO
         return true;
@@ -159,9 +162,9 @@ public final class Solver extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @param values
-     * @return
+     * @param grid the current grid
+     * @param values the current values
+     * @return true if changes to the grid have been made
      */
     private boolean nakedSubset(Field[][] grid, List[][] values) {
         return true;
@@ -169,9 +172,9 @@ public final class Solver extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @param values
-     * @return
+     * @param grid the current grid
+     * @param values the current values
+     * @return true if changes to the grid have been made
      */
     private boolean hiddenSubset(Field[][] grid, List[][] values) {
         return true;
@@ -179,9 +182,9 @@ public final class Solver extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @param values
-     * @return
+     * @param grid the current grid
+     * @param values the current values
+     * @return true if changes to the grid have been made
      */
     private boolean xWing(Field[][] grid, List[][] values) {
         return true;
@@ -189,9 +192,9 @@ public final class Solver extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @param values
-     * @return
+     * @param grid the current grid
+     * @param values the current values
+     * @return true if changes to the grid have been made
      */
     private boolean swordfish(Field[][] grid, List[][] values) {
         return true;
@@ -199,9 +202,9 @@ public final class Solver extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @param values
-     * @return
+     * @param grid the current grid
+     * @param values the current values
+     * @return true if changes to the grid have been made
      */
     private boolean forcingChain(Field[][] grid, List[][] values) {
         return true;
@@ -209,8 +212,8 @@ public final class Solver extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @param values
+     * @param grid the current grid
+     * @param values the current values
      */
     private void validValues(Field[][] grid, ArrayList<Field>[][] values) {
         ArrayList<Field>[][] removable = new ArrayList[9][9];
@@ -236,8 +239,8 @@ public final class Solver extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @return
+     * @param grid the current grid
+     * @return all constrains of the given grid seperated from each other
      */
     private List<Field[]> allConstrains(Field[][] grid) {
         List<Field[]> constrains = new ArrayList<>(Arrays.asList(grid).subList(0, 9));

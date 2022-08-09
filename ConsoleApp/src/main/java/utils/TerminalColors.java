@@ -1,11 +1,11 @@
 package utils;
 
 /**
- *
+ * stores required colors
  */
 public interface TerminalColors {
     /**
-     * red
+     * default
      */
     String reset = "\u001B[0m";
     /**

@@ -1,14 +1,14 @@
 package utils;
 
 /**
- *
+ * Used to display a progress-bar
  */
 public class ProgressBar {
     private final Bar bar;
     private final boolean hasSteps;
 
     /**
-     * @param name
+     * @param name the name of the progress
      */
     public ProgressBar(String name) {
         this.bar = new Bar(name);
@@ -16,8 +16,8 @@ public class ProgressBar {
     }
 
     /**
-     * @param name
-     * @param totalSteps
+     * @param name the name of the progress
+     * @param totalSteps the count of steps to complete the progress
      */
     public ProgressBar(String name, Integer totalSteps) {
         this.bar = new Bar(name, totalSteps);
@@ -25,7 +25,7 @@ public class ProgressBar {
     }
 
     /**
-     *
+     * increases the progress
      */
     public void addProgress() {
         if (hasSteps) bar.addStep();
@@ -34,7 +34,7 @@ public class ProgressBar {
     }
 
     /**
-     * @param steps
+     * @param steps the count of steps to increase
      */
     public void addProgress(int steps) {
         if (hasSteps) bar.addSteps(steps);
@@ -43,14 +43,14 @@ public class ProgressBar {
     }
 
     /**
-     * @return
+     * @return if the progress-bar is completed
      */
     public boolean isCompleted() {
         return bar.isCompleted;
     }
 
     /**
-     *
+     * complete the progress
      */
     public void complete() {
         bar.progress = 100;
@@ -59,14 +59,14 @@ public class ProgressBar {
     }
 
     /**
-     *
+     * displays the progress bar
      */
     public void display() {
         System.out.print(bar);
     }
 
     /**
-     *
+     * represents the progress-bar
      */
     private static class Bar {
 
@@ -77,7 +77,7 @@ public class ProgressBar {
         private boolean isCompleted = false;
 
         /**
-         * @param name
+         * @param name the name of the progress
          */
         public Bar(String name) {
             this.name = name;
@@ -86,8 +86,8 @@ public class ProgressBar {
         }
 
         /**
-         * @param name
-         * @param totalSteps
+         * @param name the name of the progress
+         * @param totalSteps the count of steps to complete the progress
          */
         public Bar(String name, Integer totalSteps) {
             this.name = name;
@@ -95,42 +95,29 @@ public class ProgressBar {
         }
 
         /**
-         * @return
+         * @return the progress-bar as string
          */
         @Override
         public String toString() {
             if(isCompleted) return "\r";
             if(progress == 100) isCompleted = true;
             return (name != null ? (name + " ") : "") +
-                    getPercentage() + " [" +
+                    progress + "%" + " [" +
                     getProgress() + " ] " +
-                    (totalSteps != null ? (getUnits() + " ") : "") + "\r" +
+                    (totalSteps != null ? (progressSteps + " / " + totalSteps + " ") : "") + "\r" +
                     (progress == 100 ? "\n" : "");
         }
 
         /**
-         * @return
-         */
-        private String getUnits() {
-            return progressSteps + " / " + totalSteps;
-        }
-
-        /**
-         * @return
+         * @return the current progress
          */
         private String getProgress() {
             return "=".repeat(Math.max(0, progress / 2)) + (progress == 100 ? "" : ">");
         }
 
-        /**
-         * @return
-         */
-        private String getPercentage() {
-            return progress + "%";
-        }
 
         /**
-         * @param value
+         * @param value the count of steps to increase
          */
         public void addSteps(int value) {
             assert totalSteps != null;
@@ -140,7 +127,7 @@ public class ProgressBar {
         }
 
         /**
-         *
+         * increases the progress by one step
          */
         public void addStep() {
             assert totalSteps != null;
@@ -150,14 +137,14 @@ public class ProgressBar {
         }
 
         /**
-         *
+         * increases the progress by one percent
          */
         public void addProgress() {
             if (progress + 1 <= 100) progress += 1;
         }
 
         /**
-         * @param value 
+         * @param value increases the progress
          */
         public void addProgress(int value) {
             if (progress + value <= 100) progress += value;

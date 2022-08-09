@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- *
+ * Stores print methods and a listen-thread on the given InputStream
  */
 public class UserInterface implements ProgressMonitor {
     private final InputHandler handler;
@@ -20,8 +20,8 @@ public class UserInterface implements ProgressMonitor {
     private ProgressBar progressBar;
 
     /**
-     * @param input
-     * @param handler
+     * @param input the InputStream to listen to
+     * @param handler the Handler to handle the input
      */
     public UserInterface(InputStream input, InputHandler handler) {
         this.reader = new BufferedReader(new InputStreamReader(input));
@@ -30,14 +30,14 @@ public class UserInterface implements ProgressMonitor {
     }
 
     /**
-     *
+     * displays the game intro
      */
     public void displayIntro() {
         TerminalUtils.printStatus("Welcome to Sudoku!");
     }
 
     /**
-     *
+     * displays all usages
      */
     public void displayUsages() {
         TerminalUtils.printStatus("\nThese are the available commands:");
@@ -67,8 +67,9 @@ public class UserInterface implements ProgressMonitor {
     }
 
     /**
-     * @param current
-     * @param given
+     * displays the game
+     * @param current the grid edited by the user
+     * @param given generated grid
      */
     public void displayGame(int[][] current, int[][] given, int[] selected) {
         StringBuilder builder = new StringBuilder();
@@ -124,15 +125,15 @@ public class UserInterface implements ProgressMonitor {
     }
 
     /**
-     *
+     * displays the menu intro
      */
     public void displayMenu() {
         TerminalUtils.printStatus("\nYou are in the menu!");
     }
 
     /**
-     * @param name
-     * @param totalSteps
+     * @param name the name of the progress
+     * @param totalSteps the count of steps to complete the progress
      */
     @Override
     public void displayLoading(String name, int totalSteps) {
@@ -141,7 +142,7 @@ public class UserInterface implements ProgressMonitor {
     }
 
     /**
-     *
+     * increase the progress by one
      */
     @Override
     public void increaseProgress() {
@@ -149,7 +150,7 @@ public class UserInterface implements ProgressMonitor {
     }
 
     /**
-     *
+     * completes the progress
      */
     @Override
     public void completeProgress() {
@@ -157,7 +158,8 @@ public class UserInterface implements ProgressMonitor {
     }
 
     /**
-     *
+     * listen in a thread to the input from the given InputStream
+     * on receive calls the handle method
      */
     public void listen() {
         Thread listen = new Thread(() -> {
@@ -185,7 +187,7 @@ public class UserInterface implements ProgressMonitor {
     }
 
     /**
-     *
+     * stops the listen thread
      */
     public void close() {
         TerminalUtils.printWarning("Do not receive any input from the user anymore");
@@ -198,7 +200,7 @@ public class UserInterface implements ProgressMonitor {
     }
 
     /**
-     *
+     * display the game usages
      */
     public void displayGameUsages() {
         System.out.println("Game Usages:\n" +
@@ -208,7 +210,7 @@ public class UserInterface implements ProgressMonitor {
     }
 
     /**
-     * @param inGameProgress
+     * @param inGameProgress the value to edit
      */
     public void displayGameInput(int[] inGameProgress) {
         //TODO: first 'X' in a different signal color to display the current step
@@ -227,7 +229,7 @@ public class UserInterface implements ProgressMonitor {
     }
 
     /**
-     *
+     * @param difficulty the current difficulty
      */
     public void displayGameIntro(int difficulty) {
         TerminalUtils.printStatus("Your are now in a game");
@@ -242,7 +244,7 @@ public class UserInterface implements ProgressMonitor {
     }
 
     /**
-     *
+     * clears the console
      */
     public void clear() {
         System.out.println("\033[H\033[2J");
@@ -250,9 +252,9 @@ public class UserInterface implements ProgressMonitor {
     }
 
     /**
-     * @param current
-     * @param given
-     * @param solved
+     * @param current the grid edited by the user
+     * @param given the generated grid
+     * @param solved the solved grid
      */
     public void displaySolution(int[][] current, int[][] given, int[][] solved) {
         System.out.println("Solution:\n");
@@ -289,10 +291,16 @@ public class UserInterface implements ProgressMonitor {
         System.out.println(builder);
     }
 
+    /**
+     * displays the difficulty intro
+     */
     public void introDifficulty() {
         TerminalUtils.printStatus("Choose your difficulty you want to play on");
     }
 
+    /**
+     * displays the difficulty usages
+     */
     public void displayDifficultyUsages() {
         System.out.println("Please enter one of the following digits:\n" +
                 "1 - Noob\n" +
@@ -300,6 +308,9 @@ public class UserInterface implements ProgressMonitor {
                 "3 - Medium\n");
     }
 
+    /**
+     * displays on difficulty input completion
+     */
     public void displayDifficultyCompletion() {
         System.out.println(
                 TerminalUtils.toColorString(

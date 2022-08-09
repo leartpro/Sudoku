@@ -7,7 +7,8 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 /**
- *
+ * Connects Logic and the input from the user
+ * as well as handels the input
  */
 public class Game implements InputHandler {
 
@@ -17,7 +18,7 @@ public class Game implements InputHandler {
     private final int[] point = {-1, -1, -1}; //[0]=column; [1]=row; [2]=value
 
     /**
-     * @param input
+     * @param input the InputStream to listen to
      */
     public Game(InputStream input) {
         userInterface = new UserInterface(input, this);
@@ -26,7 +27,7 @@ public class Game implements InputHandler {
     }
 
     /**
-     * @param input
+     * @param input the input from the InputStream
      */
     @Override
     public void handel(String input) { //todo display used tips and mistakes in solution
@@ -40,6 +41,10 @@ public class Game implements InputHandler {
         }
     }
 
+    /**
+     * @param input the input from the InputStream
+     * called by the handle method
+     */
     private void handleDifficultyInput(String input) {
         int selected = -1;
         boolean validInput = true;
@@ -62,7 +67,8 @@ public class Game implements InputHandler {
     }
 
     /**
-     * @param input
+     * @param input the input from the InputStream
+     * called by the handle method
      */
     private void handleGameInput(String input) {
         int selected = -1;
@@ -111,7 +117,8 @@ public class Game implements InputHandler {
     }
 
     /**
-     * @param input
+     * @param input the input from the InputStream
+     * called by the handle method
      */
     private void handleCommands(String input) {
         switch (input.substring(0, input.contains(" ") ? input.indexOf(" ") : input.length())) {
@@ -186,7 +193,7 @@ public class Game implements InputHandler {
     }
 
     /**
-     *
+     * initialize the game
      */
     public void init() {
         userInterface.clear();

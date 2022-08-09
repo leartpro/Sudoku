@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- *
+ * Handels the Generator.java as well as Solver.java and stores the current-/given- grid
  */
 public final class Controller extends GridUtils {
     private int[][] currentGrid, givenGrid;
@@ -18,7 +18,7 @@ public final class Controller extends GridUtils {
     private int difficulty;
 
     /**
-     * @param progressMonitor
+     * @param progressMonitor progress-monitor to give the progress to
      */
     public Controller(ProgressMonitor progressMonitor) {
         this.currentGrid = new int[9][9];
@@ -28,16 +28,22 @@ public final class Controller extends GridUtils {
         this.solver = new Solver(difficulty);
     }
 
+    /**
+     * @param difficulty set the difficulty
+     */
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
     }
 
+    /**
+     * @return the current difficulty
+     */
     public int getDifficulty() {
         return difficulty;
     }
 
     /**
-     *
+     * generates a new puzzle
      */
     public void generateNewPuzzle() {
         this.givenGrid = mapComparableGrid(generator.generate(this.difficulty));
@@ -45,28 +51,28 @@ public final class Controller extends GridUtils {
     }
 
     /**
-     * @return
+     * @return if the current-grid is solved correctly
      */
     public boolean isSolved() {
         return isSolved(toComparableGrid(currentGrid));
     }
 
     /**
-     * @return
+     * @return the generated-grid
      */
     public int[][] getGivenGrid() {
         return givenGrid;
     }
 
     /**
-     * @return
+     * @return the current-grid
      */
     public int[][] getCurrentGrid() {
         return currentGrid;
     }
 
     /**
-     * @return
+     * @return the solution for the generated-grid
      */
     public int[][] solvedGrid() {
         this.solver = new Solver(this.difficulty);
@@ -74,26 +80,26 @@ public final class Controller extends GridUtils {
     }
 
     /**
-     * @param x
-     * @param y
-     * @return
+     * @param x the row
+     * @param y the column
+     * @return true if this point is editable
      */
     public boolean isAvailable(int x, int y) {
         return givenGrid[x][y] == 0;
     }
 
     /**
-     * @param x
-     * @param y
-     * @param value
+     * @param x the row
+     * @param y the column
+     * @param value the value to insert
      */
     public void insert(int x, int y, int value) {
         currentGrid[x][y] = value;
     }
 
     /**
-     * @param grid
-     * @return
+     * @param grid a grid as int[][]
+     * @return the given grid as Field[][]
      */
     private Field[][] toComparableGrid(int[][] grid) {
         Field[][] result = new Field[9][9];
@@ -106,8 +112,8 @@ public final class Controller extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @return
+     * @param grid a grid as Field[][]
+     * @return the given grid as int[][]
      */
     private int[][] mapComparableGrid(Field[][] grid) {
         int[][] result = new int[9][9];
@@ -120,8 +126,8 @@ public final class Controller extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @return
+     * @param grid the int[][] to create a new instance from
+     * @return a new instance of the given int[][]
      */
     private int[][] newInstanceOf(int[][] grid) {
         int[][] solution = new int[9][9];
@@ -132,7 +138,7 @@ public final class Controller extends GridUtils {
     }
 
     /**
-     *
+     * complete one random field in the current-grid
      */
     public void giveHint() {
         this.solver = new Solver(this.difficulty);

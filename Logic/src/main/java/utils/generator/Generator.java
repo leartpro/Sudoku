@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
+ * Used to generate a valid grid
  */
 public class Generator extends GridUtils {
 
@@ -19,15 +19,17 @@ public class Generator extends GridUtils {
     private int difficulty;
 
     /**
-     * @param progressMonitor
+     * @param progressMonitor progress-monitor to give the progress to
      */
     public Generator(ProgressMonitor progressMonitor) {
         this.progressMonitor = progressMonitor;
         this.difficulty = 1;
     }
 
+
     /**
-     * @return
+     * @param difficulty the difficulty to generate
+     * @return a generated grid
      */
     public Field[][] generate(int difficulty) {
         assert (difficulty > 0 && difficulty < 4);
@@ -58,7 +60,7 @@ public class Generator extends GridUtils {
     }
 
     /**
-     * @param grid
+     * @param grid the grid to create a puzzle of
      */
     //TODO: to generate for different difficulties:
     // use different strong solvers for different difficulty values
@@ -77,8 +79,8 @@ public class Generator extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @return
+     * @param grid the puzzle to test on
+     * @return true if the given puzzle is valid
      */
     private boolean uniqueSolvable(Field[][] grid) { //is called 81times for one generation
         if(!isSolved(new Solver(this.difficulty).solve(grid))) return false;
@@ -109,8 +111,8 @@ public class Generator extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @return
+     * @param grid the grid to complete
+     * @return a valid completed grid
      */
     private boolean completeRandom(Field[][] grid) { //runs 81times for one generation
         int xPos = -1;
@@ -147,8 +149,8 @@ public class Generator extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @param values
+     * @param grid the current grid
+     * @param values the current values
      */
     private void cleanupValues(Field[][] grid, ArrayList<Integer>[][] values) {
         for (int x = 0; x < 9; x++) {
@@ -163,9 +165,9 @@ public class Generator extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @param values
-     * @return
+     * @param grid the current grid
+     * @param values the current values
+     * @return true if there is at least one solution
      */
     private boolean allPossible(Field[][] grid, ArrayList<Integer>[][] values) {
         for (int x = 0; x < 9; x++) {
@@ -179,8 +181,8 @@ public class Generator extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @return
+     * @param grid the grid to test on
+     * @return true if all values are unique
      */
     private boolean allUnique(Field[][] grid) {
         for (Field current : flatGrid(grid)) {
@@ -198,9 +200,9 @@ public class Generator extends GridUtils {
     }
 
     /**
-     * @param list
-     * @param value
-     * @return
+     * @param list the list to test on
+     * @param value the Field[][] to test for
+     * @return true if a grid with the same content is already in the given list
      */
     private boolean inList(List<Field[][]> list, Field[][] value) {
         for (Field[][] current : list) {
@@ -219,11 +221,12 @@ public class Generator extends GridUtils {
     }
 
     /**
-     * @param grid
-     * @param field
-     * @return
+     * @param grid the current grid
+     * @param field the current field
+     * @return all constrains of the given field in a list
      */
-    private List<Field[]> constrainsOf(Field[][] grid, Field field) { //TODO: use this for solver
+    private List<Field[]> constrainsOf(Field[][] grid, Field field) {
+        //TODO: use this for future solver methods
         List<Field[]> constrains = new ArrayList<>();
         Field[] column = new Field[9];
         System.arraycopy(grid[field.x()], 0, column, 0, 9);

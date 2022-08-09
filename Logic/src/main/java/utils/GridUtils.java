@@ -7,14 +7,14 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
+ * stores util methods for Field[][]'s
  */
 public abstract class GridUtils {
 
     /**
-     * @param grid
-     * @param insert
-     * @return
+     * @param grid the Field[][] to test on
+     * @param insert the Field to test with
+     * @return true if the insert-Field would be unique in the given Field[][]
      */
     public boolean isUnique(Field[][] grid, Field insert) {
         for (int y = 0; y < 9; y++) if (grid[insert.x()][y].value() == insert.value()) return false;
@@ -30,8 +30,8 @@ public abstract class GridUtils {
     }
 
     /**
-     * @param grid
-     * @return
+     * @param grid the Field[][] to flat
+     * @return the Field[][] as List
      */
     public List<Field> flatGrid(Field[][] grid) {
         List<Field> result = new ArrayList<>();
@@ -43,8 +43,8 @@ public abstract class GridUtils {
     }
 
     /**
-     * @param grid
-     * @return
+     * @param grid the Field[][] to create a new instance from
+     * @return a new instance of the given Field[][]
      */
     public Field[][] newInstanceOf(Field[][] grid) {
         Field[][] solution = new Field[9][9];
@@ -57,8 +57,8 @@ public abstract class GridUtils {
     }
 
     /**
-     * @param grid
-     * @return
+     * @param grid the Field[][] to test for
+     * @return true if the Field[][] is completed correctly
      */
     public boolean isSolved(Field[][] grid) {
         for (Field current : flatGrid(grid)) {
