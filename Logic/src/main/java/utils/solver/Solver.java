@@ -234,7 +234,7 @@ public final class Solver extends GridUtils {
         }
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++)
-            ((List<Field>) values[x][y]).retainAll(((List<Field>) removable[x][y]));
+            ((List<Field>) values[x][y]).retainAll(removable[x][y]);
         }
     }
 
