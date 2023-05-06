@@ -203,10 +203,11 @@ public class UserInterface implements ProgressMonitor {
      * display the game usages
      */
     public void displayGameUsages() {
-        System.out.println("Game Usages:\n" +
-                " - Type at first your row\n" +
-                " - Then your column\n" +
-                " - And finally the value you want to insert");
+        System.out.println("""
+                Game Usages:
+                 - Type at first your row
+                 - Then your column
+                 - And finally the value you want to insert""");
     }
 
     /**
@@ -302,10 +303,12 @@ public class UserInterface implements ProgressMonitor {
      * displays the difficulty usages
      */
     public void displayDifficultyUsages() {
-        System.out.println("Please enter one of the following digits:\n" +
-                "1 - Noob\n" +
-                "2 - Easy\n" +
-                "3 - Medium\n");
+        System.out.println("""
+                Please enter one of the following digits:
+                1 - Noob
+                2 - Easy
+                3 - Medium
+                """);
     }
 
     /**

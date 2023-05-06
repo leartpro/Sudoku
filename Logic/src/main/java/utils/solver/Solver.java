@@ -216,6 +216,7 @@ public final class Solver extends GridUtils {
      * @param values the current values
      */
     private void validValues(Field[][] grid, ArrayList<Field>[][] values) {
+        //noinspection unchecked
         ArrayList<Field>[][] removable = new ArrayList[9][9];
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 9; y++) {
@@ -228,13 +229,13 @@ public final class Solver extends GridUtils {
                     }
                     removable[x][y] = new ArrayList<>(available);
                 } else {
+                    //noinspection unchecked
                     removable[x][y] = new ArrayList();
                 }
             }
         }
         for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++)
-            ((List<Field>) values[x][y]).retainAll(removable[x][y]);
+            for (int y = 0; y < 9; y++) ((List<Field>) values[x][y]).retainAll(removable[x][y]);
         }
     }
 
